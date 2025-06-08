@@ -3,8 +3,31 @@
     static void Main()
     {
         //Exam();
-        Geometry();
+        //Geometry();
+        SymbolsHiding();
         Console.ReadKey();
+    }
+    static void SymbolsHiding()
+    {
+        //string stringToMask = Console.ReadLine();
+        string stringToMask = "78";
+        string result = Mask(stringToMask);
+        Console.WriteLine(result);
+
+        static string Mask(string stringToMask)
+        {
+            string newString = string.Empty;
+            if (stringToMask.Length > 4)
+            {
+                for (int i = 0; i < stringToMask.Length; i++)
+                {
+                    if(i < stringToMask.Length - 4) newString += "#";
+                    else newString += stringToMask[i];
+                }
+            }
+            else newString = stringToMask;
+            return newString;
+        }
     }
     static void Geometry()
     {
