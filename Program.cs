@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 class Program
 {
@@ -61,14 +62,16 @@ class Program
 
             cands.Sort();
 
+            CultureInfo.CurrentCulture = System.Globalization.CultureInfo.GetCultureInfo("en-US");
+
             foreach (Human h in cands)
             {
-                Console.WriteLine($"{h.Name}, {h.Rating:F2}", System.Globalization.CultureInfo.GetCultureInfo("en-US"));
+                //Console.WriteLine($"{h.Name}, {h.Rating:F2}");
+                result.Add($"{h.Name}, {h.Rating:F2}");
             }
+
             return result;
         }
-
-
     }
     class Human : IComparable
     {
