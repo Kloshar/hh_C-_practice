@@ -2,56 +2,10 @@
 {
     static void Main()
     {
-        //Exam();
-        //Geometry();
+        Exam();
+        Geometry();
         SymbolsHiding();
         Console.ReadKey();
-    }
-    static void SymbolsHiding()
-    {
-        //string stringToMask = Console.ReadLine();
-        string stringToMask = "78";
-        string result = Mask(stringToMask);
-        Console.WriteLine(result);
-
-        static string Mask(string stringToMask)
-        {
-            string newString = string.Empty;
-            if (stringToMask.Length > 4)
-            {
-                for (int i = 0; i < stringToMask.Length; i++)
-                {
-                    if(i < stringToMask.Length - 4) newString += "#";
-                    else newString += stringToMask[i];
-                }
-            }
-            else newString = stringToMask;
-            return newString;
-        }
-    }
-    static void Geometry()
-    {
-        //string sideString = Console.ReadLine().Trim();
-        string sideString = "5 1 4";
-        string answer = isRightTriangle(sideString) ? "Да" : "Нет";
-        Console.WriteLine(answer);
-
-        static bool isRightTriangle(string sideString)
-        {
-            string[] sidesStr = sideString.Split(' ');
-            int[] sides = new int[sidesStr.Length];
-            for (int i = 0; i < sidesStr.Length; i++)
-            {
-                sides[i] = Convert.ToInt32(sidesStr[i]);
-            }
-            Array.Sort(sides);
-            Array.Reverse(sides);
-            //foreach(int i in sides) Console.WriteLine(i);
-            //Console.WriteLine(Math.Pow(sides[2], 2));
-
-            if (Math.Pow(sides[0], 2) == Math.Pow(sides[1], 2) + Math.Pow(sides[2], 2)) return true;
-            else return false;
-        }
     }
     static void Exam()
     {
@@ -83,6 +37,49 @@
                 }
             }
             return passed;
+        }
+    }
+    static void Geometry()
+    {
+        //string sideString = Console.ReadLine().Trim();
+        string sideString = "5 1 4";
+        string answer = isRightTriangle(sideString) ? "Да" : "Нет";
+        Console.WriteLine(answer);
+
+        static bool isRightTriangle(string sideString)
+        {
+            string[] sidesStr = sideString.Split(' ');
+            int[] sides = new int[sidesStr.Length];
+            for (int i = 0; i < sidesStr.Length; i++)
+            {
+                sides[i] = Convert.ToInt32(sidesStr[i]);
+            }
+            Array.Sort(sides);
+            Array.Reverse(sides);
+            if (Math.Pow(sides[0], 2) == Math.Pow(sides[1], 2) + Math.Pow(sides[2], 2)) return true;
+            else return false;
+        }
+    }
+    static void SymbolsHiding()
+    {
+        //string stringToMask = Console.ReadLine();
+        string stringToMask = "78";
+        string result = Mask(stringToMask);
+        Console.WriteLine(result);
+
+        static string Mask(string stringToMask)
+        {
+            string newString = string.Empty;
+            if (stringToMask.Length > 4)
+            {
+                for (int i = 0; i < stringToMask.Length; i++)
+                {
+                    if (i < stringToMask.Length - 4) newString += "#";
+                    else newString += stringToMask[i];
+                }
+            }
+            else newString = stringToMask;
+            return newString;
         }
     }
 }
