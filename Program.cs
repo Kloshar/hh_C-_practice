@@ -2,11 +2,29 @@
 {
     static void Main()
     {
-        Exam();
-        Geometry();
-        SymbolsHiding();
+        //Exam();
+        //Geometry();
+        //SymbolsHiding();
+
+        Survey();
         Console.ReadKey();
     }
+    static void Survey()
+    {
+        //string inpupString = Console.ReadLine();
+        string inpupString = "132189";
+        int result = DigitalRoot(int.Parse(inpupString));
+
+
+        static int DigitalRoot(int n)
+        {
+            
+
+
+            return 1;
+        }
+    }
+
     static void Exam()
     {
         //string scoreString = Console.ReadLine();
