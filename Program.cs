@@ -10,26 +10,39 @@ class Program
         //SymbolsHiding();
         //Survey();
         //Raiting();
+        //DominantNumbers();
 
-        DominantNumbers();
+        checkingPasswords();
 
         Console.ReadKey();
     }
     
-    static void DominantNumbers()
+    static void checkingPasswords()
     {
-        //string stockPrices = Console.ReadLine();
-        string stockPrices = "1 21 3 4 5";
-        string dominatePrices = GetdominatePrices(stockPrices);
-        Console.WriteLine(dominatePrices);
+        //string inputString = Console.ReadLine();
+        string inputString = "This is example without suitable words.";        
+        StringAnalyzer analyzer = new StringAnalyzer(inputString);
+        int count = analyzer.CountWordsWithDigits();
 
-        static string GetdominatePrices(string stockPrices)
+        if (count == 0) Console.WriteLine("Не обнаружено");
+        else Console.WriteLine(count);
+    }
+    class StringAnalyzer
+    {
+        private string text;
+        public StringAnalyzer(string text)
         {
+            this.text = text;
+        }        
 
+        public int CountWordsWithDigits()
+        {
+            string[] words = text.Split(' ');
 
-            return "";
+            foreach (string word in words) Console.WriteLine(word);
+
+            return 0;
         }
-
     }
 
     static void Exam()
@@ -212,6 +225,37 @@ class Program
             return Rating.CompareTo(human.Rating);
         }
     }
+    static void DominantNumbers()
+    {
+        //string stockPrices = Console.ReadLine();
+        string stockPrices = "1 21 34 45 5";
+        string dominatePrices = GetdominatePrices(stockPrices);
+        Console.WriteLine(dominatePrices);
 
+        static string GetdominatePrices(string stockPrices)
+        {
+            List<int> numbers = stockPrices.Split(' ').Select(Int32.Parse).ToList();
+            string choosen = string.Empty;
+
+            for (int i = 0; i < numbers.Count; i++)
+            {
+                int current = numbers[i];
+                if (checkMax(i, numbers)) choosen += current + " ";
+                numbers.RemoveAt(i);
+                i--;
+            }
+            choosen = choosen.TrimEnd();
+            return choosen;
+        }
+        static bool checkMax(int a, List<int> lst)
+        {
+            bool result = true;
+            foreach (int i in lst)
+            {
+                if (lst[a] < i) result = false;
+            }
+            return result;
+        }
+    }
 
 }
