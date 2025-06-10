@@ -9,85 +9,29 @@ class Program
         //Geometry();
         //SymbolsHiding();
         //Survey();
-        Raiting();
+        //Raiting();
+
+        DominantNumbers();
+
         Console.ReadKey();
     }
-    static void Raiting()
+    
+    static void DominantNumbers()
     {
-        Dictionary<string, int[]> candidates = GetCandidates();
+        //string stockPrices = Console.ReadLine();
+        string stockPrices = "1 21 3 4 5";
+        string dominatePrices = GetdominatePrices(stockPrices);
+        Console.WriteLine(dominatePrices);
 
-        //ICollection<string> keys = candidates.Keys;
-        //foreach (string candidate in keys) Console.WriteLine($"{candidate}, {candidates[candidate].Length}");
-
-        foreach (string candidate in SelectedCandidates(candidates)) Console.WriteLine(candidate);
-         
-        static Dictionary<string, int[]> GetCandidates()
+        static string GetdominatePrices(string stockPrices)
         {
-            Dictionary<string, int[]> dict = new Dictionary<string, int[]>();
-            string candidate;
 
-            //while ((candidate = Console.ReadLine()) != null && candidate != "")
-            //{
-            //    var parts = candidate.Split(',');
-            //    string name = parts[0];
-            //    var scores = parts.Skip(1).Select(int.Parse).ToArray();
-            //    dict[name] = scores;
-            //}
 
-            dict.Add("Ivanov", new int[] { 5, 6, 8, 5 });
-            dict.Add("Lisii", new int[] { 9, 8, 10, 9 });
-            dict.Add("Sokolova", new int[] { 5, 6, 8, 5 });
-            dict.Add("Tritonov", new int[] { 7, 2, 3, 4 });
-            dict.Add("Chernov", new int[] { 8, 8, 8, 8 });
-            dict.Add("Svetova", new int[] { 4, 5, 3, 6 });
-            dict.Add("Zayatz", new int[] { 5, 6, 8, 5 });
-            dict.Add("Rezhik", new int[] { 6, 6, 8 });
-
-            return dict;
+            return "";
         }
-        static List<string> SelectedCandidates(Dictionary<string, int[]> candidates)
-        {
-            List<string> result = new List<string>();
 
-            List<Human> cands = new List<Human>();           
-
-            ICollection<string> keys = candidates.Keys;
-            foreach (string candidate in keys)
-            {
-                int[] numbers = candidates[candidate];
-                double average = Math.Round(numbers.Average(), 1);
-                cands.Add(new Human(candidate, average));
-                //Console.WriteLine($"Имя: {candidate}, Средний балл: {average}");
-            }
-
-            cands.Sort();
-
-            CultureInfo.CurrentCulture = System.Globalization.CultureInfo.GetCultureInfo("en-US");
-
-            foreach (Human h in cands)
-            {
-                //Console.WriteLine($"{h.Name}, {h.Rating:F2}");
-                result.Add($"{h.Name}, {h.Rating:F2}");
-            }
-
-            return result;
-        }
     }
-    class Human : IComparable
-    {
-        public string Name {  get; set; }
-        public double Rating { get; set; }
-        public Human(string name, double rating)
-        {
-            Name = name;
-            Rating = rating;
-        }
-        public int CompareTo(object obj)
-        {
-            Human human = obj as Human;
-            return Rating.CompareTo(human.Rating);
-        }
-    }
+
     static void Exam()
     {
         //string scoreString = Console.ReadLine();
@@ -187,5 +131,87 @@ class Program
             return result;
         }
     }
+    static void Raiting()
+    {
+        Dictionary<string, int[]> candidates = GetCandidates();
+
+        //ICollection<string> keys = candidates.Keys;
+        //foreach (string candidate in keys) Console.WriteLine($"{candidate}, {candidates[candidate].Length}");
+
+        foreach (string candidate in SelectedCandidates(candidates)) Console.WriteLine(candidate);
+
+        static Dictionary<string, int[]> GetCandidates()
+        {
+            Dictionary<string, int[]> dict = new Dictionary<string, int[]>();
+            string candidate;
+
+            //while ((candidate = Console.ReadLine()) != null && candidate != "")
+            //{
+            //    var parts = candidate.Split(',');
+            //    string name = parts[0];
+            //    var scores = parts.Skip(1).Select(int.Parse).ToArray();
+            //    dict[name] = scores;
+            //}
+
+            dict.Add("Ivanov", new int[] { 5, 6, 8, 5 });
+            dict.Add("Lisii", new int[] { 9, 8, 10, 9 });
+            dict.Add("Sokolova", new int[] { 5, 6, 8, 5 });
+            dict.Add("Tritonov", new int[] { 7, 2, 3, 4 });
+            dict.Add("Chernov", new int[] { 8, 8, 8, 8 });
+            dict.Add("Svetova", new int[] { 4, 5, 3, 6 });
+            dict.Add("Zayatz", new int[] { 5, 6, 8, 5 });
+            dict.Add("Rezhik", new int[] { 6, 6, 8 });
+
+            return dict;
+        }
+        static List<string> SelectedCandidates(Dictionary<string, int[]> candidates)
+        {
+            List<string> result = new List<string>();
+
+            List<Human> cands = new List<Human>();
+
+            ICollection<string> keys = candidates.Keys;
+            foreach (string candidate in keys)
+            {
+                int[] numbers = candidates[candidate];
+                double average = Math.Round(numbers.Average(), 1);
+
+                if (average >= 5)
+                {
+                    cands.Add(new Human(candidate, average));
+                }
+                //Console.WriteLine($"Имя: {candidate}, Средний балл: {average}");
+            }
+
+            cands.Sort();
+            cands.Reverse();
+
+            CultureInfo.CurrentCulture = System.Globalization.CultureInfo.GetCultureInfo("en-US");
+
+            foreach (Human h in cands)
+            {
+                //Console.WriteLine($"{h.Name}, {h.Rating:F2}");
+                result.Add($"{h.Name},{h.Rating:F2}");
+            }
+
+            return result;
+        }
+    }
+    class Human : IComparable
+    {
+        public string Name { get; set; }
+        public double Rating { get; set; }
+        public Human(string name, double rating)
+        {
+            Name = name;
+            Rating = rating;
+        }
+        public int CompareTo(object obj)
+        {
+            Human human = obj as Human;
+            return Rating.CompareTo(human.Rating);
+        }
+    }
+
 
 }
