@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Linq;
 
 class Program
 {
@@ -20,7 +21,7 @@ class Program
     static void checkingPasswords()
     {
         //string inputString = Console.ReadLine();
-        string inputString = "This is example without suitable words.";        
+        string inputString = "Thi5s is example without suitable words.";        
         StringAnalyzer analyzer = new StringAnalyzer(inputString);
         int count = analyzer.CountWordsWithDigits();
 
@@ -33,13 +34,16 @@ class Program
         public StringAnalyzer(string text)
         {
             this.text = text;
-        }        
-
+        }
         public int CountWordsWithDigits()
         {
             string[] words = text.Split(' ');
 
-            foreach (string word in words) Console.WriteLine(word);
+            //var result = from p in words where char.IsUpper(p[0]) select p;
+
+            var result = from p in words where p.Any(char.IsDigit) select p;
+
+            foreach (string word in result) Console.WriteLine(word);
 
             return 0;
         }
