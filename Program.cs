@@ -12,40 +12,69 @@ class Program
         //Survey();
         //Raiting();
         //DominantNumbers();
+        //checkingPasswords();
 
-        checkingPasswords();
+        ReportMaker();
 
         Console.ReadKey();
     }
-    
-    static void checkingPasswords()
-    {
-        //string inputString = Console.ReadLine();
-        string inputString = "Thi5s is example without suitable words.";        
-        StringAnalyzer analyzer = new StringAnalyzer(inputString);
-        int count = analyzer.CountWordsWithDigits();
 
-        if (count == 0) Console.WriteLine("Не обнаружено");
-        else Console.WriteLine(count);
-    }
-    class StringAnalyzer
+    static void ReportMaker()
     {
-        private string text;
-        public StringAnalyzer(string text)
+        //string inputData = Console.ReadLine();
+
+        string inputData = "2023-01-15:Книга:10;2023-01-20:Флешка:5;2023-01-05:Наушники:8";
+
+        List<string> report = GenerateMonthlyReport(inputData);
+        foreach (string line in report) Console.WriteLine(line);
+
+        static List<string> GenerateMonthlyReport(string data)
         {
-            this.text = text;
+            List<string> result = new List<string>();
+
+            string[] sales = data.Split(';');
+
+            foreach(string sale in sales) Console.WriteLine(sale);
+
+            Item sale1 = new Item(sales[0].Split(':'));
+
+            return result;
         }
-        public int CountWordsWithDigits()
+    }
+    class Item
+    {
+        public string Date { get; set; }
+        public string Product { get; set; }
+        public int Quantity { get; set; }
+        public string Month
         {
-            string[] words = text.Split(' ');
+            get
+            {
+                var months = new Dictionary<string, string>
+                {
+                    { "01", "Январь" },
+                    { "02", "Февраль" },
+                    { "03", "Март" },
+                    { "04", "Апрель" },
+                    { "05", "Май" },
+                    { "06", "Июнь" },
+                    { "07", "Июль" },
+                    { "08", "Август" },
+                    { "09", "Сентябрь" },
+                    { "10", "Октябрь" },
+                    { "11", "Ноябрь" },
+                    { "12", "Декабрь" }
+                };
+                string m = Date.Split('-')[1];
+                return months.ContainsKey(m) ? months[m] : "Неизвестный месяц";
+            }
+        }
 
-            //var result = from p in words where char.IsUpper(p[0]) select p;
-
-            var result = from p in words where p.Any(char.IsDigit) select p;
-
-            foreach (string word in result) Console.WriteLine(word);
-
-            return 0;
+        public Item(string date, string product, string quantity)
+        {
+            Date = date;
+            Product = product;
+            Quantity = quantity;
         }
     }
 
@@ -261,5 +290,28 @@ class Program
             return result;
         }
     }
+    static void checkingPasswords()
+    {
+        //string inputString = Console.ReadLine();
+        string inputString = "Password123 mus be secure. Use 1 digi and 1 uppercase letter.";
+        StringAnalyzer analyzer = new StringAnalyzer(inputString);
+        int count = analyzer.CountWordsWithDigits();
 
+        if (count == 0) Console.WriteLine("Не обнаружено");
+        else Console.WriteLine(count);
+    }
+    class StringAnalyzer
+    {
+        private string text;
+        public StringAnalyzer(string text)
+        {
+            this.text = text;
+        }
+        public int CountWordsWithDigits()
+        {
+            string[] words = text.Split(' ');
+            var result = from p in words where char.IsUpper(p[0]) && p.Any(char.IsDigit) select p;
+            return result.Count();
+        }
+    }
 }
