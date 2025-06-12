@@ -13,70 +13,13 @@ class Program
         //Raiting();
         //DominantNumbers();
         //checkingPasswords();
+        //ReportMaker();
 
-        ReportMaker();
 
         Console.ReadKey();
     }
 
-    static void ReportMaker()
-    {
-        //string inputData = Console.ReadLine();
-
-        string inputData = "2023-01-15:Книга:10;2023-01-20:Флешка:5;2023-01-05:Наушники:8";
-
-        List<string> report = GenerateMonthlyReport(inputData);
-        foreach (string line in report) Console.WriteLine(line);
-
-        static List<string> GenerateMonthlyReport(string data)
-        {
-            List<string> result = new List<string>();
-
-            string[] sales = data.Split(';');
-
-            foreach(string sale in sales) Console.WriteLine(sale);
-
-            Item sale1 = new Item(sales[0].Split(':'));
-
-            return result;
-        }
-    }
-    class Item
-    {
-        public string Date { get; set; }
-        public string Product { get; set; }
-        public int Quantity { get; set; }
-        public string Month
-        {
-            get
-            {
-                var months = new Dictionary<string, string>
-                {
-                    { "01", "Январь" },
-                    { "02", "Февраль" },
-                    { "03", "Март" },
-                    { "04", "Апрель" },
-                    { "05", "Май" },
-                    { "06", "Июнь" },
-                    { "07", "Июль" },
-                    { "08", "Август" },
-                    { "09", "Сентябрь" },
-                    { "10", "Октябрь" },
-                    { "11", "Ноябрь" },
-                    { "12", "Декабрь" }
-                };
-                string m = Date.Split('-')[1];
-                return months.ContainsKey(m) ? months[m] : "Неизвестный месяц";
-            }
-        }
-
-        public Item(string date, string product, string quantity)
-        {
-            Date = date;
-            Product = product;
-            Quantity = quantity;
-        }
-    }
+   
 
     static void Exam()
     {
@@ -314,4 +257,82 @@ class Program
             return result.Count();
         }
     }
+    static void ReportMaker()
+    {
+        //string inputData = Console.ReadLine();
+        string inputData = "2023-03-01:Лампа:8;2023-03-20:Ключи:7;2023-04-25:Фонарь:6";
+        List<string> report = GenerateMonthlyReport(inputData);
+        foreach (string line in report) Console.WriteLine(line);
+
+        static List<string> GenerateMonthlyReport(string data)
+        {
+            List<string> result = new List<string>(); //пока не используется
+            List<Item> products = new List<Item>();
+
+            string[] sales = data.Split(';'); //массив, содержащий все товары
+
+            foreach (string sale in sales)
+            {
+                string[] dateNameAmount = sale.Split(":");
+                Item item = new Item(dateNameAmount[0], dateNameAmount[1], dateNameAmount[2]);
+                products.Add(item);
+            }
+            products = products.OrderBy(p => p.MonthNumber).ThenBy(p => p.Product).ToList();
+            string currentMonth = "";
+            foreach (Item i in products)
+            {
+                if (i.Month != currentMonth)
+                {
+                    currentMonth = i.Month;
+                    result.Add(i.Month + ":");
+                }
+                result.Add($"-{i.Product}:{i.Quantity}:{i.MonthNumber}");
+            }
+
+            return result;
+        }
+    }
+    class Item
+    {
+        public string Date { get; set; }
+        public string Product { get; set; }
+        public int Quantity { get; set; }
+        public string Month
+        {
+            get
+            {
+                var months = new Dictionary<string, string>
+                {
+                    { "01", "Январь" },
+                    { "02", "Февраль" },
+                    { "03", "Март" },
+                    { "04", "Апрель" },
+                    { "05", "Май" },
+                    { "06", "Июнь" },
+                    { "07", "Июль" },
+                    { "08", "Август" },
+                    { "09", "Сентябрь" },
+                    { "10", "Октябрь" },
+                    { "11", "Ноябрь" },
+                    { "12", "Декабрь" }
+                };
+                string m = Date.Split('-')[1];
+                return months.ContainsKey(m) ? months[m] : "Неизвестный месяц";
+            }
+        }
+        public int MonthNumber
+        {
+            get
+            {
+                return int.Parse(this.Date.Split('-')[1]);
+            }
+        }
+        public Item(string date, string product, string quantity)
+        {
+            Date = date;
+            Product = product;
+            Quantity = int.Parse(quantity);
+        }
+    }
+
 }
