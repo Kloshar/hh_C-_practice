@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
-
 class Program
 {
     static void Main()
@@ -14,12 +13,60 @@ class Program
         //DominantNumbers();
         //checkingPasswords();
         //ReportMaker();
-
-
+        Backlogs();
         Console.ReadKey();
     }
+    static void Backlogs()
+    {
+        //string studentsInfo = Console.ReadLine();
+        string studentsInfo = "Анна,Математика,85;Анна,Химия,90;Борис,Математика,75;Борис,История,80;Евгений,Математика,95;Евгений,Химия,85";
+        //string scoresInfo = Console.ReadLine();
+        string scoresInfo = "Математика,80;Химия,60,История,80";
 
-   
+        Dictionary<string, List<int>> courseScores = new Dictionary<string, List<int>>(); //словарь - предмет, оценки
+        var studentRecords = studentsInfo.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries); //массив строк по ученик,предмет,балл
+        foreach (var record in studentRecords) //для каждой записи ученика
+        {
+            var parts = record.Split(',');
+            string studentName = parts[0]; //имя ученика
+            string course = parts[1]; //предмет ученика
+            int score = int.Parse(parts[2]); //балл ученика по предмету
+            if (!courseScores.ContainsKey(course)) //если в словаре с предметами ещё нет предмета ученика, то 
+                courseScores[course] = new List<int>(); //добавляем ключ и создаём пустой список с баллами
+            courseScores[course].Add(score); //добавляем баллы ученика по предмету в список
+            //[Математика],[85,75,95]
+            //[Химия],[90,85]
+            //[История],[80]
+        }
+        Dictionary<string, int> passingScores = new Dictionary<string, int>(); //словарь - предмет, проходной балл
+        List<string> courseOrder = new List<string>(); //список предметов
+        var scoreRecords = scoresInfo.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+        foreach (var scoreRecord in scoreRecords) //для каждой записи предметов и проходных баллов
+        {
+            var parts = scoreRecord.Split(',');
+            string course = parts[0];
+            int passing = int.Parse(parts[1]);
+            passingScores[course] = passing; //предмет, балл
+            courseOrder.Add(course); //добавляем предмет в список
+        }
+
+        List<string> result = GetCoursesWithoutDebts(courseScores, passingScores, courseOrder);
+
+        if(result.Count == 0) Console.WriteLine("Пусто");
+        else
+        {
+            foreach(var course in result) Console.WriteLine(course);
+        }
+
+        static List<string> GetCoursesWithoutDebts(Dictionary<string, List<int>> courseScores, Dictionary<string, int> passingScores, List<string> couseOrder)
+        {
+            List<string> list = new List<string>();
+
+
+
+            return list;
+        }
+    }
 
     static void Exam()
     {
