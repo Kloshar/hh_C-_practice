@@ -19,9 +19,9 @@ class Program
     static void Backlogs()
     {
         //string studentsInfo = Console.ReadLine();
-        string studentsInfo = "Анна,Математика,85;Анна,Химия,90;Борис,Математика,75;Борис,История,80;Евгений,Математика,95;Евгений,Химия,85";
+        string studentsInfo = "Анна,Химия,90;Анна,Математика,85;Борис,Математика,75;Борис,История,80;Евгений,Математика,95;Евгений,Химия,85";
         //string scoresInfo = Console.ReadLine();
-        string scoresInfo = "Математика,80;Химия,60,История,80";
+        string scoresInfo = "Математика,80;Химия,60;История,80";
 
         Dictionary<string, List<int>> courseScores = new Dictionary<string, List<int>>(); //словарь - предмет, оценки
         var studentRecords = studentsInfo.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries); //массив строк по ученик,предмет,балл
@@ -39,7 +39,7 @@ class Program
             //[История],[80]
         }
         Dictionary<string, int> passingScores = new Dictionary<string, int>(); //словарь - предмет, проходной балл
-        List<string> courseOrder = new List<string>(); //список предметов
+        List<string> courseOrder = new List<string>(); //список предметов в порядке проходных баллов
         var scoreRecords = scoresInfo.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
         foreach (var scoreRecord in scoreRecords) //для каждой записи предметов и проходных баллов
         {
@@ -52,17 +52,49 @@ class Program
 
         List<string> result = GetCoursesWithoutDebts(courseScores, passingScores, courseOrder);
 
-        if(result.Count == 0) Console.WriteLine("Пусто");
-        else
-        {
-            foreach(var course in result) Console.WriteLine(course);
-        }
+        //if(result.Count == 0) Console.WriteLine("Пусто");
+        //else
+        //{
+        //    foreach(var course in result) Console.WriteLine(course);
+        //}
 
         static List<string> GetCoursesWithoutDebts(Dictionary<string, List<int>> courseScores, Dictionary<string, int> passingScores, List<string> couseOrder)
         {
             List<string> list = new List<string>();
 
+            foreach (var subject in couseOrder)
+            {
+                //Console.WriteLine(subject);
 
+                Console.WriteLine($"Минимальныей балл по {subject}: {courseScores[subject].Min()}");
+                Console.WriteLine($"{passingScores[subject]}{passingScores[subject]}");
+
+            }
+
+
+
+            //Console.WriteLine("Предметы и оченки учеников: ");
+            //foreach (var rec in courseScores)
+            //{
+            //    Console.Write($"{rec.Key}: ");
+            //    foreach (var scores in rec.Value)
+            //    {
+            //        Console.Write($"{scores}, ");
+            //    }
+            //    Console.WriteLine();
+            //}
+            //Console.WriteLine("Проходные баллы: ");
+            //foreach (var rec in passingScores)
+            //{
+            //    Console.Write($"{rec.Key}: ");
+            //    Console.Write($"{rec.Value}, ");
+            //    Console.WriteLine();
+            //}
+            //Console.WriteLine("Порядок предметов: ");
+            //foreach (var rec in couseOrder)
+            //{
+            //    Console.WriteLine(rec);
+            //}
 
             return list;
         }
