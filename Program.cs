@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using System.Numerics;
 class Program
 {
     static void Main()
@@ -19,8 +20,59 @@ class Program
     }
     static void Lottery()
     {
-        string inputString = Console.ReadLine();
+        //string inputString = Console.ReadLine();
+        string inputString = "531";
+        string result = NextSmallest(inputString);
+        Console.WriteLine(result);
 
+        static string NextSmallest(string n)
+        {
+            List<int> numbers = new List<int>();
+            foreach (char c in n) numbers.Add(int.Parse(c.ToString()));
+            numbers.Sort();
+            //foreach (int i in numbers) Console.WriteLine(i);
+            makeSequences(numbers);
+            return "";
+        }
+
+        static void makeSequences(List<int>numbers)
+        {
+            int quantity = 1; //вычисляем количество комбинаций (факториал от количества цифр)
+            for(int i = 1; i <= numbers.Count; i++) quantity *= i;
+
+            List<List<int>> sequences = new List<List<int>>(); //создаём список списков
+            for(int i = 0; i < quantity; i++) sequences.Add(new List<int>()); //добавляем в него шесть пустых списков чисел
+
+            int count = 0;
+            int step = sequences.Count / numbers.Count;
+            int index = 0;
+
+            for(int k = 0; k < numbers.Count; k++)
+            {                
+                for (int i = 0; i < sequences.Count; i++) //в каждый список добавляем свою цифру
+                {
+                    List<int> lst = sequences[i];
+                    if (count >= step) { count = 0; index++; }
+                    Console.WriteLine($"lst № {i}, index={index}, numbers[index]={numbers[index]}, k={k},numbers[k]={numbers[k+index]} ");
+                    lst.Add(numbers[index]);
+                    count++;
+                }
+                count = 0;
+                index = 0;
+                Console.WriteLine();
+            }
+
+            //Console.WriteLine();
+            //foreach (var l in sequences)
+            //{
+            //    foreach(int i in l)
+            //    {
+            //        Console.WriteLine(i);
+            //    }
+                
+            //}
+
+        }
     }
     static void Exam()
     {
@@ -133,8 +185,8 @@ class Program
         static Dictionary<string, int[]> GetCandidates()
         {
             Dictionary<string, int[]> dict = new Dictionary<string, int[]>();
-            string candidate;
-
+            
+            //string candidate;
             //while ((candidate = Console.ReadLine()) != null && candidate != "")
             //{
             //    var parts = candidate.Split(',');
