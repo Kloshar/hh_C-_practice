@@ -36,49 +36,19 @@ class Program
         }
         static void makeSequences(List<int>numbers)
         {
-            int quantity = 1; //вычисляем количество комбинаций (факториал от количества цифр)
-            for(int i = 1; i <= numbers.Count; i++) quantity *= i;
-
-            List<List<int>> sequences = new List<List<int>>(); //создаём список списков
-            for(int i = 0; i < quantity; i++) sequences.Add(new List<int>()); //добавляем в него шесть пустых списков чисел
-
-            int step = sequences.Count / numbers.Count;
-            int count = 0;
-            int index = 0;
-
-            for(int k = 0; k < numbers.Count; k++)
-            {                
-                for (int i = 0; i < sequences.Count; i++) //в каждый список добавляем свою цифру
-                {
-                    List<int> lst = sequences[i];
-                    if (count >= step) { count = 0; index++; }
-
-                    string numbersString = string.Empty;
-                    foreach (int n in numbers.Select(p => p)) numbersString += n;
-
-                    Console.WriteLine($"lst № {i}, index={index}, numbers[index]={numbers[index]}, numbersString={numbersString}, k={k}");
-
-                    lst.Add(numbers[index]);
-                    count++;
-                }
-                count = 0;
-                index = 0;
-
-                numbers.Add(numbers[0]);
-                numbers.RemoveAt(0);
-
-                Console.WriteLine();
-            }
-
-            Console.WriteLine();
-            foreach (var l in sequences)
+            string[] a_s = { "1", "2", "3"};
+            int m = 3, n = 3;
+            for(int i = 0; i < Math.Pow(m,n); i++)
             {
-                foreach (int i in l)
+                string s = "";
+                int ii = i;
+                for(int j = 0; j < n; j++)
                 {
-                    Console.Write(i);
+                    s = a_s[ii % m] + s;
+                    ii /= m;
                 }
-                Console.WriteLine();
-            }
+                Console.WriteLine(s);
+            }            
         }
     }
     static void Exam()
