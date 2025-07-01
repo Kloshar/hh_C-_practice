@@ -31,24 +31,43 @@ class Program
             foreach (char c in n) numbers.Add(int.Parse(c.ToString()));
             numbers.Sort();
             //foreach (int i in numbers) Console.WriteLine(i);
-            makeSequences(numbers);
+             makeSequences(numbers);
+
+
+
             return "";
         }
-        static void makeSequences(List<int>numbers)
+        static List<List<int>> makeSequences(List<int>numbers)
         {
-            string[] a_s = { "1", "2", "3"};
-            int m = 3, n = 3;
-            for(int i = 0; i < Math.Pow(m,n); i++)
+            int amount = 1; //общее количество комбинаций 
+            for (int i = 1; i < numbers.Count + 1; i++) amount *= i; //это факториал числа неповторяющихся символов
+            List<List<int>> combinations = new List<List<int>>(); //список комбинаций
+            Random rnd = new Random();
+            while (combinations.Count < amount)
             {
-                string s = "";
-                int ii = i;
-                for(int j = 0; j < n; j++)
+                numbers = numbers.OrderBy(x => rnd.Next()).ToList<int>();
+                //if (!combinations.Any(x => checkListsEquals(x, numbers))) //не проверяет комбинации в списке
+                if (!combinations.Contains(numbers, new listComparer())) //не проверяет комбинации в списке
                 {
-                    s = a_s[ii % m] + s;
-                    ii /= m;
+                    combinations.Add(numbers);
+                    //foreach (int i in numbers) Console.Write($"{i} ");
+                    //Console.WriteLine();
                 }
-                Console.WriteLine(s);
-            }            
+            }
+            return combinations;
+        }
+    }
+    class listComparer : IEqualityComparer<List<int>>
+    {
+        public bool Equals(List<int> l1, List<int> l2)
+        {
+            bool equals = true;
+            for (int i = 0; i < l1.Count; i++) if (l1[i] != l2[i]) equals = false;
+            return equals;
+        }
+        public int GetHashCode(List<int> l1) 
+        {
+            return l1.GetHashCode();
         }
     }
     static void Exam()
