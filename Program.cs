@@ -31,7 +31,13 @@ class Program
             foreach (char c in n) numbers.Add(int.Parse(c.ToString()));
             numbers.Sort();
             //foreach (int i in numbers) Console.WriteLine(i);
-             makeSequences(numbers);
+             makeSequences(n);
+
+            return "";
+        }
+
+        static string makeSequences(string numbers)
+        {
 
 
 
@@ -54,9 +60,10 @@ class Program
                     //Console.WriteLine();
                 }
             }
-            return combinations;
+            return combinations; //проблема в том, что возвращает список списков. Нужно число...
         }
     }
+
     class listComparer : IEqualityComparer<List<int>>
     {
         public bool Equals(List<int> l1, List<int> l2)
