@@ -38,12 +38,18 @@ class Program
 
         static string makeSequences(string numbers)
         {
+            int amount = 1; //общее количество комбинаций 
+            for (int i = 1; i < numbers.Length + 1; i++) amount *= i; //это факториал числа неповторяющихся символов
+            String[] arr = new String[amount];
+            Random rnd = new Random();
+
+
 
 
 
             return "";
         }
-        static List<List<int>> makeSequences(List<int>numbers)
+        static List<List<int>> makeSequences1(List<int>numbers)
         {
             int amount = 1; //общее количество комбинаций 
             for (int i = 1; i < numbers.Count + 1; i++) amount *= i; //это факториал числа неповторяющихся символов
