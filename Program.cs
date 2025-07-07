@@ -29,25 +29,52 @@ class Program
         {
             List<int> numbers = new List<int>();
             foreach (char c in n) numbers.Add(int.Parse(c.ToString()));
-            numbers.Sort();
+            //numbers.Sort();
             //foreach (int i in numbers) Console.WriteLine(i);
-             makeSequences(n);
+            string smallest = makeSequences(n);
 
-            return "";
+            return smallest;
         }
 
         static string makeSequences(string numbers)
         {
             int amount = 1; //общее количество комбинаций 
             for (int i = 1; i < numbers.Length + 1; i++) amount *= i; //это факториал числа неповторяющихся символов
-            String[] arr = new String[amount];
+            String[] combinations = new String[amount]; //список комбинаций
+            int n = 0; //счётчик добавленных в массив строк
             Random rnd = new Random();
+            //Console.WriteLine(numbers);
+            //Console.WriteLine(new string(numbers.OrderBy(x => rnd.Next()).ToArray<char>()));
+            //numbers = new string(numbers.OrderBy(x => rnd.Next()).ToArray<char>());
+            //combinations[n] = numbers;
+            //n++;
+            //numbers = new string(numbers.OrderBy(x => rnd.Next()).ToArray<char>());
+            //combinations[n] = numbers;
+            //n++;
+            //numbers = new string(numbers.OrderBy(x => rnd.Next()).ToArray<char>());
+            //combinations[n] = numbers;
+            //foreach (string s in combinations) Console.WriteLine(s);
+            //Console.WriteLine($"{!combinations.Contains(numbers)}");
 
+            while (n < amount)
+            {
+                numbers = new string(numbers.OrderBy(x => rnd.Next()).ToArray<char>());
+                if (!combinations.Contains(numbers))
+                {
+                    combinations[n] = numbers;
+                    n++;
+                }
+            }
 
+            //foreach (string s in combinations) Console.WriteLine(s);
 
+            //осталось найти меньшее число из массива
 
+            combinations = combinations.Order().ToArray<string>();
 
-            return "";
+            //foreach (string s in combinations) Console.WriteLine(s);
+
+            return combinations.First();
         }
         static List<List<int>> makeSequences1(List<int>numbers)
         {
