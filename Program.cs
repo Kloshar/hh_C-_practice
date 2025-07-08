@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
+
 class Program
 {
     static void Main()
@@ -21,93 +22,38 @@ class Program
     static void Lottery()
     {
         //string inputString = Console.ReadLine();
-        string inputString = "531";
-        string result = NextSmallest(inputString);
+        string inputString = "101";
+        string result = NextSmaller(inputString);
         Console.WriteLine(result);
 
-        static string NextSmallest(string n)
+        static string NextSmaller(string n)
         {
-            List<int> numbers = new List<int>();
-            foreach (char c in n) numbers.Add(int.Parse(c.ToString()));
-            //numbers.Sort();
-            //foreach (int i in numbers) Console.WriteLine(i);
-            string smallest = makeSequences(n);
-
-            return smallest;
+            string[] combinations = makeSequences(n); //создаём комбинации из заданных циферек
+            int ind = Array.IndexOf(combinations, n); //индекс элемента в массиве
+            if (ind != 0) return combinations[ind - 1]; //предыдущее значение
+            else return "-1";
         }
-
-        static string makeSequences(string numbers)
+        static string[] makeSequences(string numbers)
         {
-            int amount = 1; //общее количество комбинаций 
+            //нужно определить количество уникальных символов, чтобы понять количество комбинаций
+
+            int amount = 1; //общее количество комбинаций
             for (int i = 1; i < numbers.Length + 1; i++) amount *= i; //это факториал числа неповторяющихся символов
+
             String[] combinations = new String[amount]; //список комбинаций
             int n = 0; //счётчик добавленных в массив строк
-            Random rnd = new Random();
-            //Console.WriteLine(numbers);
-            //Console.WriteLine(new string(numbers.OrderBy(x => rnd.Next()).ToArray<char>()));
-            //numbers = new string(numbers.OrderBy(x => rnd.Next()).ToArray<char>());
-            //combinations[n] = numbers;
-            //n++;
-            //numbers = new string(numbers.OrderBy(x => rnd.Next()).ToArray<char>());
-            //combinations[n] = numbers;
-            //n++;
-            //numbers = new string(numbers.OrderBy(x => rnd.Next()).ToArray<char>());
-            //combinations[n] = numbers;
-            //foreach (string s in combinations) Console.WriteLine(s);
-            //Console.WriteLine($"{!combinations.Contains(numbers)}");
-
-            while (n < amount)
+            Random rnd = new Random(); //класс для случайных чисел
+            while (n < amount) //пока не заполним массив
             {
-                numbers = new string(numbers.OrderBy(x => rnd.Next()).ToArray<char>());
+                numbers = new string(numbers.OrderBy(x => rnd.Next()).ToArray<char>()); //создаём случайную последовательность из заданных цифр
                 if (!combinations.Contains(numbers))
                 {
-                    combinations[n] = numbers;
+                    combinations[n] = numbers; //добасляем в массив
                     n++;
                 }
             }
-
-            //foreach (string s in combinations) Console.WriteLine(s);
-
-            //осталось найти меньшее число из массива
-
             combinations = combinations.Order().ToArray<string>();
-
-            //foreach (string s in combinations) Console.WriteLine(s);
-
-            return combinations.First();
-        }
-        static List<List<int>> makeSequences1(List<int>numbers)
-        {
-            int amount = 1; //общее количество комбинаций 
-            for (int i = 1; i < numbers.Count + 1; i++) amount *= i; //это факториал числа неповторяющихся символов
-            List<List<int>> combinations = new List<List<int>>(); //список комбинаций
-            Random rnd = new Random();
-            while (combinations.Count < amount)
-            {
-                numbers = numbers.OrderBy(x => rnd.Next()).ToList<int>();
-                //if (!combinations.Any(x => checkListsEquals(x, numbers))) //не проверяет комбинации в списке
-                if (!combinations.Contains(numbers, new listComparer())) //не проверяет комбинации в списке
-                {
-                    combinations.Add(numbers);
-                    //foreach (int i in numbers) Console.Write($"{i} ");
-                    //Console.WriteLine();
-                }
-            }
-            return combinations; //проблема в том, что возвращает список списков. Нужно число...
-        }
-    }
-
-    class listComparer : IEqualityComparer<List<int>>
-    {
-        public bool Equals(List<int> l1, List<int> l2)
-        {
-            bool equals = true;
-            for (int i = 0; i < l1.Count; i++) if (l1[i] != l2[i]) equals = false;
-            return equals;
-        }
-        public int GetHashCode(List<int> l1) 
-        {
-            return l1.GetHashCode();
+            return combinations;
         }
     }
     static void Exam()
