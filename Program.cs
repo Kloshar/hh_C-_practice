@@ -1,7 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Numerics;
+using System.Text;
 
 class Program
 {
@@ -16,13 +18,39 @@ class Program
         //checkingPasswords();
         //ReportMaker();
         //Backlogs();
-        Lottery();
+        //Lottery();
+        Coding();
         Console.ReadKey();
+    }
+    static void Coding()
+    {
+        //string inputString = Console.ReadLine();
+        string inputString = "аааабвв";
+        string encodedString = EncodeString(inputString);
+        Console.WriteLine(encodedString);
+
+        static string EncodeString(string input)
+        {
+            List<string> GenerateBinaryNumbers(int input)
+            {
+                var binaryNumbers = new List<string>();
+                for(int i = 0;i <= new; i++)
+                {
+                    binaryNumbers.Add(Convert.ToString(i, 2));
+                }
+                return binaryNumbers;
+            }
+            //my code
+
+
+
+            return "";
+        }
     }
     static void Lottery()
     {
         //string inputString = Console.ReadLine();
-        string inputString = "101";
+        string inputString = "153";
         string result = NextSmaller(inputString);
         Console.WriteLine(result);
 
@@ -30,17 +58,25 @@ class Program
         {
             string[] combinations = makeSequences(n); //создаём комбинации из заданных циферек
             int ind = Array.IndexOf(combinations, n); //индекс элемента в массиве
-            if (ind != 0) return combinations[ind - 1]; //предыдущее значение
-            else return "-1";
+            if (ind == 0) return "-1";
+            else if(combinations[ind - 1][0] == '0') return "-1"; //если предыдущий элемент начинается с нуля
+            else return combinations[ind - 1]; //предыдущее значение
         }
         static string[] makeSequences(string numbers)
         {
             //нужно определить количество уникальных символов, чтобы понять количество комбинаций
+            Dictionary<char, int> dic = new Dictionary<char, int>();
+            foreach (char ch in numbers)
+            {
+                if (dic.ContainsKey(ch)) dic[ch]++;
+                else dic[ch] = 1;
+            }
+            int N = fac(numbers.Length); //общее количество комбинаций это факториал числа неповторяющихся символов (числитель формулы)
+            int D = 1; //считаем знаменатель формулы перестановки с повторами
+            foreach(var e in dic) D = D * fac(e.Value);
+            int amount = N / D; //формула перестановки с повторяющимися элементами
 
-            int amount = 1; //общее количество комбинаций
-            for (int i = 1; i < numbers.Length + 1; i++) amount *= i; //это факториал числа неповторяющихся символов
-
-            String[] combinations = new String[amount]; //список комбинаций
+            string[] combinations = new string[amount]; //список комбинаций
             int n = 0; //счётчик добавленных в массив строк
             Random rnd = new Random(); //класс для случайных чисел
             while (n < amount) //пока не заполним массив
@@ -54,6 +90,12 @@ class Program
             }
             combinations = combinations.Order().ToArray<string>();
             return combinations;
+        }
+        static int fac(int x) //факториал числа
+        {
+            int amount = 1;
+            for (int i = 1; i < x + 1; i++) amount *= i;
+            return amount;
         }
     }
     static void Exam()
