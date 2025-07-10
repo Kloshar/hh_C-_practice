@@ -12,14 +12,16 @@ class Program
         //Exam();
         //Geometry();
         //SymbolsHiding();
+
         //Survey();
         //Raiting();
         //DominantNumbers();
         //checkingPasswords();
+
         //ReportMaker();
         //Backlogs();
         //Lottery();
-        Coding();
+        //Coding();
         Console.ReadKey();
     }
     static void Coding()
@@ -47,57 +49,7 @@ class Program
             return "";
         }
     }
-    static void Lottery()
-    {
-        //string inputString = Console.ReadLine();
-        string inputString = "153";
-        string result = NextSmaller(inputString);
-        Console.WriteLine(result);
-
-        static string NextSmaller(string n)
-        {
-            string[] combinations = makeSequences(n); //создаём комбинации из заданных циферек
-            int ind = Array.IndexOf(combinations, n); //индекс элемента в массиве
-            if (ind == 0) return "-1";
-            else if(combinations[ind - 1][0] == '0') return "-1"; //если предыдущий элемент начинается с нуля
-            else return combinations[ind - 1]; //предыдущее значение
-        }
-        static string[] makeSequences(string numbers)
-        {
-            //нужно определить количество уникальных символов, чтобы понять количество комбинаций
-            Dictionary<char, int> dic = new Dictionary<char, int>();
-            foreach (char ch in numbers)
-            {
-                if (dic.ContainsKey(ch)) dic[ch]++;
-                else dic[ch] = 1;
-            }
-            int N = fac(numbers.Length); //общее количество комбинаций это факториал числа неповторяющихся символов (числитель формулы)
-            int D = 1; //считаем знаменатель формулы перестановки с повторами
-            foreach(var e in dic) D = D * fac(e.Value);
-            int amount = N / D; //формула перестановки с повторяющимися элементами
-
-            string[] combinations = new string[amount]; //список комбинаций
-            int n = 0; //счётчик добавленных в массив строк
-            Random rnd = new Random(); //класс для случайных чисел
-            while (n < amount) //пока не заполним массив
-            {
-                numbers = new string(numbers.OrderBy(x => rnd.Next()).ToArray<char>()); //создаём случайную последовательность из заданных цифр
-                if (!combinations.Contains(numbers))
-                {
-                    combinations[n] = numbers; //добасляем в массив
-                    n++;
-                }
-            }
-            combinations = combinations.Order().ToArray<string>();
-            return combinations;
-        }
-        static int fac(int x) //факториал числа
-        {
-            int amount = 1;
-            for (int i = 1; i < x + 1; i++) amount *= i;
-            return amount;
-        }
-    }
+    
     static void Exam()
     {
         //string scoreString = Console.ReadLine();
@@ -173,6 +125,7 @@ class Program
             return newString;
         }
     }
+
     static void Survey()
     {
         //string inpupString = Console.ReadLine();
@@ -334,6 +287,7 @@ class Program
             return result.Count();
         }
     }
+
     static void ReportMaker()
     {
         //string inputData = Console.ReadLine();
@@ -467,6 +421,57 @@ class Program
                 }
             }
             return list;
+        }
+    }
+    static void Lottery()
+    {
+        //string inputString = Console.ReadLine();
+        string inputString = "153";
+        string result = NextSmaller(inputString);
+        Console.WriteLine(result);
+
+        static string NextSmaller(string n)
+        {
+            string[] combinations = makeSequences(n); //создаём комбинации из заданных циферек
+            int ind = Array.IndexOf(combinations, n); //индекс элемента в массиве
+            if (ind == 0) return "-1";
+            else if (combinations[ind - 1][0] == '0') return "-1"; //если предыдущий элемент начинается с нуля
+            else return combinations[ind - 1]; //предыдущее значение
+        }
+        static string[] makeSequences(string numbers)
+        {
+            //нужно определить количество уникальных символов, чтобы понять количество комбинаций
+            Dictionary<char, int> dic = new Dictionary<char, int>();
+            foreach (char ch in numbers)
+            {
+                if (dic.ContainsKey(ch)) dic[ch]++;
+                else dic[ch] = 1;
+            }
+            int N = fac(numbers.Length); //общее количество комбинаций это факториал числа неповторяющихся символов (числитель формулы)
+            int D = 1; //считаем знаменатель формулы перестановки с повторами
+            foreach (var e in dic) D = D * fac(e.Value);
+            int amount = N / D; //формула перестановки с повторяющимися элементами
+
+            string[] combinations = new string[amount]; //список комбинаций
+            int n = 0; //счётчик добавленных в массив строк
+            Random rnd = new Random(); //класс для случайных чисел
+            while (n < amount) //пока не заполним массив
+            {
+                numbers = new string(numbers.OrderBy(x => rnd.Next()).ToArray<char>()); //создаём случайную последовательность из заданных цифр
+                if (!combinations.Contains(numbers))
+                {
+                    combinations[n] = numbers; //добасляем в массив
+                    n++;
+                }
+            }
+            combinations = combinations.Order().ToArray<string>();
+            return combinations;
+        }
+        static int fac(int x) //факториал числа
+        {
+            int amount = 1;
+            for (int i = 1; i < x + 1; i++) amount *= i;
+            return amount;
         }
     }
 }
