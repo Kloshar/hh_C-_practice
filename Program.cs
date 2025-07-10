@@ -33,10 +33,10 @@ class Program
 
         static string EncodeString(string input)
         {
-            List<string> GenerateBinaryNumbers(int input)
+            List<string> GenerateBinaryNumbers(int n)
             {
                 var binaryNumbers = new List<string>();
-                for(int i = 0;i <= new; i++)
+                for(int i = 0;i <= n; i++)
                 {
                     binaryNumbers.Add(Convert.ToString(i, 2));
                 }
@@ -44,6 +44,9 @@ class Program
             }
             //my code
 
+            List<string> bnums = GenerateBinaryNumbers(34);
+
+            foreach (string s in bnums) Console.WriteLine(s);
 
 
             return "";
