@@ -14,7 +14,7 @@ class Program
         //SymbolsHiding();
 
         //Survey();
-        //Raiting();
+        Raiting();
         //DominantNumbers();
         //checkingPasswords();
 
@@ -213,13 +213,13 @@ class Program
             foreach (Human h in cands)
             {
                 //Console.WriteLine($"{h.Name}, {h.Rating:F2}");
-                result.Add($"{h.Name},{h.Rating:F2}");
+                result.Add($"{h.Name},{h.Rating:F1}");
             }
 
             return result;
         }
     }
-    class Human : IComparable
+    class Human : IComparable<Human>
     {
         public string Name { get; set; }
         public double Rating { get; set; }
@@ -228,10 +228,27 @@ class Program
             Name = name;
             Rating = rating;
         }
-        public int CompareTo(object obj)
+        public int CompareTo(Human obj)
         {
-            Human human = obj as Human;
-            return Rating.CompareTo(human.Rating);
+            if (this.Rating > obj.Rating)
+            {
+                if(Name.CompareTo(obj.Name) > 1)
+                {
+                    return 1;
+                }
+                if (Name.CompareTo(obj.Name) < 1)
+                {
+                    return -1;
+                }
+                else return 0;
+            }
+            if (this.Rating < obj.Rating)
+            {
+                return -1;
+            }
+            else return 0;
+
+            //return Rating.CompareTo(obj.Rating);
         }
     }
     static void DominantNumbers()
