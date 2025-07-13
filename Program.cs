@@ -165,7 +165,7 @@ class Program
         static Dictionary<string, int[]> GetCandidates()
         {
             Dictionary<string, int[]> dict = new Dictionary<string, int[]>();
-            
+
             //string candidate;
             //while ((candidate = Console.ReadLine()) != null && candidate != "")
             //{
@@ -175,14 +175,21 @@ class Program
             //    dict[name] = scores;
             //}
 
-            dict.Add("Ivanov", new int[] { 5, 6, 8, 5 });
-            dict.Add("Lisii", new int[] { 9, 8, 10, 9 });
-            dict.Add("Sokolova", new int[] { 5, 6, 8, 5 });
-            dict.Add("Tritonov", new int[] { 7, 2, 3, 4 });
-            dict.Add("Chernov", new int[] { 8, 8, 8, 8 });
-            dict.Add("Svetova", new int[] { 4, 5, 3, 6 });
+            //dict.Add("Ivanov", new int[] { 5, 6, 8, 5 });
+            //dict.Add("Lisii", new int[] { 9, 8, 10, 9 });
+            //dict.Add("Sokolova", new int[] { 5, 6, 8, 5 });
+            //dict.Add("Tritonov", new int[] { 7, 2, 3, 4 });
+            //dict.Add("Chernov", new int[] { 8, 8, 8, 8 });
+            //dict.Add("Svetova", new int[] { 4, 5, 3, 6 });
             dict.Add("Zayatz", new int[] { 5, 6, 8, 5 });
             dict.Add("Rezhik", new int[] { 6, 6, 8 });
+            dict.Add("Trezhik", new int[] { 6, 6, 8 });
+            dict.Add("AbRezhik", new int[] { 6, 6, 8 });
+
+            //dict.Add("Rezhik", new int[] { 6, 6, 8 });
+            //dict.Add("Trezhik", new int[] { 6, 6, 8 });
+            //dict.Add("AbRezhik", new int[] { 6, 6, 8 });
+
 
             return dict;
         }
@@ -230,23 +237,28 @@ class Program
         }
         public int CompareTo(Human obj)
         {
-            if (this.Rating > obj.Rating)
+            if (Rating > obj.Rating)
             {
-                if(Name.CompareTo(obj.Name) > 1)
-                {
-                    return 1;
-                }
-                if (Name.CompareTo(obj.Name) < 1)
-                {
-                    return -1;
-                }
-                else return 0;
+                return 1;
             }
-            if (this.Rating < obj.Rating)
+            if (Rating < obj.Rating)
             {
                 return -1;
             }
-            else return 0;
+            else
+            {
+                Console.WriteLine($"Name={Name}, obj.Name={obj.Name}, compareTo: {Name.CompareTo(obj.Name)}");
+
+                if (Name.CompareTo(obj.Name) > 1)
+                {
+                    return -1;
+                }
+                if (Name.CompareTo(obj.Name) < 1)
+                {
+                    return 1;
+                }
+                else return 0;
+            }                
 
             //return Rating.CompareTo(obj.Rating);
         }
