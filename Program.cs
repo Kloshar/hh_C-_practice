@@ -181,14 +181,15 @@ class Program
             //dict.Add("Tritonov", new int[] { 7, 2, 3, 4 });
             //dict.Add("Chernov", new int[] { 8, 8, 8, 8 });
             //dict.Add("Svetova", new int[] { 4, 5, 3, 6 });
-            dict.Add("Zayatz", new int[] { 5, 6, 8, 5 });
-            dict.Add("Rezhik", new int[] { 6, 6, 8 });
-            dict.Add("Trezhik", new int[] { 6, 6, 8 });
-            dict.Add("AbRezhik", new int[] { 6, 6, 8 });
-
+            //dict.Add("Zayatz", new int[] { 5, 6, 8, 5 });
             //dict.Add("Rezhik", new int[] { 6, 6, 8 });
             //dict.Add("Trezhik", new int[] { 6, 6, 8 });
             //dict.Add("AbRezhik", new int[] { 6, 6, 8 });
+
+            dict.Add("Z", new int[] { 5, 6, 8, 5 });
+            dict.Add("B", new int[] { 6, 6, 8 });
+            dict.Add("C", new int[] { 6, 6, 8 });
+            dict.Add("A", new int[] { 6, 6, 8 });
 
 
             return dict;
@@ -237,20 +238,30 @@ class Program
         }
         public int CompareTo(Human obj)
         {
+            //int compareResult = Rating.CompareTo(obj.Rating);
+            //if (compareResult == 0) Name.CompareTo(obj.Name);
+            //return compareResult;
+
+            Console.WriteLine($"Сравниваются {Name} и {obj.Name}...");
+
             if (Rating > obj.Rating)
             {
+                Console.WriteLine($"Rating={Rating}, obj.Rating={obj.Rating}, compareTo Rating result: {1}");
                 return 1;
             }
             if (Rating < obj.Rating)
             {
+                Console.WriteLine($"Rating={Rating}, obj.Rating={obj.Rating}, compareTo Rating result: {-1}");
                 return -1;
             }
             else
             {
-                Console.WriteLine($"Name={Name}, obj.Name={obj.Name}, compareTo: {Name.CompareTo(obj.Name)}");
+                Console.WriteLine($"compareTo Name result: {Name.CompareTo(obj.Name)}");
 
                 if (Name.CompareTo(obj.Name) > 1)
                 {
+                    Console.WriteLine($"");
+
                     return -1;
                 }
                 if (Name.CompareTo(obj.Name) < 1)
