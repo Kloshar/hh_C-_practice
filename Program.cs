@@ -155,12 +155,24 @@ class Program
     }
     static void Raiting()
     {
+        List<Human> people = new List<Human>();
+        people.Add(new Human("X", 8));
+        people.Add(new Human("A", 5));        
+        people.Add(new Human("C", 5));
+        people.Add(new Human("B", 5));
+
+        foreach (Human p in people) Console.WriteLine($"{p.Name}, {p.Rating}");
+        people.Sort();
+        foreach (Human p in people) Console.WriteLine($"{p.Name}, {p.Rating}");
+
+
+
         Dictionary<string, int[]> candidates = GetCandidates();
 
         //ICollection<string> keys = candidates.Keys;
         //foreach (string candidate in keys) Console.WriteLine($"{candidate}, {candidates[candidate].Length}");
 
-        foreach (string candidate in SelectedCandidates(candidates)) Console.WriteLine(candidate);
+        //foreach (string candidate in SelectedCandidates(candidates)) Console.WriteLine(candidate);
 
         static Dictionary<string, int[]> GetCandidates()
         {
@@ -186,10 +198,12 @@ class Program
             //dict.Add("Trezhik", new int[] { 6, 6, 8 });
             //dict.Add("AbRezhik", new int[] { 6, 6, 8 });
 
-            dict.Add("Z", new int[] { 5, 6, 8, 5 });
-            dict.Add("B", new int[] { 6, 6, 8 });
-            dict.Add("C", new int[] { 6, 6, 8 });
-            dict.Add("A", new int[] { 6, 6, 8 });
+            //dict.Add("Z", new int[] { 8 });
+            dict.Add("B", new int[] { 6 });
+            dict.Add("C", new int[] { 6 });
+            dict.Add("A", new int[] { 6 });
+            dict.Add("X", new int[] { 8 });
+            //dict.Add("Y", new int[] { 8 });
 
 
             return dict;
@@ -258,15 +272,15 @@ class Program
             {
                 Console.WriteLine($"compareTo Name result: {Name.CompareTo(obj.Name)}");
 
-                if (Name.CompareTo(obj.Name) > 1)
+                if (Name.CompareTo(obj.Name) < 1)
                 {
                     Console.WriteLine($"");
 
-                    return -1;
-                }
-                if (Name.CompareTo(obj.Name) < 1)
-                {
                     return 1;
+                }
+                if (Name.CompareTo(obj.Name) > 1)
+                {
+                    return -1;
                 }
                 else return 0;
             }                
