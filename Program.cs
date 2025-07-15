@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Linq;
+//using System.Linq;
 using System.Net.Http.Headers;
 using System.Numerics;
 using System.Text;
@@ -14,14 +14,14 @@ class Program
         //SymbolsHiding();
 
         //Survey();
-        Raiting();
+        //Raiting();
         //DominantNumbers();
         //checkingPasswords();
 
         //ReportMaker();
         //Backlogs();
         //Lottery();
-        //Coding();
+        Coding();
         Console.ReadKey();
     }
     static void Coding()
@@ -156,24 +156,10 @@ class Program
     static void Raiting()
     {
         List<Human> people = new List<Human>();
-        people.Add(new Human("X", 8));
-        people.Add(new Human("A", 5));        
-        people.Add(new Human("C", 5));
-        people.Add(new Human("B", 5));
-
-        foreach (Human p in people) Console.WriteLine($"{p.Name}, {p.Rating}");
-        people.Sort();
-        foreach (Human p in people) Console.WriteLine($"{p.Name}, {p.Rating}");
-
-
-
         Dictionary<string, int[]> candidates = GetCandidates();
-
-        //ICollection<string> keys = candidates.Keys;
+        ICollection<string> keys = candidates.Keys;
         //foreach (string candidate in keys) Console.WriteLine($"{candidate}, {candidates[candidate].Length}");
-
-        //foreach (string candidate in SelectedCandidates(candidates)) Console.WriteLine(candidate);
-
+        foreach (string candidate in SelectedCandidates(candidates)) Console.WriteLine(candidate);
         static Dictionary<string, int[]> GetCandidates()
         {
             Dictionary<string, int[]> dict = new Dictionary<string, int[]>();
@@ -187,33 +173,22 @@ class Program
             //    dict[name] = scores;
             //}
 
-            //dict.Add("Ivanov", new int[] { 5, 6, 8, 5 });
-            //dict.Add("Lisii", new int[] { 9, 8, 10, 9 });
-            //dict.Add("Sokolova", new int[] { 5, 6, 8, 5 });
-            //dict.Add("Tritonov", new int[] { 7, 2, 3, 4 });
-            //dict.Add("Chernov", new int[] { 8, 8, 8, 8 });
-            //dict.Add("Svetova", new int[] { 4, 5, 3, 6 });
-            //dict.Add("Zayatz", new int[] { 5, 6, 8, 5 });
-            //dict.Add("Rezhik", new int[] { 6, 6, 8 });
-            //dict.Add("Trezhik", new int[] { 6, 6, 8 });
-            //dict.Add("AbRezhik", new int[] { 6, 6, 8 });
-
-            //dict.Add("Z", new int[] { 8 });
-            dict.Add("B", new int[] { 6 });
-            dict.Add("C", new int[] { 6 });
-            dict.Add("A", new int[] { 6 });
-            dict.Add("X", new int[] { 8 });
-            //dict.Add("Y", new int[] { 8 });
-
-
+            dict.Add("Ivanov", new int[] { 5, 6, 7, 8 });
+            dict.Add("Lisii", new int[] { 9, 8, 10, 9 });
+            dict.Add("Sokolova", new int[] { 5, 6, 8, 5 });
+            dict.Add("Tritonov", new int[] { 7, 2, 3, 4 });
+            dict.Add("Chernov", new int[] { 8, 8, 8, 8 });
+            dict.Add("Svetova", new int[] { 4, 5, 3, 6 });
+            dict.Add("Zayatz", new int[] { 5, 5, 5, 5 });
+            dict.Add("Rezhik", new int[] { 6, 6, 6, 6 });
+            dict.Add("Trezhik", new int[] { 6, 6, 8 });
+            dict.Add("AbRezhik", new int[] { 6, 6, 8 });
             return dict;
         }
         static List<string> SelectedCandidates(Dictionary<string, int[]> candidates)
         {
             List<string> result = new List<string>();
-
             List<Human> cands = new List<Human>();
-
             ICollection<string> keys = candidates.Keys;
             foreach (string candidate in keys)
             {
@@ -224,13 +199,10 @@ class Program
                 {
                     cands.Add(new Human(candidate, average));
                 }
-                //Console.WriteLine($"Имя: {candidate}, Средний балл: {average}");
             }
 
             cands.Sort();
-            cands.Reverse();
-
-            CultureInfo.CurrentCulture = System.Globalization.CultureInfo.GetCultureInfo("en-US");
+            System.Globalization.CultureInfo.CurrentCulture = System.Globalization.CultureInfo.GetCultureInfo("en-US"); // или using System.Globalization;
 
             foreach (Human h in cands)
             {
@@ -252,40 +224,9 @@ class Program
         }
         public int CompareTo(Human obj)
         {
-            //int compareResult = Rating.CompareTo(obj.Rating);
-            //if (compareResult == 0) Name.CompareTo(obj.Name);
-            //return compareResult;
-
-            Console.WriteLine($"Сравниваются {Name} и {obj.Name}...");
-
-            if (Rating > obj.Rating)
-            {
-                Console.WriteLine($"Rating={Rating}, obj.Rating={obj.Rating}, compareTo Rating result: {1}");
-                return 1;
-            }
-            if (Rating < obj.Rating)
-            {
-                Console.WriteLine($"Rating={Rating}, obj.Rating={obj.Rating}, compareTo Rating result: {-1}");
-                return -1;
-            }
-            else
-            {
-                Console.WriteLine($"compareTo Name result: {Name.CompareTo(obj.Name)}");
-
-                if (Name.CompareTo(obj.Name) < 1)
-                {
-                    Console.WriteLine($"");
-
-                    return 1;
-                }
-                if (Name.CompareTo(obj.Name) > 1)
-                {
-                    return -1;
-                }
-                else return 0;
-            }                
-
-            //return Rating.CompareTo(obj.Rating);
+            int result = -Rating.CompareTo(obj.Rating);
+            if (result == 0) result = Name.CompareTo(obj.Name);
+            return result;
         }
     }
     static void DominantNumbers()
@@ -297,7 +238,7 @@ class Program
 
         static string GetdominatePrices(string stockPrices)
         {
-            List<int> numbers = stockPrices.Split(' ').Select(Int32.Parse).ToList();
+            List<int> numbers = stockPrices.Split(' ').Select(Int32.Parse).ToList(); //была опечатка ранее string[] вместо string
             string choosen = string.Empty;
 
             for (int i = 0; i < numbers.Count; i++)
@@ -310,7 +251,7 @@ class Program
             choosen = choosen.TrimEnd();
             return choosen;
         }
-        static bool checkMax(int a, List<int> lst)
+        static bool checkMax(int a, List<int> lst) //была опечатка ранее boll вместо boll
         {
             bool result = true;
             foreach (int i in lst)
