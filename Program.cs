@@ -155,7 +155,6 @@ class Program
     }
     static void Raiting()
     {
-        List<Human> people = new List<Human>();
         Dictionary<string, int[]> candidates = GetCandidates();
         ICollection<string> keys = candidates.Keys;
         //foreach (string candidate in keys) Console.WriteLine($"{candidate}, {candidates[candidate].Length}");
@@ -163,7 +162,6 @@ class Program
         static Dictionary<string, int[]> GetCandidates()
         {
             Dictionary<string, int[]> dict = new Dictionary<string, int[]>();
-
             //string candidate;
             //while ((candidate = Console.ReadLine()) != null && candidate != "")
             //{
@@ -195,10 +193,7 @@ class Program
                 int[] numbers = candidates[candidate];
                 double average = Math.Round(numbers.Average(), 1);
 
-                if (average >= 5)
-                {
-                    cands.Add(new Human(candidate, average));
-                }
+                if (average >= 5) cands.Add(new Human(candidate, average));
             }
 
             cands.Sort();
