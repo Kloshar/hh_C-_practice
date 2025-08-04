@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Net.Http.Headers;
 using System.Numerics;
 using System.Text;
-
 class Program
 {
     static void Main()
@@ -27,29 +26,48 @@ class Program
     static void Coding()
     {
         //string inputString = Console.ReadLine();
-        string inputString = "аааабвв";
+        //string inputString = "аааабвв";
+        string inputString = "птицы поют утром";
         string encodedString = EncodeString(inputString);
         Console.WriteLine(encodedString);
 
         static string EncodeString(string input)
         {
+            //этот метод предоставляется условием и создаё 34 последовательных числа
             List<string> GenerateBinaryNumbers(int n)
             {
                 var binaryNumbers = new List<string>();
-                for(int i = 0;i <= n; i++)
+                for(int i = 1;i <= n; i++)
                 {
                     binaryNumbers.Add(Convert.ToString(i, 2));
                 }
                 return binaryNumbers;
             }
-            //my code
 
-            List<string> bnums = GenerateBinaryNumbers(34);
+            List<string> bnums = GenerateBinaryNumbers(34); //получаем 34 кода для символов в порядке возрастаня сложности
+            foreach (string s in bnums) Console.WriteLine(s); //вывести коды по порядку
 
-            foreach (string s in bnums) Console.WriteLine(s);
+            Dictionary<char, int> symbols = new Dictionary<char, int>(); //сохраняем сиволы строки в словарь
+            foreach (char ch in input)
+            {
+                if (!symbols.ContainsKey(ch)) symbols.Add(ch, 1); else symbols[ch] += 1;
+            }            
+            symbols = (from p in symbols orderby p.Value ascending select p).Reverse().ToDictionary(); //словарь сортируем по частоте символов
 
+            foreach (KeyValuePair<char, int> p in symbols) Console.WriteLine($"{p.Key}:{p.Value}");
 
-            return "";
+            Dictionary<char, string> dic = new Dictionary<char, string>();
+
+            for(int i = 0; i < symbols.Count; i++)
+            {
+                dic.Add(symbols.ElementAt(i).Key , bnums[i]);
+            }
+
+            foreach(KeyValuePair<char, string> p in dic) Console.WriteLine($"{p.Key} : {p.Value}");
+
+            string coded = string.Empty;
+            foreach(char ch in input) coded += dic[ch];
+            return coded;
         }
     }
     
