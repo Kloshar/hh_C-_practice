@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-//using System.Linq;
+using System.Linq;
 using System.Net.Http.Headers;
 using System.Numerics;
 using System.Text;
@@ -27,7 +27,8 @@ class Program
     {
         //string inputString = Console.ReadLine();
         //string inputString = "аааабвв";
-        string inputString = "птицы поют утром";
+        string inputString = "Птицы поют утром";
+        //string inputString = "Солнце светит ярко на небе";
         string encodedString = EncodeString(inputString);
         Console.WriteLine(encodedString);
 
@@ -44,29 +45,29 @@ class Program
                 return binaryNumbers;
             }
 
+            string text = input.ToLower();
+
             List<string> bnums = GenerateBinaryNumbers(34); //получаем 34 кода для символов в порядке возрастаня сложности
+
             foreach (string s in bnums) Console.WriteLine(s); //вывести коды по порядку
 
             Dictionary<char, int> symbols = new Dictionary<char, int>(); //сохраняем сиволы строки в словарь
-            foreach (char ch in input)
+            foreach (char ch in text)
             {
                 if (!symbols.ContainsKey(ch)) symbols.Add(ch, 1); else symbols[ch] += 1;
-            }            
-            symbols = (from p in symbols orderby p.Value ascending select p).Reverse().ToDictionary(); //словарь сортируем по частоте символов
+            }
+            symbols = (from p in symbols orderby p.Value ascending, p.Key descending select p).Reverse().ToDictionary(); //словарь сортируем по частоте символов
 
-            foreach (KeyValuePair<char, int> p in symbols) Console.WriteLine($"{p.Key}:{p.Value}");
+            foreach (KeyValuePair<char, int> p in symbols) Console.WriteLine($"{p.Key}:{p.Value}"); //вывести элементы словаря символов с частотой
 
             Dictionary<char, string> dic = new Dictionary<char, string>();
 
-            for(int i = 0; i < symbols.Count; i++)
-            {
-                dic.Add(symbols.ElementAt(i).Key , bnums[i]);
-            }
+            for(int i = 0; i < symbols.Count; i++) dic.Add(symbols.ElementAt(i).Key , bnums[i]);
 
-            foreach(KeyValuePair<char, string> p in dic) Console.WriteLine($"{p.Key} : {p.Value}");
+            foreach(KeyValuePair<char, string> p in dic) Console.WriteLine($"{p.Key} : {p.Value}"); //вывести символы и соответствующие коды
 
             string coded = string.Empty;
-            foreach(char ch in input) coded += dic[ch];
+            foreach(char ch in text) coded += dic[ch] + ' '; //пробел прибавляется для наглядности
             return coded;
         }
     }
