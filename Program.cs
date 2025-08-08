@@ -29,42 +29,99 @@ class Program
     {
         var userManager = new UserManager();
         var inputLines = new List<string>();
-        string? line;
-        while ((line = Console.ReadLine()) != null)
-        {
-            if (line == "") break;
-            inputLines.Add(line);
-        }
+        //inputLines.Add("add_user Alice 1");
+        //inputLines.Add("add_user Bob 3");
+        //inputLines.Add("add_user Charlie 3");
+        //inputLines.Add("promote Alice");
+        //inputLines.Add("promote Alice");
+        //inputLines.Add("demote Alice");
+        //inputLines.Add("get_users");
+
+        //inputLines.Add("add_user Анна 3");
+        //inputLines.Add("add_user Борис 2");
+        //inputLines.Add("promote Анна");
+        //inputLines.Add("get_users");
+        //inputLines.Add("add_user Евгений 2");
+
+        inputLines.Add("add_user Bob 3");
+        inputLines.Add("add_user Charlie 2");
+        inputLines.Add("remove_user Bob");
+        inputLines.Add("remove_user Charlie");
+        inputLines.Add("get_users");
+
+        //string? line;
+        //while ((line = Console.ReadLine()) != null)
+        //{
+        //    if (line == "") break;
+        //    inputLines.Add(line);
+        //}
         foreach (var command in inputLines)
         {
-
+            //нужно разобрать inputLine и в зависимости от типа команды запустить метод класса UserManager
+            string[] com = command.Split(' ');
+            switch (com[0])                
+            {
+                case "add_user":
+                    userManager.AddUser(com[1], Convert.ToInt32(com[2]));
+                    break;
+                case "remove_user":
+                    userManager.RemoveUser(com[1]);
+                    break;
+                case "promote":
+                    userManager.Promote(com[1]);
+                    break;
+                case "demote":
+                    userManager.Demote(com[1]);
+                    break;
+                case "get_users":
+                    userManager.GetUsers();
+                    break;
+            }                
         }
     }
     public class UserManager
     {
-        private Dictionary<string, int> users = new Dictionary<string, int>();
+        private Dictionary<string, int> users = new Dictionary<string, int>(); //словарь для хранения пользователей и их доступа
         public UserManager AddUser(string name, int level = 1)
         {
+            users.Add(name, level);
+            //Console.WriteLine(users.Count);
             return this;
         }
-        public UserManager RemoveUser(string name) 
+        public UserManager RemoveUser(string name)
         {
+            users.Remove(name);
+            //Console.WriteLine(users.Count);
             return this;
         }
         public UserManager Promote(string name)
         {
+            users[name] += 1;
+            //Console.WriteLine($"{name}:{users[name]}");
             return this;
         }
         public UserManager Demote(string name)
         {
+            if(users[name] > 0)
+            {
+                users[name] -= 1;
+                //Console.WriteLine($"{name}:{users[name]}");
+            }
             return this;
         }
         public void GetUsers()
         {
-            Console.WriteLine("will return users");
+            if(users.Count > 0)
+            {
+                foreach (var user in users)
+                {
+                    Console.WriteLine($"{user.Key}: {user.Value}");
+                }
+            }
+            else Console.WriteLine("Не найдено");
         }
-
-        static void Exam()
+    }
+    static void Exam()
     {
         //string scoreString = Console.ReadLine();
         //string scoreName = Console.ReadLine();
