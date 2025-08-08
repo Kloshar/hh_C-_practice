@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Numerics;
 using System.Text;
+using System.Collections.Generic;
 class Program
 {
     static void Main()
@@ -20,59 +21,50 @@ class Program
         //ReportMaker();
         //Backlogs();
         //Lottery();
-        Coding();
+        //Coding();
+        Users_access();
         Console.ReadKey();
     }
-    static void Coding()
+    static void Users_access()
     {
-        //string inputString = Console.ReadLine();
-        //string inputString = "аааабвв";
-        string inputString = "Птицы поют утром";
-        //string inputString = "Солнце светит ярко на небе";
-        string encodedString = EncodeString(inputString);
-        Console.WriteLine(encodedString);
-
-        static string EncodeString(string input)
+        var userManager = new UserManager();
+        var inputLines = new List<string>();
+        string? line;
+        while ((line = Console.ReadLine()) != null)
         {
-            //этот метод предоставляется условием и создаё 34 последовательных числа
-            List<string> GenerateBinaryNumbers(int n)
-            {
-                var binaryNumbers = new List<string>();
-                for(int i = 1;i <= n; i++)
-                {
-                    binaryNumbers.Add(Convert.ToString(i, 2));
-                }
-                return binaryNumbers;
-            }
+            if (line == "") break;
+            inputLines.Add(line);
+        }
+        foreach (var command in inputLines)
+        {
 
-            string text = input.ToLower();
-
-            List<string> bnums = GenerateBinaryNumbers(34); //получаем 34 кода для символов в порядке возрастаня сложности
-
-            foreach (string s in bnums) Console.WriteLine(s); //вывести коды по порядку
-
-            Dictionary<char, int> symbols = new Dictionary<char, int>(); //сохраняем сиволы строки в словарь
-            foreach (char ch in text)
-            {
-                if (!symbols.ContainsKey(ch)) symbols.Add(ch, 1); else symbols[ch] += 1;
-            }
-            symbols = (from p in symbols orderby p.Value ascending, p.Key descending select p).Reverse().ToDictionary(); //словарь сортируем по частоте символов
-
-            foreach (KeyValuePair<char, int> p in symbols) Console.WriteLine($"{p.Key}:{p.Value}"); //вывести элементы словаря символов с частотой
-
-            Dictionary<char, string> dic = new Dictionary<char, string>();
-
-            for(int i = 0; i < symbols.Count; i++) dic.Add(symbols.ElementAt(i).Key , bnums[i]);
-
-            foreach(KeyValuePair<char, string> p in dic) Console.WriteLine($"{p.Key} : {p.Value}"); //вывести символы и соответствующие коды
-
-            string coded = string.Empty;
-            foreach(char ch in text) coded += dic[ch] + ' '; //пробел прибавляется для наглядности
-            return coded;
         }
     }
-    
-    static void Exam()
+    public class UserManager
+    {
+        private Dictionary<string, int> users = new Dictionary<string, int>();
+        public UserManager AddUser(string name, int level = 1)
+        {
+            return this;
+        }
+        public UserManager RemoveUser(string name) 
+        {
+            return this;
+        }
+        public UserManager Promote(string name)
+        {
+            return this;
+        }
+        public UserManager Demote(string name)
+        {
+            return this;
+        }
+        public void GetUsers()
+        {
+            Console.WriteLine("will return users");
+        }
+
+        static void Exam()
     {
         //string scoreString = Console.ReadLine();
         //string scoreName = Console.ReadLine();
@@ -484,6 +476,54 @@ class Program
             int amount = 1;
             for (int i = 1; i < x + 1; i++) amount *= i;
             return amount;
+        }
+    }
+    static void Coding() //ЗАДАЧА НЕ РЕШЕНА (НЕ СОВПАДАЕТ ОТВЕТ)!
+    {
+        //string inputString = Console.ReadLine();
+        //string inputString = "аааабвв";
+        string inputString = "Птицы поют утром";
+        //string inputString = "Солнце светит ярко на небе";
+        string encodedString = EncodeString(inputString);
+        Console.WriteLine(encodedString);
+
+        static string EncodeString(string input)
+        {
+            //этот метод предоставляется условием и создаёт 34 последовательных числа
+            List<string> GenerateBinaryNumbers(int n)
+            {
+                var binaryNumbers = new List<string>();
+                for (int i = 1; i <= n; i++)
+                {
+                    binaryNumbers.Add(Convert.ToString(i, 2));
+                }
+                return binaryNumbers;
+            }
+
+            string text = input.ToLower();
+
+            List<string> bnums = GenerateBinaryNumbers(34); //получаем 34 кода для символов в порядке возрастаня сложности
+
+            foreach (string s in bnums) Console.WriteLine(s); //вывести коды по порядку
+
+            Dictionary<char, int> symbols = new Dictionary<char, int>(); //сохраняем сиволы строки в словарь
+            foreach (char ch in text)
+            {
+                if (!symbols.ContainsKey(ch)) symbols.Add(ch, 1); else symbols[ch] += 1;
+            }
+            symbols = (from p in symbols orderby p.Value ascending, p.Key descending select p).Reverse().ToDictionary(); //словарь сортируем по частоте символов
+
+            foreach (KeyValuePair<char, int> p in symbols) Console.WriteLine($"{p.Key}:{p.Value}"); //вывести элементы словаря символов с частотой
+
+            Dictionary<char, string> dic = new Dictionary<char, string>();
+
+            for (int i = 0; i < symbols.Count; i++) dic.Add(symbols.ElementAt(i).Key, bnums[i]);
+
+            foreach (KeyValuePair<char, string> p in dic) Console.WriteLine($"{p.Key} : {p.Value}"); //вывести символы и соответствующие коды
+
+            string coded = string.Empty;
+            foreach (char ch in text) coded += dic[ch] + ' '; //пробел прибавляется для наглядности
+            return coded;
         }
     }
 }
