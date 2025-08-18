@@ -5,6 +5,9 @@ using System.Net.Http.Headers;
 using System.Numerics;
 using System.Text;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Collections;
+using System.Text.RegularExpressions;
 class Program
 {
     static void Main()
@@ -23,11 +26,154 @@ class Program
         //Lottery();
         //Coding();
         //Users_access();
-        UnfairClients();
+        //UnfairClients();
+
+        actors();
 
         Console.ReadKey();
     }
-    
+
+    static void actors()
+    {
+        List<string> inputData = new List<string>() {
+            "Иванов::12345::175::1980  ", 
+            "  Петров::12445::175::1980", 
+            "::12345::175::1980", 
+            "Сидоров::12545::85::1980", 
+            "Смирнов::9999::175::1980", 
+            "Васильев::12645::175::1929", 
+            "Алексеев::12745::221::1980", 
+            "Николаев::10000::175::2011"
+        };
+        inputData = new List<string>() {
+            "Павлов::12345::180::1990",
+            " Белов::54321::220::1930",
+            "Чернов::67890::90::2010",
+            "Рыжов::98765::185::1995",
+            "12345::10000::170::1980", 
+            "Дроздов::99999::89::1990",
+            "Гусев::12345::221::1990",
+            "Журавлев::54321::175::1929"
+        };
+        inputData = new List<string>() {
+            "Зайцев::12745::180::1990",
+            "Волков::54421::220::1930",
+            "Егоров::67890::90::2010",
+            "Комаров::98765::185::1995",
+            "Тихонов::10000::170::1980",
+            "Савельев::99999::220::1990", 
+            "Филиппов::12345::180::1990",
+            "Макаров::54321::180::1929"
+        };
+        inputData = new List<string>() {
+            "Смирнов::10000::90::1930",
+            "::20000::170::1980",
+            "Кузнецов::99999::220::2010",
+            "Лисицын::1234::180::1995",
+            "Медведев::12345::89::1990",
+            "0рлов::54321::221::1990",
+            "Соколов::67890::175::1929",
+            "Воробьев::98765::185::2011"
+        };
+        inputData = new List<string>() {
+            "Григорьев::10001::91::1931",
+            "Иванова::9999::170::1980",
+            "Петрова::100000::175::1990",
+            "Сидоров::12345::220::1930",
+            "Николаев::54321::90::2010",
+            "Федоров::123::180::1995",
+            "Козлов::67890::220::1929",
+            "Новиков::98765::185::2011"
+        };
+        inputData = new List<string>() {
+            "Соловьев::12345::180::1990::563",
+            "Ворона::54321::220::1930",
+            "Сорока::67890::90::2010",
+            "Голубь::98765::185::1995::Ведущий::201",
+            "Сокол::10000::170::1980",
+            "0рёл::99999::220::1990",
+            "Ястреб::12345::175::1990",
+            "Коршун::54321::180::1929",
+            "Жаворонок::123::185::1995",
+            "Чайка::67890::89::1990",
+            "Лебедь::98765::221::1990",
+            "Аист::10000::175::2011"
+        };
+
+        ProcessingValidateActors proc = new ProcessingValidateActors(inputData);
+        List<string> approved = (List<string>)proc.PrintValidActors();
+
+        //выводить на эхкран, вроде, не просят. Но для проверки:
+        if (approved.Count > 0) foreach (string a in approved) Console.WriteLine(a);
+        else Console.WriteLine("none");
+    }
+    public class ProcessingValidateActors
+    {
+        List<string> inputData;
+        public ProcessingValidateActors(List<string> input)
+        {
+            inputData = input;
+        }
+        public bool ValidateActor(string actorData)
+        {            
+            string[] data = actorData.Trim().Split("::");
+   
+            if (data.Count() == 4 && 
+                data[0].Length > 0 && data[0].Length <=40 && Regex.IsMatch(data[0], "^[А-Яа-я]+$") &&
+                int.TryParse(data[1], out int x) && x >= 10000 && x <= 99999 &&
+                Convert.ToInt32(data[2]) >= 172 && Convert.ToInt32(data[2]) <= 190 && Convert.ToInt32(data[3]) >= 1960 && Convert.ToInt32(data[3]) <= 1990)
+            {
+                //Console.WriteLine($"Кандидат подходит: ФИО: {data[0]}, ID: {data[1]}, рост: {data[2]}, год рождения: {data[3]}");
+                return true;
+            }
+            else return false;
+        }
+        public IList<string> PrintValidActors()
+        {
+            List<string> data = new List<string>();
+            List<actorData> lst = new List<actorData>();
+
+            foreach (string str in inputData)
+            {
+                if (ValidateActor(str))
+                {
+                    string[] actorData = str.Trim().Split("::");
+                    lst.Add(new actorData(actorData[0], Convert.ToInt32(actorData[1]), Convert.ToInt32(actorData[2]), Convert.ToInt32(actorData[3])));
+                }
+            }
+
+            lst.Sort();
+
+            foreach(actorData actor in lst)
+            {
+                data.Add($"{actor.ActorID}->({actor.LastName}:{actor.Height}:{actor.Year})");
+            }
+            return data;
+        }
+    }
+    class actorData : IComparable<actorData>
+    {
+        public string LastName {get;set;}
+        public int ActorID { get; set; }
+        public int Height { get; set; }
+        public int Year { get; set; }
+        public actorData(string lastName, int actorID, int height, int year)
+        {
+            LastName = lastName;
+            ActorID = actorID;
+            Height = height;
+            Year = year;
+        }
+        int IComparable<actorData>.CompareTo(actorData obj)
+        {
+            int result = -Height.CompareTo(obj.Height);
+            if (result == 0) result = Year.CompareTo(obj.Year);
+            if (result == 0) result = ActorID.CompareTo(obj.ActorID);
+
+            return result;
+        }
+    }
+
     static void Exam()
     {
         //string scoreString = Console.ReadLine();
@@ -130,13 +276,13 @@ class Program
     }
     static void Raiting()
     {
-        Dictionary<string, int[]> candidates = GetCandidates();
-        ICollection<string> keys = candidates.Keys;
+        Dictionary<string, double[]> candidates = GetCandidates();
+        //ICollection<string> keys = candidates.Keys;
         //foreach (string candidate in keys) Console.WriteLine($"{candidate}, {candidates[candidate].Length}");
         foreach (string candidate in SelectedCandidates(candidates)) Console.WriteLine(candidate);
-        static Dictionary<string, int[]> GetCandidates()
+        static Dictionary<string, double[]> GetCandidates()
         {
-            Dictionary<string, int[]> dict = new Dictionary<string, int[]>();
+            Dictionary<string, double[]> dict = new Dictionary<string, double[]>();
             //string candidate;
             //while ((candidate = Console.ReadLine()) != null && candidate != "")
             //{
@@ -146,27 +292,27 @@ class Program
             //    dict[name] = scores;
             //}
 
-            dict.Add("Ivanov", new int[] { 5, 6, 7, 8 });
-            dict.Add("Lisii", new int[] { 9, 8, 10, 9 });
-            dict.Add("Sokolova", new int[] { 5, 6, 8, 5 });
-            dict.Add("Tritonov", new int[] { 7, 2, 3, 4 });
-            dict.Add("Chernov", new int[] { 8, 8, 8, 8 });
-            dict.Add("Svetova", new int[] { 4, 5, 3, 6 });
-            dict.Add("Zayatz", new int[] { 5, 5, 5, 5 });
-            dict.Add("Rezhik", new int[] { 6, 6, 6, 6 });
-            dict.Add("Trezhik", new int[] { 6, 6, 8 });
-            dict.Add("AbRezhik", new int[] { 6, 6, 8 });
+            dict.Add("Ivanov", new double[] { 5, 6, 7, 8 });
+            dict.Add("Lisii", new double[] { 9, 8, 10, 9 });
+            dict.Add("Sokolova", new double[] { 5, 6, 8, 5 });
+            dict.Add("Tritonov", new double[] { 7, 2, 3, 4 });
+            dict.Add("Chernov", new double[] { 8, 8, 8, 8 });
+            dict.Add("Svetova", new double[] { 4, 5, 3, 6 });
+            dict.Add("Zayatz", new double[] { 5, 5, 5, 5 });
+            dict.Add("Rezhik", new double[] { 6, 6, 6, 6 });
+            dict.Add("Trezhik", new double[] { 6, 6, 8 });
+            dict.Add("AbRezhik", new double[] { 6, 6, 8 });
             return dict;
         }
-        static List<string> SelectedCandidates(Dictionary<string, int[]> candidates)
+        static List<string> SelectedCandidates(Dictionary<string, double[]> candidates)
         {
             List<string> result = new List<string>();
             List<Human> cands = new List<Human>();
             ICollection<string> keys = candidates.Keys;
             foreach (string candidate in keys)
             {
-                int[] numbers = candidates[candidate];
-                double average = Math.Round(numbers.Average(), 1);
+                double[] numbers = candidates[candidate];
+                double average = Math.Round(numbers.Average() + 0.01, 1); //
 
                 if (average >= 5) cands.Add(new Human(candidate, average));
             }
@@ -587,17 +733,72 @@ class Program
     }
     static void UnfairClients()
     {
-        
+        var inputLines = new List<string>();
+        //string line;
+        //while ((line = Console.ReadLine()) != null)
+        //{
+        //    if (line == "") break;
+        //    inputLines.Add(line);
+        //}
+        inputLines.Add("5 2"); //месяц и количество клиентов, ожидающих выдачу заказа (не рассматривается?)
+        inputLines.Add("10001:20001:accepted:15000:01-05-2024"); //id клиента:номер заказа:действие:сумма:дата
+        inputLines.Add("10002:20002:rejected:25000:15-05-2024");
+        inputLines.Add("10001:20003:rejected:35000:20-05-2024");
+        inputLines.Add("10003:20004:rejected:10000:15-05-2024");
+        inputLines.Add("10002:20005:rejected:15000:25-05-2024");
+        //inputLines.Add("7 5");
+        //inputLines.Add("10041:20041:accepted:45000:01-07-2024");
+        //inputLines.Add("10042:20042:accepted:50000:05-07-2024");
+        //inputLines.Add("10043:20043:accepted:55000:10-07-2024");
+        //inputLines.Add("10044:20044:accepted:60000:15-07-2024");
+        //inputLines.Add("10045:20045:accepted:65000:20-07-2024");
+        //inputLines.Add("10046:20046:accepted:70000:25-07-2024");
+        //inputLines.Add("10047:20047:accepted:75000:30-07-2024");
+        //inputLines.Add("10048:20048:accepted:80000:31-07-2024");
+
+        ProscessingClientData pcd = new ProscessingClientData();
+        pcd.ProcessingInputLines(inputLines);
+
     }
     public class ClientData
     {
-        //ваш код
+        public string ClientID { set; get; }
+        public int totalSum { set; get; }
+        public int orderCount { set; get; }
+
+
+        public ClientData(string client_id, int total_sum)
+        {
+            ClientID = client_id;
+            totalSum = total_sum;
+            orderCount++;
+        }
     }
-    public class ProscessingClientData
+    public class ProscessingClientData //класс для обработки с методом ProcessingInputLines()
     {
+        IList<string> list = new List<string>();
+        int NClients;
+        List<ClientData> clientDatas = new List<ClientData>();
         public IList<string> ProcessingInputLines(IList<string> inputLines)
         {
-            //ваш код
+            for (int i = 0; i < inputLines.Count; i++)
+            {
+                if (i == 0) //обработка первой строки
+                {
+                    NClients = int.Parse(inputLines[i].Split(' ')[1]);
+                }
+                else //все последующие строки
+                {
+                    Span<string> data = inputLines[i].Trim().Split(':'); //получаем массив строк и преобразуем его в span<string>
+
+                    if (data.Slice(2)[0] == "accepted")
+                    {
+                        clientDatas.Add(new ClientData(data[0], int.Parse(data[3])));
+                        //Console.WriteLine(clientDatas.Last().orderCount);
+                    }
+                }
+            }
+            return list;
         }
         //ваш код
     }
