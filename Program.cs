@@ -294,19 +294,43 @@ class Program
 
             dict = new Dictionary<string, double[]>()
             {
-               "Ivanov", new double[] { 5, 6, 7, 8 }
-            }
-            
-
-            dict.Add("Ivanov", new double[] { 5, 6, 7, 8 });
-            dict.Add("Lisii", new double[] { 9, 8, 10, 9 });
-            dict.Add("Sokolova", new double[] { 5, 6, 8, 5 });
-            dict.Add("Tritonov", new double[] { 7, 2, 3, 4 });
-            dict.Add("Chernov", new double[] { 8, 8, 8, 8 });
-            dict.Add("Svetova", new double[] { 4, 5, 3, 6 });
-            dict.Add("Zayatz", new double[] { 5, 5, 5, 5 });
-            dict.Add("Rezhik", new double[] { 6, 6, 6, 6 });
-
+                { "Ivanov", new double[] { 5, 6, 7, 8 } },
+                { "Lisii", new double[] { 9, 8, 10, 9 } },
+                { "Sokolova", new double[] { 5, 6, 8, 5 }},
+                { "Tritonov", new double[] { 7, 2, 3, 4 }},
+                { "Chernov", new double[] { 8, 8, 8, 8 }},
+                { "Svetova", new double[] { 4, 5, 3, 6 }},
+                { "Zayatz", new double[] { 5, 5, 5, 5 }},
+                { "Rezhik", new double[] { 6, 6, 6, 6 }}
+            };
+            dict = new Dictionary<string, double[]>()
+            {
+                { "Zuev", new double[] { 5, 1 } },
+                { "Krivin", new double[] { 2, 8 } },
+                { "Grilina", new double[] { 8, 8 }},
+                { "Qubrick", new double[] { 9, 1 }},
+                { "Tikhonova", new double[] { 8, 8 }},
+                { "Svetova", new double[] { 8, 7 }},
+                { "Futova", new double[] { 5, 4 }},
+                { "Shestakova", new double[] { 3, 9 }}
+            };
+            dict = new Dictionary<string, double[]>()
+            {
+                { "Svetova", new double[] { 8, 7 }},
+                { "Futova", new double[] { 5, 4 }},
+                { "Tikhonova", new double[] { 8, 8 }},
+                //{ "Futova", new double[] { 5, 4 }}, //гарантируется, что фамилии уникальны
+                { "Shestakova", new double[] {2, 9 }}
+            };
+            dict = new Dictionary<string, double[]>()
+            {
+                { "Grivin", new double[] { 5, 6, 7, 8 } },
+                { "Goptin", new double[] { 9, 8, 10, 9 } },
+                { "Gewink", new double[] { 5, 6, 8, 5 }},
+                { "Guliev", new double[] { 7, 2, 3, 4 }},
+                { "Devina", new double[] { 8, 8, 8, 8 }}
+            };
+            //Grivin,4,5,3,2 Goptin,4,5,5,4 Gewink,4,5,4,5 Guliev,5,5,5,5 Truvin,7,8,4,2 Devina,8,1,2,3
 
             return dict;
         }
