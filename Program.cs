@@ -17,7 +17,7 @@ class Program
         //SymbolsHiding();
 
         //Survey();
-        //Raiting();
+        Raiting();
         //DominantNumbers();
         //checkingPasswords();
 
@@ -28,7 +28,7 @@ class Program
         //Users_access();
         //UnfairClients();
 
-        actors();
+        //actors();
 
         Console.ReadKey();
     }
@@ -292,6 +292,12 @@ class Program
             //    dict[name] = scores;
             //}
 
+            dict = new Dictionary<string, double[]>()
+            {
+               "Ivanov", new double[] { 5, 6, 7, 8 }
+            }
+            
+
             dict.Add("Ivanov", new double[] { 5, 6, 7, 8 });
             dict.Add("Lisii", new double[] { 9, 8, 10, 9 });
             dict.Add("Sokolova", new double[] { 5, 6, 8, 5 });
@@ -300,8 +306,8 @@ class Program
             dict.Add("Svetova", new double[] { 4, 5, 3, 6 });
             dict.Add("Zayatz", new double[] { 5, 5, 5, 5 });
             dict.Add("Rezhik", new double[] { 6, 6, 6, 6 });
-            dict.Add("Trezhik", new double[] { 6, 6, 8 });
-            dict.Add("AbRezhik", new double[] { 6, 6, 8 });
+
+
             return dict;
         }
         static List<string> SelectedCandidates(Dictionary<string, double[]> candidates)
@@ -312,7 +318,7 @@ class Program
             foreach (string candidate in keys)
             {
                 double[] numbers = candidates[candidate];
-                double average = Math.Round(numbers.Average() + 0.01, 1); //
+                double average = Math.Round(numbers.Average(), 1); //неправильное округление!
 
                 if (average >= 5) cands.Add(new Human(candidate, average));
             }
