@@ -17,7 +17,7 @@ class Program
         //SymbolsHiding();
 
         //Survey();
-        Raiting();
+        //Raiting();
         //DominantNumbers();
         //checkingPasswords();
 
@@ -29,150 +29,62 @@ class Program
         //UnfairClients();
 
         //actors();
+        ServerAnalyzer();
 
         Console.ReadKey();
     }
 
-    static void actors()
+    static void ServerAnalyzer()
     {
-        List<string> inputData = new List<string>() {
-            "Иванов::12345::175::1980  ", 
-            "  Петров::12445::175::1980", 
-            "::12345::175::1980", 
-            "Сидоров::12545::85::1980", 
-            "Смирнов::9999::175::1980", 
-            "Васильев::12645::175::1929", 
-            "Алексеев::12745::221::1980", 
-            "Николаев::10000::175::2011"
+        List<string> input = new List<string>()
+        {
+            " <service=\"31007\" data=\"ABCDEFGHI\" action=\"write\">",
+            "<service=\"32008\" data=\"JKLMNOPQR\" action=\"read\"> ",
+            "<service-'31007\" data=\"STUVWXYZA\" action=\"write\">", 
+            "<service=\"32008\" data=\"BCDEFGHIJ\" action=\"read\">",
+            "<service-'31007\" data=\"KLMNOPQRS\" action=\"write\">",
+            "<service=\"32008\" data=\"TUVWXYZAB\" action=\"read\">", 
+            "<service=\"31007\" data=\"CDEFGHIJK\" action=\"write\">", 
+            "<service=\"32008\" data=\"LMNOPQRST\" action=\"read\">"
         };
-        inputData = new List<string>() {
-            "Павлов::12345::180::1990",
-            " Белов::54321::220::1930",
-            "Чернов::67890::90::2010",
-            "Рыжов::98765::185::1995",
-            "12345::10000::170::1980", 
-            "Дроздов::99999::89::1990",
-            "Гусев::12345::221::1990",
-            "Журавлев::54321::175::1929"
-        };
-        inputData = new List<string>() {
-            "Зайцев::12745::180::1990",
-            "Волков::54421::220::1930",
-            "Егоров::67890::90::2010",
-            "Комаров::98765::185::1995",
-            "Тихонов::10000::170::1980",
-            "Савельев::99999::220::1990", 
-            "Филиппов::12345::180::1990",
-            "Макаров::54321::180::1929"
-        };
-        inputData = new List<string>() {
-            "Смирнов::10000::90::1930",
-            "::20000::170::1980",
-            "Кузнецов::99999::220::2010",
-            "Лисицын::1234::180::1995",
-            "Медведев::12345::89::1990",
-            "0рлов::54321::221::1990",
-            "Соколов::67890::175::1929",
-            "Воробьев::98765::185::2011"
-        };
-        inputData = new List<string>() {
-            "Григорьев::10001::91::1931",
-            "Иванова::9999::170::1980",
-            "Петрова::100000::175::1990",
-            "Сидоров::12345::220::1930",
-            "Николаев::54321::90::2010",
-            "Федоров::123::180::1995",
-            "Козлов::67890::220::1929",
-            "Новиков::98765::185::2011"
-        };
-        inputData = new List<string>() {
-            "Соловьев::12345::180::1990::563",
-            "Ворона::54321::220::1930",
-            "Сорока::67890::90::2010",
-            "Голубь::98765::185::1995::Ведущий::201",
-            "Сокол::10000::170::1980",
-            "0рёл::99999::220::1990",
-            "Ястреб::12345::175::1990",
-            "Коршун::54321::180::1929",
-            "Жаворонок::123::185::1995",
-            "Чайка::67890::89::1990",
-            "Лебедь::98765::221::1990",
-            "Аист::10000::175::2011"
-        };
+        ServerLogAnalyzer analyzer = new ServerLogAnalyzer(input);
+        analyzer.ProcessingServerLogs();
 
-        ProcessingValidateActors proc = new ProcessingValidateActors(inputData);
-        List<string> approved = (List<string>)proc.PrintValidActors();
-
-        //выводить на эхкран, вроде, не просят. Но для проверки:
-        if (approved.Count > 0) foreach (string a in approved) Console.WriteLine(a);
-        else Console.WriteLine("none");
     }
-    public class ProcessingValidateActors
+    interface IWriteServiceActivity
     {
-        List<string> inputData;
-        public ProcessingValidateActors(List<string> input)
+        void PrintData();
+    }
+    class CorrectService : IWriteServiceActivity
+    {
+        public void PrintData()
         {
-            inputData = input;
-        }
-        public bool ValidateActor(string actorData)
-        {            
-            string[] data = actorData.Trim().Split("::");
-   
-            if (data.Count() == 4 && 
-                data[0].Length > 0 && data[0].Length <=40 && Regex.IsMatch(data[0], "^[А-Яа-я]+$") &&
-                int.TryParse(data[1], out int x) && x >= 10000 && x <= 99999 &&
-                Convert.ToInt32(data[2]) >= 172 && Convert.ToInt32(data[2]) <= 190 && Convert.ToInt32(data[3]) >= 1960 && Convert.ToInt32(data[3]) <= 1990)
-            {
-                //Console.WriteLine($"Кандидат подходит: ФИО: {data[0]}, ID: {data[1]}, рост: {data[2]}, год рождения: {data[3]}");
-                return true;
-            }
-            else return false;
-        }
-        public IList<string> PrintValidActors()
-        {
-            List<string> data = new List<string>();
-            List<actorData> lst = new List<actorData>();
-
-            foreach (string str in inputData)
-            {
-                if (ValidateActor(str))
-                {
-                    string[] actorData = str.Trim().Split("::");
-                    lst.Add(new actorData(actorData[0], Convert.ToInt32(actorData[1]), Convert.ToInt32(actorData[2]), Convert.ToInt32(actorData[3])));
-                }
-            }
-
-            lst.Sort();
-
-            foreach(actorData actor in lst)
-            {
-                data.Add($"{actor.ActorID}->({actor.LastName}:{actor.Height}:{actor.Year})");
-            }
-            return data;
+            Console.WriteLine("!");
         }
     }
-    class actorData : IComparable<actorData>
+    class FishingService : IWriteServiceActivity
     {
-        public string LastName {get;set;}
-        public int ActorID { get; set; }
-        public int Height { get; set; }
-        public int Year { get; set; }
-        public actorData(string lastName, int actorID, int height, int year)
+        public void PrintData()
         {
-            LastName = lastName;
-            ActorID = actorID;
-            Height = height;
-            Year = year;
-        }
-        int IComparable<actorData>.CompareTo(actorData obj)
-        {
-            int result = -Height.CompareTo(obj.Height);
-            if (result == 0) result = Year.CompareTo(obj.Year);
-            if (result == 0) result = ActorID.CompareTo(obj.ActorID);
-
-            return result;
+            Console.WriteLine("!");
         }
     }
+    public class ServerLogAnalyzer
+    {
+        List<string> input;
+        public ServerLogAnalyzer(List<string> inputData)
+        {
+            input = inputData;
+        }
+
+        public List<string> ProcessingServerLogs()
+        {
+            var lst = new List<string>();
+
+
+            return lst;
+        }
+    }    
 
     static void Exam()
     {
@@ -314,23 +226,23 @@ class Program
                 { "Futova", new double[] { 5, 4 }},
                 { "Shestakova", new double[] { 3, 9 }}
             };
-            dict = new Dictionary<string, double[]>()
-            {
-                { "Svetova", new double[] { 8, 7 }},
-                { "Futova", new double[] { 5, 4 }},
-                { "Tikhonova", new double[] { 8, 8 }},
-                //{ "Futova", new double[] { 5, 4 }}, //гарантируется, что фамилии уникальны
-                { "Shestakova", new double[] {2, 9 }}
-            };
-            dict = new Dictionary<string, double[]>()
-            {
-                { "Grivin", new double[] { 5, 6, 7, 8 } },
-                { "Goptin", new double[] { 9, 8, 10, 9 } },
-                { "Gewink", new double[] { 5, 6, 8, 5 }},
-                { "Guliev", new double[] { 7, 2, 3, 4 }},
-                { "Devina", new double[] { 8, 8, 8, 8 }}
-            };
-            //Grivin,4,5,3,2 Goptin,4,5,5,4 Gewink,4,5,4,5 Guliev,5,5,5,5 Truvin,7,8,4,2 Devina,8,1,2,3
+            //dict = new Dictionary<string, double[]>()
+            //{
+            //    { "Svetova", new double[] { 8, 7 }},
+            //    { "Futova", new double[] { 5, 4 }},
+            //    { "Tikhonova", new double[] { 8, 8 }},
+            //    //{ "Futova", new double[] { 5, 4 }}, //гарантируется, что фамилии уникальны
+            //    { "Shestakova", new double[] {2, 9 }}
+            //};
+            //dict = new Dictionary<string, double[]>()
+            //{
+            //    { "Grivin", new double[] { 4, 5, 3, 2 } },
+            //    { "Goptin", new double[] { 4, 5, 5, 4 } },
+            //    { "Gewink", new double[] { 4, 5, 4, 5 }},
+            //    { "Guliev", new double[] { 5, 5, 5, 5 }},
+            //    { "Truvin", new double[] { 7, 8, 4, 2 }},
+            //    { "Devina", new double[] { 8, 1, 2, 3 }}
+            //};
 
             return dict;
         }
@@ -378,7 +290,10 @@ class Program
     static void DominantNumbers()
     {
         //string stockPrices = Console.ReadLine();
-        string stockPrices = "1 21 34 45 5";
+        string stockPrices = "1 21 4 7 5";
+        stockPrices = "1 21 3 4 5";
+        stockPrices = "1 21 34 45 5";
+
         string dominatePrices = GetdominatePrices(stockPrices);
         Console.WriteLine(dominatePrices);
 
@@ -431,6 +346,147 @@ class Program
             return result.Count();
         }
     }
+    static void actors()
+    {
+        List<string> inputData = new List<string>() {
+            "Иванов::12345::175::1980  ",
+            "  Петров::12445::175::1980",
+            "::12345::175::1980",
+            "Сидоров::12545::85::1980",
+            "Смирнов::9999::175::1980",
+            "Васильев::12645::175::1929",
+            "Алексеев::12745::221::1980",
+            "Николаев::10000::175::2011"
+        };
+        inputData = new List<string>() {
+            "Павлов::12345::180::1990",
+            " Белов::54321::220::1930",
+            "Чернов::67890::90::2010",
+            "Рыжов::98765::185::1995",
+            "12345::10000::170::1980",
+            "Дроздов::99999::89::1990",
+            "Гусев::12345::221::1990",
+            "Журавлев::54321::175::1929"
+        };
+        inputData = new List<string>() {
+            "Зайцев::12745::180::1990",
+            "Волков::54421::220::1930",
+            "Егоров::67890::90::2010",
+            "Комаров::98765::185::1995",
+            "Тихонов::10000::170::1980",
+            "Савельев::99999::220::1990",
+            "Филиппов::12345::180::1990",
+            "Макаров::54321::180::1929"
+        };
+        inputData = new List<string>() {
+            "Смирнов::10000::90::1930",
+            "::20000::170::1980",
+            "Кузнецов::99999::220::2010",
+            "Лисицын::1234::180::1995",
+            "Медведев::12345::89::1990",
+            "0рлов::54321::221::1990",
+            "Соколов::67890::175::1929",
+            "Воробьев::98765::185::2011"
+        };
+        inputData = new List<string>() {
+            "Григорьев::10001::91::1931",
+            "Иванова::9999::170::1980",
+            "Петрова::100000::175::1990",
+            "Сидоров::12345::220::1930",
+            "Николаев::54321::90::2010",
+            "Федоров::123::180::1995",
+            "Козлов::67890::220::1929",
+            "Новиков::98765::185::2011"
+        };
+        inputData = new List<string>() {
+            "Соловьев::12345::180::1990::563",
+            "Ворона::54321::220::1930",
+            "Сорока::67890::90::2010",
+            "Голубь::98765::185::1995::Ведущий::201",
+            "Сокол::10000::170::1980",
+            "0рёл::99999::220::1990",
+            "Ястреб::12345::175::1990",
+            "Коршун::54321::180::1929",
+            "Жаворонок::123::185::1995",
+            "Чайка::67890::89::1990",
+            "Лебедь::98765::221::1990",
+            "Аист::10000::175::2011"
+        };
+
+        ProcessingValidateActors proc = new ProcessingValidateActors(inputData);
+        List<string> approved = (List<string>)proc.PrintValidActors();
+
+        //выводить на эхкран, вроде, не просят. Но для проверки:
+        if (approved.Count > 0) foreach (string a in approved) Console.WriteLine(a);
+        else Console.WriteLine("none");
+    }
+    public class ProcessingValidateActors
+    {
+        List<string> inputData;
+        public ProcessingValidateActors(List<string> input)
+        {
+            inputData = input;
+        }
+        public bool ValidateActor(string actorData)
+        {
+            string[] data = actorData.Trim().Split("::");
+
+            if (data.Count() == 4 &&
+                data[0].Length > 0 && data[0].Length <= 40 && Regex.IsMatch(data[0], "^[А-Яа-я]+$") &&
+                int.TryParse(data[1], out int x) && x >= 10000 && x <= 99999 &&
+                Convert.ToInt32(data[2]) >= 172 && Convert.ToInt32(data[2]) <= 190 && Convert.ToInt32(data[3]) >= 1960 && Convert.ToInt32(data[3]) <= 1990)
+            {
+                //Console.WriteLine($"Кандидат подходит: ФИО: {data[0]}, ID: {data[1]}, рост: {data[2]}, год рождения: {data[3]}");
+                return true;
+            }
+            else return false;
+        }
+        public IList<string> PrintValidActors()
+        {
+            List<string> data = new List<string>();
+            List<actorData> lst = new List<actorData>();
+
+            foreach (string str in inputData)
+            {
+                if (ValidateActor(str))
+                {
+                    string[] actorData = str.Trim().Split("::");
+                    lst.Add(new actorData(actorData[0], Convert.ToInt32(actorData[1]), Convert.ToInt32(actorData[2]), Convert.ToInt32(actorData[3])));
+                }
+            }
+
+            lst.Sort();
+
+            foreach (actorData actor in lst)
+            {
+                data.Add($"{actor.ActorID}->({actor.LastName}:{actor.Height}:{actor.Year})");
+            }
+            return data;
+        }
+    }
+    class actorData : IComparable<actorData>
+    {
+        public string LastName { get; set; }
+        public int ActorID { get; set; }
+        public int Height { get; set; }
+        public int Year { get; set; }
+        public actorData(string lastName, int actorID, int height, int year)
+        {
+            LastName = lastName;
+            ActorID = actorID;
+            Height = height;
+            Year = year;
+        }
+        int IComparable<actorData>.CompareTo(actorData obj)
+        {
+            int result = -Height.CompareTo(obj.Height);
+            if (result == 0) result = Year.CompareTo(obj.Year);
+            if (result == 0) result = ActorID.CompareTo(obj.ActorID);
+
+            return result;
+        }
+    }
+
 
     static void ReportMaker()
     {
