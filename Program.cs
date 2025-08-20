@@ -31,6 +31,7 @@ class Program
         //actors();
         ServerAnalyzer();
 
+        Console.WriteLine("Press any key...");
         Console.ReadKey();
     }
 
@@ -40,16 +41,82 @@ class Program
         {
             " <service=\"31007\" data=\"ABCDEFGHI\" action=\"write\">",
             "<service=\"32008\" data=\"JKLMNOPQR\" action=\"read\"> ",
-            "<service-'31007\" data=\"STUVWXYZA\" action=\"write\">", 
+            "<service=\"31007\" data=\"STUVWXYZA\" action=\"write\">", 
             "<service=\"32008\" data=\"BCDEFGHIJ\" action=\"read\">",
-            "<service-'31007\" data=\"KLMNOPQRS\" action=\"write\">",
+            "<service=\"31007\" data=\"KLMNOPQRS\" action=\"write\">",
             "<service=\"32008\" data=\"TUVWXYZAB\" action=\"read\">", 
             "<service=\"31007\" data=\"CDEFGHIJK\" action=\"write\">", 
             "<service=\"32008\" data=\"LMNOPQRST\" action=\"read\">"
         };
-        ServerLogAnalyzer analyzer = new ServerLogAnalyzer(input);
-        analyzer.ProcessingServerLogs();
+        input = new List<string>()
+        {
+            "<service=\"41017\" data=\"ABCDEFGHI\" action=\"write\">",
+            "<service=\"42018\" data=\"UKLMNOPQR\" action=\"read\"> ", 
+            "<service=\"41017\" data=\"STUVWXYZA\" action=\"write\">", 
+            "<service=\"42018\" data=\"BCDEFGHIJ\" action=\"read\">", 
+            "<service=\"41017\" data=\"KLMNOPQRS\" action=\"write\">", 
+            "<service=\"42018\" data=\"TUVWXYZAB\" action=\"read\">", 
+            "<service=\"41017\" data=\"CDEFGHIJK\" action=\"write\">", 
+            "<service=\"42018\" data=\"LMNOPQRST\" action=\"read\"> ", 
+            "<service=\"41017\" data=\"UVWXYZABC\" action=\"write\">", 
+            "<service=\"42018\" data=\"XYZABCDEF\" action=\"read\">", 
+            "<service=\"41017\" data=\"YZABCDEFG\" action=\"write\">", 
+            "<service=\"42018\" data=\"ZABCDEFGH\" action=\"read\">", 
+            "<service=\"41017\" data=\"NEWDATAID\" action=\"write\">", 
+            "<service=\"42018\" data=\"ANOTHERID\" action=\"write\">"
+        };
+        input = new List<string>()
+        {
+            "<service=\"29005\" data=\"ABCDEFGHI\" action=\"read\">", 
+            "<service=\"30006\" data=\"JKLMNOPQR\" action=\"write\">", 
+            "<service=\"29005\" data=\"STUVWXYZA\" action=\"read\">", 
+            "<service=\"30006\" data=\"BCDEFGHIJ\" action=\"write\">", 
+            "<service=\"29005\" data=\"KLMNOPQRS\" action=\"read\">", 
+            "<service=\"30006\" data=\"TUVWXYZAB\" action=\"write\">", 
+            "<service=\"29005\" data=\"CDEFGHIJK\" action=\"read\">", 
+            "<service=\"30006\" data=\"LMNOPQRST\" action=\"write\">"
+        };
+        input = new List<string>()
+        {
+            "<service=\"34010\" data=\"ABCDEFGHI\" action=\"write\">", 
+            "<service=\"34010\" data=\"JKLMNOPQR\" action=\"write\">", 
+            "<service=\"34010\" data=''STUVWXYZA\" action=\"write\">", 
+            "<service=\"34010\" data=\"BCDEFGHIJ\" action=\"write\">", 
+            "<service=\"34010\" data=\"KLMNOPQRS\" action=\"write\">", 
+            "<service=\"34010\" data=\"TUVWXYZAB\" action=”read\">", 
+            "<service=\"34010\" data=\"CDEFGHIJK\" action=\"write\">", 
+            "<service=\"34010\" data=\"LMNOPQRST\" action=\"write\">", 
+            "<service=\"34010\" data=\"UVWXYZABC\" action=\"write\">", 
+            "<service=\"34010\" data-'XYZABCDEF\" action=\"read\">", 
+            "<service=\"34010\" data=\"YZABCDEFG\" action=\"write\">", 
+            "<service=\"34010\" data=\"ZABCDEFGH\" action=\"write\">"
+        };
+        input = new List<string>()
+        {
+            "<service=\"41017\" data=\"ABCDEFGHI\" action=\"write\">",
+            "<service=\"42018\" data=\"UKLMNOPQR\" action=\"read\"> ",
+            "<service=\"41017\" data=\"STUVWXYZA\" action=\"write\">",
+            "<service=\"42018\" data=\"BCDEFGHIJ\" action=\"read\">",
+            "<service=\"41017\" data=\"KLMNOPQRS\" action=\"write\">",
+            "<service=\"42018\" data=\"TUVWXYZAB\" action=\"read\">",
+            "<service=\"41017\" data=\"CDEFGHIJK\" action=\"write\">",
+            "<service=\"42018\" data=\"LMNOPQRST\" action=\"read\"> ",
+            "<service=\"41017\" data=\"UVWXYZABC\" action=\"write\">",
+            "<service=\"42018\" data=\"XYZABCDEF\" action=\"read\">",
+            "<service=\"41017\" data=\"YZABCDEFG\" action=\"write\">",
+            "<service=\"42018\" data=\"ZABCDEFGH\" action=\"read\">",
+            "<service=\"41017\" data=\"NEWDATAID\" action=\"write\">",
+            "<service=\"41019\" data=\"NEWDATAID\" action=\"write\">",
+            "<service=\"41020\" data=\"NEWDATAID\" action=\"write\">",
+            "<service=\"41021\" data=\"NEWDATAID\" action=\"write\">",
+            "<service=\"41022\" data=\"NEWDATAID\" action=\"write\">",
+            "<service=\"42018\" data=\"ANOTHERID\" action=\"write\">"
+        };
 
+
+        ServerLogAnalyzer analyzer = new ServerLogAnalyzer(input);
+        List<string> l = analyzer.ProcessingServerLogs();
+        foreach (string line in l) Console.WriteLine(line);
     }
     interface IWriteServiceActivity
     {
@@ -79,12 +146,67 @@ class Program
 
         public List<string> ProcessingServerLogs()
         {
-            var lst = new List<string>();
+            var strings = new List<string>();
+            var lst = new List<LogRecord>();
 
+            //проверяем корректность каждой записи
+            foreach (string s in input)
+            {
+                string[] data = s.Trim(new char[] {' ', '<', '>'}).Split(" ");
 
-            return lst;
+                if(data.Length == 3 && 
+                    Regex.IsMatch(data[0], @"^service=""\d*""") && 
+                    Regex.IsMatch(data[1], @"^data=""\w*""") && 
+                    Regex.IsMatch(data[2], @"^action=""\w*"""))
+                {
+                    string serviceNumber = data[0].Substring("service=".Length).Trim('"');
+                    string dataString = data[1].Substring("data=".Length).Trim('"');
+                    string action = data[2].Substring("action=".Length).Trim('"');
+
+                    LogRecord rec = new LogRecord(serviceNumber, dataString, action);
+                        
+                    if (int.Parse(serviceNumber) >= 10000 && int.Parse(serviceNumber) <= 99999 &&
+                        Regex.IsMatch(dataString, "[A-Z]{9}") && (action == "read" || action == "write")
+                        )
+                    {
+                        lst.Add(rec);
+                    }
+                }
+            }
+
+            Dictionary<string, List<int>> readWriteCounter = new Dictionary<string, List<int>>(); //ключ, список из целых
+
+            foreach(LogRecord r in lst)
+            {
+                if (!readWriteCounter.ContainsKey(r.ServiceNumber))
+                {
+                    readWriteCounter.Add(r.ServiceNumber, new List<int>() { 0, 0 });
+                }
+                if(r.Action == "read") readWriteCounter[r.ServiceNumber][0] += 1;
+                if(r.Action == "write") readWriteCounter[r.ServiceNumber][1] += 1;
+            }
+
+            foreach (KeyValuePair<string, List<int>> kv in readWriteCounter)
+            {
+                if(kv.Value[1] * 100 / (kv.Value[1] + kv.Value[0]) >= 75) strings.Add($"Alert! {kv.Key} has suspicious activity");
+                else strings.Add($"{{\"service\":\"{kv.Key}\":\"read\":{kv.Value[0]}:\"write\":{kv.Value[1]}}}");
+            }
+
+            return strings;
         }
-    }    
+    }
+    class LogRecord
+    {
+        public string ServiceNumber {get; set;}
+        public string DataString { get; set; }
+        public string Action { get; set; }
+        public LogRecord(string serviceNumber, string dataString, string action)
+        {
+            ServiceNumber = serviceNumber;
+            DataString = dataString;
+            Action = action;
+        }        
+    }
 
     static void Exam()
     {
