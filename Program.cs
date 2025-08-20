@@ -174,7 +174,7 @@ class Program
                 }
             }
 
-            Dictionary<string, List<int>> readWriteCounter = new Dictionary<string, List<int>>(); //ключ, список из целых
+            SortedDictionary<string, List<int>> readWriteCounter = new SortedDictionary<string, List<int>>(); //ключ, список из целых
 
             foreach(LogRecord r in lst)
             {
@@ -185,6 +185,8 @@ class Program
                 if(r.Action == "read") readWriteCounter[r.ServiceNumber][0] += 1;
                 if(r.Action == "write") readWriteCounter[r.ServiceNumber][1] += 1;
             }
+
+            readWriteCounter.;
 
             foreach (KeyValuePair<string, List<int>> kv in readWriteCounter)
             {
