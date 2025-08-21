@@ -37,6 +37,13 @@ class Program
 
     static void ServerAnalyzer()
     {
+        /*
+         Задача выполнена, но классы CorrectService и FishingService не используются и созданы формально
+         Нужно понять как именно будут вводиться данные. Сейчас предполагается, что данные вводятся в консоль
+         до тех пор, пока вводится пустая строка
+         нужно добавить обработку вывод 'none', если все строки не корректны
+         */
+
         List<string> input = new List<string>()
         {
             " <service=\"31007\" data=\"ABCDEFGHI\" action=\"write\">",
@@ -110,9 +117,10 @@ class Program
             "<service=\"41020\" data=\"NEWDATAID\" action=\"write\">",
             "<service=\"41021\" data=\"NEWDATAID\" action=\"write\">",
             "<service=\"41022\" data=\"NEWDATAID\" action=\"write\">",
-            "<service=\"42018\" data=\"ANOTHERID\" action=\"write\">"
+            "<service=\"42018\" data=\"ANOTHERID\" action=\"write\">",
+            "<service=\"41019\" data=\"NEWDATAID\" action=\"read\">",
+            "<service=\"41019\" data=\"NEWDATAID\" action=\"read\">"
         };
-
 
         ServerLogAnalyzer analyzer = new ServerLogAnalyzer(input);
         List<string> l = analyzer.ProcessingServerLogs();
@@ -174,7 +182,7 @@ class Program
                 }
             }
 
-            SortedDictionary<string, List<int>> readWriteCounter = new SortedDictionary<string, List<int>>(); //ключ, список из целых
+            SortedDictionary<string, List<int>> readWriteCounter = new SortedDictionary<string, List<int>>(new StringComparer()); //ключ, список из целых
 
             foreach(LogRecord r in lst)
             {
@@ -184,9 +192,7 @@ class Program
                 }
                 if(r.Action == "read") readWriteCounter[r.ServiceNumber][0] += 1;
                 if(r.Action == "write") readWriteCounter[r.ServiceNumber][1] += 1;
-            }
-
-            readWriteCounter.;
+            }            
 
             foreach (KeyValuePair<string, List<int>> kv in readWriteCounter)
             {
@@ -195,6 +201,13 @@ class Program
             }
 
             return strings;
+        }
+    }
+    class StringComparer : IComparer<string>
+    {
+        public int Compare(string a, string b)
+        {
+            return a.CompareTo(b);
         }
     }
     class LogRecord
