@@ -41,7 +41,6 @@ class Program
          Задача выполнена, но классы CorrectService и FishingService не используются и созданы формально
          Нужно понять как именно будут вводиться данные. Сейчас предполагается, что данные вводятся в консоль
          до тех пор, пока вводится пустая строка
-         нужно добавить обработку вывод 'none', если все строки не корректны
          */
 
         List<string> input = new List<string>()
@@ -55,6 +54,10 @@ class Program
             "<service=\"31007\" data=\"CDEFGHIJK\" action=\"write\">", 
             "<service=\"32008\" data=\"LMNOPQRST\" action=\"read\">"
         };
+
+        string str = Console.ReadLine();
+
+
         input = new List<string>()
         {
             "<service=\"41017\" data=\"ABCDEFGHI\" action=\"write\">",
@@ -121,6 +124,13 @@ class Program
             "<service=\"41019\" data=\"NEWDATAID\" action=\"read\">",
             "<service=\"41019\" data=\"NEWDATAID\" action=\"read\">"
         };
+        //input = new List<string>()
+        //{
+        //    "<service=\"41017\" data=\"ABCDEFGHI12 \" action=\"write\">",
+        //    "<service=\"4201811\" data=\"UKLMNOPQR\" action=\"read\"> ",
+        //    "<service=\"41017\" data=\"STUVWXYZAы\" action=\"read\">",            
+        //    "<service=\"41019\" data=\"NEWDATAID\" action=\"readц\">"
+        //};
 
         ServerLogAnalyzer analyzer = new ServerLogAnalyzer(input);
         List<string> l = analyzer.ProcessingServerLogs();
@@ -151,7 +161,6 @@ class Program
         {
             input = inputData;
         }
-
         public List<string> ProcessingServerLogs()
         {
             var strings = new List<string>();
@@ -172,10 +181,13 @@ class Program
                     string action = data[2].Substring("action=".Length).Trim('"');
 
                     LogRecord rec = new LogRecord(serviceNumber, dataString, action);
+
+                    //Console.WriteLine(int.Parse(serviceNumber) >= 10000 && int.Parse(serviceNumber) <= 99999);
+                    //Console.WriteLine(Regex.IsMatch(dataString, "^[A-Z]{9}$"));
+                    //Console.WriteLine(action == "read" || action == "write");
                         
                     if (int.Parse(serviceNumber) >= 10000 && int.Parse(serviceNumber) <= 99999 &&
-                        Regex.IsMatch(dataString, "[A-Z]{9}") && (action == "read" || action == "write")
-                        )
+                        Regex.IsMatch(dataString, "^[A-Z]{9}$") && (action == "read" || action == "write"))
                     {
                         lst.Add(rec);
                     }
@@ -192,13 +204,17 @@ class Program
                 }
                 if(r.Action == "read") readWriteCounter[r.ServiceNumber][0] += 1;
                 if(r.Action == "write") readWriteCounter[r.ServiceNumber][1] += 1;
-            }            
-
-            foreach (KeyValuePair<string, List<int>> kv in readWriteCounter)
-            {
-                if(kv.Value[1] * 100 / (kv.Value[1] + kv.Value[0]) >= 75) strings.Add($"Alert! {kv.Key} has suspicious activity");
-                else strings.Add($"{{\"service\":\"{kv.Key}\":\"read\":{kv.Value[0]}:\"write\":{kv.Value[1]}}}");
             }
+
+            if (readWriteCounter.Count > 0)
+            {
+                foreach (KeyValuePair<string, List<int>> kv in readWriteCounter)
+                {
+                    if (kv.Value[1] * 100 / (kv.Value[1] + kv.Value[0]) >= 75) strings.Add($"Alert! {kv.Key} has suspicious activity");
+                    else strings.Add($"{{\"service\":\"{kv.Key}\":\"read\":{kv.Value[0]}:\"write\":{kv.Value[1]}}}");
+                }
+            }
+            else strings.Add("none");
 
             return strings;
         }
