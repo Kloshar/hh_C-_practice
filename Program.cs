@@ -33,219 +33,7 @@ class Program
 
         Console.WriteLine("Press any key...");
         Console.ReadKey();
-    }
-
-    static void ServerAnalyzer()
-    {
-        /*
-         Задача выполнена, но классы CorrectService и FishingService не используются и созданы формально
-         Нужно понять как именно будут вводиться данные. Сейчас предполагается, что данные вводятся в консоль
-         до тех пор, пока вводится пустая строка
-         */
-
-        List<string> input = new List<string>();
-
-        string str;
-        do
-        {
-            str = Console.ReadLine();
-            input.Add(str);
-
-        } while (str != "");
-
-        foreach (string s in input) Console.WriteLine(s);
-
-        //input = new List<string>()
-        //{
-        //    " <service=\"31007\" data=\"ABCDEFGHI\" action=\"write\">",
-        //    "<service=\"32008\" data=\"JKLMNOPQR\" action=\"read\"> ",
-        //    "<service=\"31007\" data=\"STUVWXYZA\" action=\"write\">", 
-        //    "<service=\"32008\" data=\"BCDEFGHIJ\" action=\"read\">",
-        //    "<service=\"31007\" data=\"KLMNOPQRS\" action=\"write\">",
-        //    "<service=\"32008\" data=\"TUVWXYZAB\" action=\"read\">", 
-        //    "<service=\"31007\" data=\"CDEFGHIJK\" action=\"write\">", 
-        //    "<service=\"32008\" data=\"LMNOPQRST\" action=\"read\">"
-        //};
-        //input = new List<string>()
-        //{
-        //    "<service=\"41017\" data=\"ABCDEFGHI\" action=\"write\">",
-        //    "<service=\"42018\" data=\"UKLMNOPQR\" action=\"read\"> ", 
-        //    "<service=\"41017\" data=\"STUVWXYZA\" action=\"write\">", 
-        //    "<service=\"42018\" data=\"BCDEFGHIJ\" action=\"read\">", 
-        //    "<service=\"41017\" data=\"KLMNOPQRS\" action=\"write\">", 
-        //    "<service=\"42018\" data=\"TUVWXYZAB\" action=\"read\">", 
-        //    "<service=\"41017\" data=\"CDEFGHIJK\" action=\"write\">", 
-        //    "<service=\"42018\" data=\"LMNOPQRST\" action=\"read\"> ", 
-        //    "<service=\"41017\" data=\"UVWXYZABC\" action=\"write\">", 
-        //    "<service=\"42018\" data=\"XYZABCDEF\" action=\"read\">", 
-        //    "<service=\"41017\" data=\"YZABCDEFG\" action=\"write\">", 
-        //    "<service=\"42018\" data=\"ZABCDEFGH\" action=\"read\">", 
-        //    "<service=\"41017\" data=\"NEWDATAID\" action=\"write\">", 
-        //    "<service=\"42018\" data=\"ANOTHERID\" action=\"write\">"
-        //};
-        //input = new List<string>()
-        //{
-        //    "<service=\"29005\" data=\"ABCDEFGHI\" action=\"read\">", 
-        //    "<service=\"30006\" data=\"JKLMNOPQR\" action=\"write\">", 
-        //    "<service=\"29005\" data=\"STUVWXYZA\" action=\"read\">", 
-        //    "<service=\"30006\" data=\"BCDEFGHIJ\" action=\"write\">", 
-        //    "<service=\"29005\" data=\"KLMNOPQRS\" action=\"read\">", 
-        //    "<service=\"30006\" data=\"TUVWXYZAB\" action=\"write\">", 
-        //    "<service=\"29005\" data=\"CDEFGHIJK\" action=\"read\">", 
-        //    "<service=\"30006\" data=\"LMNOPQRST\" action=\"write\">"
-        //};
-        //input = new List<string>()
-        //{
-        //    "<service=\"34010\" data=\"ABCDEFGHI\" action=\"write\">", 
-        //    "<service=\"34010\" data=\"JKLMNOPQR\" action=\"write\">", 
-        //    "<service=\"34010\" data=''STUVWXYZA\" action=\"write\">", 
-        //    "<service=\"34010\" data=\"BCDEFGHIJ\" action=\"write\">", 
-        //    "<service=\"34010\" data=\"KLMNOPQRS\" action=\"write\">", 
-        //    "<service=\"34010\" data=\"TUVWXYZAB\" action=”read\">", 
-        //    "<service=\"34010\" data=\"CDEFGHIJK\" action=\"write\">", 
-        //    "<service=\"34010\" data=\"LMNOPQRST\" action=\"write\">", 
-        //    "<service=\"34010\" data=\"UVWXYZABC\" action=\"write\">", 
-        //    "<service=\"34010\" data-'XYZABCDEF\" action=\"read\">", 
-        //    "<service=\"34010\" data=\"YZABCDEFG\" action=\"write\">", 
-        //    "<service=\"34010\" data=\"ZABCDEFGH\" action=\"write\">"
-        //};
-        //input = new List<string>()
-        //{
-        //    "<service=\"41017\" data=\"ABCDEFGHI\" action=\"write\">",
-        //    "<service=\"42018\" data=\"UKLMNOPQR\" action=\"read\"> ",
-        //    "<service=\"41017\" data=\"STUVWXYZA\" action=\"write\">",
-        //    "<service=\"42018\" data=\"BCDEFGHIJ\" action=\"read\">",
-        //    "<service=\"41017\" data=\"KLMNOPQRS\" action=\"write\">",
-        //    "<service=\"42018\" data=\"TUVWXYZAB\" action=\"read\">",
-        //    "<service=\"41017\" data=\"CDEFGHIJK\" action=\"write\">",
-        //    "<service=\"42018\" data=\"LMNOPQRST\" action=\"read\"> ",
-        //    "<service=\"41017\" data=\"UVWXYZABC\" action=\"write\">",
-        //    "<service=\"42018\" data=\"XYZABCDEF\" action=\"read\">",
-        //    "<service=\"41017\" data=\"YZABCDEFG\" action=\"write\">",
-        //    "<service=\"42018\" data=\"ZABCDEFGH\" action=\"read\">",
-        //    "<service=\"41017\" data=\"NEWDATAID\" action=\"write\">",
-        //    "<service=\"41019\" data=\"NEWDATAID\" action=\"write\">",
-        //    "<service=\"41020\" data=\"NEWDATAID\" action=\"write\">",
-        //    "<service=\"41021\" data=\"NEWDATAID\" action=\"write\">",
-        //    "<service=\"41022\" data=\"NEWDATAID\" action=\"write\">",
-        //    "<service=\"42018\" data=\"ANOTHERID\" action=\"write\">",
-        //    "<service=\"41019\" data=\"NEWDATAID\" action=\"read\">",
-        //    "<service=\"41019\" data=\"NEWDATAID\" action=\"read\">"
-        //};
-        //input = new List<string>()
-        //{
-        //    "<service=\"41017\" data=\"ABCDEFGHI12 \" action=\"write\">",
-        //    "<service=\"4201811\" data=\"UKLMNOPQR\" action=\"read\"> ",
-        //    "<service=\"41017\" data=\"STUVWXYZAы\" action=\"read\">",            
-        //    "<service=\"41019\" data=\"NEWDATAID\" action=\"readц\">"
-        //};
-
-        ServerLogAnalyzer analyzer = new ServerLogAnalyzer(input);
-        List<string> l = analyzer.ProcessingServerLogs();
-        foreach (string line in l) Console.WriteLine(line);
-    }
-    interface IWriteServiceActivity
-    {
-        void PrintData();
-    }
-    class CorrectService : IWriteServiceActivity
-    {
-        public void PrintData()
-        {
-            Console.WriteLine("!");
-        }
-    }
-    class FishingService : IWriteServiceActivity
-    {
-        public void PrintData()
-        {
-            Console.WriteLine("!");
-        }
-    }
-    public class ServerLogAnalyzer
-    {
-        List<string> input;
-        public ServerLogAnalyzer(List<string> inputData)
-        {
-            input = inputData;
-        }
-        public List<string> ProcessingServerLogs()
-        {
-            var strings = new List<string>();
-            var lst = new List<LogRecord>();
-
-            //проверяем корректность каждой записи
-            foreach (string s in input)
-            {
-                string[] data = s.Trim(new char[] {' ', '<', '>'}).Split(" ");
-
-                if(data.Length == 3 && 
-                    Regex.IsMatch(data[0], @"^service=""\d*""") && 
-                    Regex.IsMatch(data[1], @"^data=""\w*""") && 
-                    Regex.IsMatch(data[2], @"^action=""\w*"""))
-                {
-                    string serviceNumber = data[0].Substring("service=".Length).Trim('"');
-                    string dataString = data[1].Substring("data=".Length).Trim('"');
-                    string action = data[2].Substring("action=".Length).Trim('"');
-
-                    LogRecord rec = new LogRecord(serviceNumber, dataString, action);
-
-                    //Console.WriteLine(int.Parse(serviceNumber) >= 10000 && int.Parse(serviceNumber) <= 99999);
-                    //Console.WriteLine(Regex.IsMatch(dataString, "^[A-Z]{9}$"));
-                    //Console.WriteLine(action == "read" || action == "write");
-                        
-                    if (int.Parse(serviceNumber) >= 10000 && int.Parse(serviceNumber) <= 99999 &&
-                        Regex.IsMatch(dataString, "^[A-Z]{9}$") && (action == "read" || action == "write"))
-                    {
-                        lst.Add(rec);
-                    }
-                }
-            }
-
-            SortedDictionary<string, List<int>> readWriteCounter = new SortedDictionary<string, List<int>>(new StringComparer()); //ключ, список из целых
-
-            foreach(LogRecord r in lst)
-            {
-                if (!readWriteCounter.ContainsKey(r.ServiceNumber))
-                {
-                    readWriteCounter.Add(r.ServiceNumber, new List<int>() { 0, 0 });
-                }
-                if(r.Action == "read") readWriteCounter[r.ServiceNumber][0] += 1;
-                if(r.Action == "write") readWriteCounter[r.ServiceNumber][1] += 1;
-            }
-
-            if (readWriteCounter.Count > 0)
-            {
-                foreach (KeyValuePair<string, List<int>> kv in readWriteCounter)
-                {
-                    if (kv.Value[1] * 100 / (kv.Value[1] + kv.Value[0]) >= 75) strings.Add($"Alert! {kv.Key} has suspicious activity");
-                    else strings.Add($"{{\"service\":\"{kv.Key}\":\"read\":{kv.Value[0]}:\"write\":{kv.Value[1]}}}");
-                }
-            }
-            else strings.Add("none");
-
-            return strings;
-        }
-    }
-    class StringComparer : IComparer<string>
-    {
-        public int Compare(string a, string b)
-        {
-            return a.CompareTo(b);
-        }
-    }
-    class LogRecord
-    {
-        public string ServiceNumber {get; set;}
-        public string DataString { get; set; }
-        public string Action { get; set; }
-        public LogRecord(string serviceNumber, string dataString, string action)
-        {
-            ServiceNumber = serviceNumber;
-            DataString = dataString;
-            Action = action;
-        }        
-    }
+    }    
 
     static void Exam()
     {
@@ -346,8 +134,8 @@ class Program
             } while (vremResult >= 10);
             return result;
         }
-    }
-    static void Raiting()
+    } //Рекурсивная сумма
+    static void Raiting() 
     {
         Dictionary<string, double[]> candidates = GetCandidates();
         //ICollection<string> keys = candidates.Keys;
@@ -431,7 +219,7 @@ class Program
 
             return result;
         }
-    }
+    } //Рекрутер с видеосвязью
     class Human : IComparable<Human>
     {
         public string Name { get; set; }
@@ -448,7 +236,7 @@ class Program
             return result;
         }
     }
-    static void DominantNumbers()
+    static void DominantNumbers() 
     {
         //string stockPrices = Console.ReadLine();
         string stockPrices = "1 21 4 7 5";
@@ -482,7 +270,7 @@ class Program
             }
             return result;
         }
-    }
+    }  //Анализ финансовых рынков
     static void checkingPasswords()
     {
         //string inputString = Console.ReadLine();
@@ -492,7 +280,7 @@ class Program
 
         if (count == 0) Console.WriteLine("Не обнаружено");
         else Console.WriteLine(count);
-    }
+    } //Проверка ряда паролей
     class StringAnalyzer
     {
         private string text;
@@ -580,7 +368,7 @@ class Program
         //выводить на эхкран, вроде, не просят. Но для проверки:
         if (approved.Count > 0) foreach (string a in approved) Console.WriteLine(a);
         else Console.WriteLine("none");
-    }
+    } //Подбор актёров
     public class ProcessingValidateActors
     {
         List<string> inputData;
@@ -648,6 +436,126 @@ class Program
         }
     }
 
+    static void ServerAnalyzer()
+    {
+        /*
+         Задача выполнена, но классы CorrectService и FishingService не используются и созданы формально
+         Нужно понять как именно будут вводиться данные. Сейчас предполагается, что данные вводятся в консоль
+         до тех пор, пока вводится пустая строка
+         */
+
+        List<string> input = new List<string>();
+
+        string str;
+        do
+        {
+            str = Console.ReadLine();
+            input.Add(str);
+
+        } while (str != "");
+
+        ServerLogAnalyzer analyzer = new ServerLogAnalyzer(input);
+        List<string> l = analyzer.ProcessingServerLogs();
+        foreach (string line in l) Console.WriteLine(line);
+    } //Подозрительная активность на сервере
+    interface IWriteServiceActivity
+    {
+        void PrintData();
+    }
+    class CorrectService : IWriteServiceActivity
+    {
+        public void PrintData()
+        {
+            Console.WriteLine("!");
+        }
+    }
+    class FishingService : IWriteServiceActivity
+    {
+        public void PrintData()
+        {
+            Console.WriteLine("!");
+        }
+    }
+    public class ServerLogAnalyzer
+    {
+        List<string> input;
+        public ServerLogAnalyzer(List<string> inputData)
+        {
+            input = inputData;
+        }
+        public List<string> ProcessingServerLogs()
+        {
+            var strings = new List<string>();
+            var lst = new List<LogRecord>();
+
+            //проверяем корректность каждой записи
+            foreach (string s in input)
+            {
+                string[] data = s.Trim(new char[] { ' ', '<', '>' }).Split(" ");
+
+                if (data.Length == 3 &&
+                    Regex.IsMatch(data[0], @"^service=""\d*""") &&
+                    Regex.IsMatch(data[1], @"^data=""\w*""") &&
+                    Regex.IsMatch(data[2], @"^action=""\w*"""))
+                {
+                    string serviceNumber = data[0].Substring("service=".Length).Trim('"');
+                    string dataString = data[1].Substring("data=".Length).Trim('"');
+                    string action = data[2].Substring("action=".Length).Trim('"');
+
+                    LogRecord rec = new LogRecord(serviceNumber, dataString, action);
+
+                    if (int.Parse(serviceNumber) >= 10000 && int.Parse(serviceNumber) <= 99999 &&
+                        Regex.IsMatch(dataString, "^[A-Z]{9}$") && (action == "read" || action == "write"))
+                    {
+                        lst.Add(rec);
+                    }
+                }
+            }
+
+            SortedDictionary<string, List<int>> readWriteCounter = new SortedDictionary<string, List<int>>(new StringComparer()); //ключ, список из целых
+
+            foreach (LogRecord r in lst)
+            {
+                if (!readWriteCounter.ContainsKey(r.ServiceNumber))
+                {
+                    readWriteCounter.Add(r.ServiceNumber, new List<int>() { 0, 0 });
+                }
+                if (r.Action == "read") readWriteCounter[r.ServiceNumber][0] += 1;
+                if (r.Action == "write") readWriteCounter[r.ServiceNumber][1] += 1;
+            }
+
+            if (readWriteCounter.Count > 0)
+            {
+                foreach (KeyValuePair<string, List<int>> kv in readWriteCounter)
+                {
+                    if (kv.Value[1] * 100 / (kv.Value[1] + kv.Value[0]) >= 75) strings.Add($"Alert! {kv.Key} has suspicious activity");
+                    else strings.Add($"{{\"service\":\"{kv.Key}\":\"read\":{kv.Value[0]}:\"write\":{kv.Value[1]}}}");
+                }
+            }
+            else strings.Add("none");
+
+            return strings;
+        }
+    }
+    class StringComparer : IComparer<string>
+    {
+        public int Compare(string a, string b)
+        {
+            return a.CompareTo(b);
+        }
+    }
+    class LogRecord
+    {
+        public string ServiceNumber { get; set; }
+        public string DataString { get; set; }
+        public string Action { get; set; }
+        public LogRecord(string serviceNumber, string dataString, string action)
+        {
+            ServiceNumber = serviceNumber;
+            DataString = dataString;
+            Action = action;
+        }
+    }
 
     static void ReportMaker()
     {
