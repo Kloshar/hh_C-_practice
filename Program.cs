@@ -29,7 +29,9 @@ class Program
         //UnfairClients();
 
         //actors();
-        ServerAnalyzer();
+        //ServerAnalyzer();
+
+        StocksMonitoring();
 
         Console.WriteLine("Press any key...");
         Console.ReadKey();
@@ -557,6 +559,103 @@ class Program
         }
     }
 
+    static void StocksMonitoring()
+    {
+        //тут важно определить, что получаем на вводе: одну строку с переносами, массив строк или список
+        //рассмотрим вариант с массивом строк
+        string[] input = {
+            "AAPL::100::UP::10:00:00",
+            "AAPL::120::UP::10:05:00",
+            "GOOG::200::DOWN::10:10:00",
+            "AAPL::110::DOWN::10:15:00",
+            "GOOG::210::UP::10:05:00",
+            "MSFT::150::UP::10:20:00",
+            "AAPL::115::UP::10:10:00" };
+
+        SharePriceSystem sps = new SharePriceSystem();
+        List<string> output = (List<string>)sps.ProcessingInputLines(input.ToList());
+        foreach(string line in output) Console.WriteLine(line);
+
+    }
+    public class SharePriceSystem
+    {
+        List<Stock> stocks = new List<Stock>();
+        public event EventHandler PriceUp;
+        public event EventHandler PriceDown;
+
+        public SharePriceSystem()
+        {
+
+        }
+        List<string> lst = new List<string>();
+        public IList<string> ProcessingInputLines(IList<string> inputLines)
+        {
+            List<string> inputList = (List<string>)inputLines;
+            
+
+            foreach (string line in inputList)
+            {
+                string[] properties = line.Split("::");
+                Stock st = new Stock(properties[0], int.Parse(properties[1]), properties[2], TimeOnly.Parse(properties[3]));
+
+                //Predicate<string> callback = new Predicate<string>(isEqual);
+
+                if (!stocks.Any((s) => s.Name == st.Name)) //если нет в списке
+                {
+                    //Console.WriteLine($"{st} добавлена в список");
+                    stocks.Add(st);
+                }
+                else
+                {
+                    Stock old = stocks.Find((s) => s.Name == st.Name);
+
+                    if (old.Time < st.Time)
+                    {
+                        int index = stocks.IndexOf(old);
+                        stocks.RemoveAt(index);
+                        stocks.Insert(index, st);
+
+                        if (st.Change == "UP")
+                        {
+                            PriceUp;
+                        }
+                        if (st.Change == "DOWN")
+                        {
+
+                        }
+
+                    }
+                    
+                }
+
+                //Console.WriteLine(st);
+            }
+
+            foreach (Stock st in stocks) Console.WriteLine(st);
+
+            return lst;
+        }
+    }
+    public class Stock
+    {
+        public string Name { get; set; }
+        public int Price { get; set; }
+        public string Change { get; set; }
+        public TimeOnly Time { get; set; }
+        public Stock(string name, int price, string change, TimeOnly time)
+        {
+            Name = name;
+            Price = price;
+            Change = change;
+            Time = time;
+        }
+        public override string ToString()
+        {
+            return $"{Name}::{Price}::{Change}::{Time:HH:mm:ss}";
+        }
+        
+    }
+
     static void ReportMaker()
     {
         //string inputData = Console.ReadLine();
@@ -886,7 +985,7 @@ class Program
             else Console.WriteLine("Не найдено");
         }
     }
-    static void UnfairClients()
+    static void UnfairClients() 
     {
         var inputLines = new List<string>();
         //string line;
@@ -914,7 +1013,7 @@ class Program
         ProscessingClientData pcd = new ProscessingClientData();
         pcd.ProcessingInputLines(inputLines);
 
-    }
+    } //недобросовестные клиенты
     public class ClientData
     {
         public string ClientID { set; get; }
