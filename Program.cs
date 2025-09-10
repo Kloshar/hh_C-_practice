@@ -576,6 +576,8 @@ class Program
         List<string> output = (List<string>)sps.ProcessingInputLines(input.ToList());
         foreach(string line in output) Console.WriteLine(line);
 
+        sps.PriceUp += (object sender, EventArgs e) => { Console.WriteLine($""); };
+        sps.PriceDown += (object sender, EventArgs e) => { Console.WriteLine($""); };
     }
     public class SharePriceSystem
     {
@@ -590,8 +592,7 @@ class Program
         List<string> lst = new List<string>();
         public IList<string> ProcessingInputLines(IList<string> inputLines)
         {
-            List<string> inputList = (List<string>)inputLines;
-            
+            List<string> inputList = (List<string>)inputLines;            
 
             foreach (string line in inputList)
             {
