@@ -573,11 +573,11 @@ class Program
             "AAPL::115::UP::10:10:00" };
 
         SharePriceSystem sps = new SharePriceSystem();
-        List<string> output = (List<string>)sps.ProcessingInputLines(input.ToList());
-        foreach(string line in output) Console.WriteLine(line);
+        sps.PriceUp += (sender, e) => { Console.WriteLine($"{{\"Symbol\":\"{((Stock)sender).Name}\",\"Price\":{((Stock)sender).Price},\"Trend\":\"{((Stock)sender).Change}\"}}"); };
+        sps.PriceDown += (sender, e) => { Console.WriteLine($"{((Stock)sender).Name} {((Stock)sender).Change} "); };
 
-        sps.PriceUp += (object sender, EventArgs e) => { Console.WriteLine($""); };
-        sps.PriceDown += (object sender, EventArgs e) => { Console.WriteLine($""); };
+        List<string> output = (List<string>)sps.ProcessingInputLines(input.ToList());
+        foreach(string line in output) Console.WriteLine(line);        
     }
     public class SharePriceSystem
     {
@@ -618,11 +618,11 @@ class Program
 
                         if (st.Change == "UP")
                         {
-                            PriceUp;
+                            PriceUp(st, new EventArgs());
                         }
                         if (st.Change == "DOWN")
                         {
-
+                            PriceDown(st, new EventArgs());
                         }
 
                     }
