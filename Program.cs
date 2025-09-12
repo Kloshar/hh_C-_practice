@@ -35,7 +35,7 @@ class Program
 
         Console.WriteLine("Press any key...");
         Console.ReadKey();
-    }    
+    }
 
     static void Exam()
     {
@@ -137,7 +137,7 @@ class Program
             return result;
         }
     } //Рекурсивная сумма
-    static void Raiting() 
+    static void Raiting()
     {
         Dictionary<string, double[]> candidates = GetCandidates();
         //ICollection<string> keys = candidates.Keys;
@@ -238,7 +238,7 @@ class Program
             return result;
         }
     }
-    static void DominantNumbers() 
+    static void DominantNumbers()
     {
         //string stockPrices = Console.ReadLine();
         string stockPrices = "1 21 4 7 5";
@@ -570,14 +570,41 @@ class Program
             "AAPL::110::DOWN::10:15:00",
             "GOOG::210::UP::10:05:00",
             "MSFT::150::UP::10:20:00",
-            "AAPL::115::UP::10:10:00" };
+            "AAPL::115::UP::10:10:00"
+            };
+        input = new string[] {
+            "CRCL::80::UP::15:00:00",
+            "CRCL::85::UP::15:05:00",
+            "CRCL::90::UP::15:10:00",
+            "CSCO::45::DOWN::15:15:00",
+            "CSCO::43::DOWN::15:20:00",
+            "CSCO::41::DOWN::15:25:00",
+            "CRCL::95::UP::15:30:00",
+            "CSCO::39::DOWN::15:35:00"
+        };
+        input = new string[] {
+            "NVDA::600::UP::15:00:00",
+            "NVDA::610::UP::15:05:00",
+            "NVDA::620::UP::15:10:00",
+            "NVDA::630::UP::15:15:00",
+            "FDDB::350::DOWN::15:20:00",
+            "FDDB::340::DOWN::15:25:00",
+            "FDDB::330::DOWN::15:30:00",
+            "FDDB::320::DOWN::15:35:00",
+            "INTC::50::UP::15:40:00",
+            "INTC::55::UP::15:45:00",
+            "INTC::60::UP::15:50:00",
+            "INTC::65::UP::15:55:00",
+            "INTC::70::UP::16:00:00",
+            "INTC::75::UP::16:05:00"
+        };
 
-        SharePriceSystem sps = new SharePriceSystem();
+        SharePriceSystem sps = new SharePriceSystem(); //создаём обработчик данных и добавим обработчики событий
         sps.PriceUp += (sender, e) => { Console.WriteLine($"{{\"Symbol\":\"{((Stock)sender).Name}\",\"Price\":{((Stock)sender).Price},\"Trend\":\"{((Stock)sender).Change}\"}}"); };
-        sps.PriceDown += (sender, e) => { Console.WriteLine($"{((Stock)sender).Name} {((Stock)sender).Change} "); };
+        sps.PriceDown += (sender, e) => { Console.WriteLine($"{((Stock)sender).Name} {((Stock)sender).Change} {((Stock)sender).delta}"); };
 
-        List<string> output = (List<string>)sps.ProcessingInputLines(input.ToList());
-        foreach(string line in output) Console.WriteLine(line);        
+        List<string> output = (List<string>)sps.ProcessingInputLines(input.ToList()); //запустим метод обработки
+        if (output.Count > 0) Console.WriteLine(output.First()); //выводим none, если список не пуст
     }
     public class SharePriceSystem
     {
@@ -589,25 +616,22 @@ class Program
         {
 
         }
-        List<string> lst = new List<string>();
+        List<string> lst = new List<string>() { "none" };
         public IList<string> ProcessingInputLines(IList<string> inputLines)
         {
-            List<string> inputList = (List<string>)inputLines;            
+            List<string> inputList = (List<string>)inputLines;
 
             foreach (string line in inputList)
             {
                 string[] properties = line.Split("::");
                 Stock st = new Stock(properties[0], int.Parse(properties[1]), properties[2], TimeOnly.Parse(properties[3]));
-
-                //Predicate<string> callback = new Predicate<string>(isEqual);
-
                 if (!stocks.Any((s) => s.Name == st.Name)) //если нет в списке
                 {
-                    //Console.WriteLine($"{st} добавлена в список");
                     stocks.Add(st);
                 }
                 else
                 {
+                    lst.Remove("none"); //удаляем единственный элемент, если цена изменилась
                     Stock old = stocks.Find((s) => s.Name == st.Name);
 
                     if (old.Time < st.Time)
@@ -622,19 +646,14 @@ class Program
                         }
                         if (st.Change == "DOWN")
                         {
+                            st.delta = old.Price - st.Price;
                             PriceDown(st, new EventArgs());
                         }
 
                     }
-                    
                 }
-
-                //Console.WriteLine(st);
             }
-
-            foreach (Stock st in stocks) Console.WriteLine(st);
-
-            return lst;
+            return lst; //пустой список, если были изменения цены, или none, если не было
         }
     }
     public class Stock
@@ -643,18 +662,17 @@ class Program
         public int Price { get; set; }
         public string Change { get; set; }
         public TimeOnly Time { get; set; }
+        public int delta { get; set; }
         public Stock(string name, int price, string change, TimeOnly time)
         {
             Name = name;
             Price = price;
             Change = change;
             Time = time;
-        }
-        public override string ToString()
+        }        public override string ToString() 
         {
             return $"{Name}::{Price}::{Change}::{Time:HH:mm:ss}";
         }
-        
     }
 
     static void ReportMaker()
@@ -986,7 +1004,7 @@ class Program
             else Console.WriteLine("Не найдено");
         }
     }
-    static void UnfairClients() 
+    static void UnfairClients()
     {
         var inputLines = new List<string>();
         //string line;
