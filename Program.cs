@@ -30,8 +30,9 @@ class Program
 
         //actors();
         //ServerAnalyzer();
+        //StocksMonitoring();
 
-        StocksMonitoring();
+        PopularGames();
 
         Console.WriteLine("Press any key...");
         Console.ReadKey();
@@ -330,46 +331,46 @@ class Program
             "Макаров::54321::180::1929"
         };
         inputData = new List<string>() {
-            "Смирнов::10000::90::1930",
-            "::20000::170::1980",
-            "Кузнецов::99999::220::2010",
-            "Лисицын::1234::180::1995",
-            "Медведев::12345::89::1990",
-            "0рлов::54321::221::1990",
-            "Соколов::67890::175::1929",
-            "Воробьев::98765::185::2011"
+"Смирнов::10000::90::1930",
+"::20000::170::1980",
+"Кузнецов::99999::220::2010",
+"Лисицын::1234::180::1995",
+"Медведев::12345::89::1990",
+"Орлов::54321::221::1990",
+"Соколов::67890::175::1929",
+"Воробьев::98765::185::2011"
         };
         inputData = new List<string>() {
             "Григорьев::10001::91::1931",
-            "Иванова::9999::170::1980",
-            "Петрова::100000::175::1990",
-            "Сидоров::12345::220::1930",
-            "Николаев::54321::90::2010",
-            "Федоров::123::180::1995",
-            "Козлов::67890::220::1929",
-            "Новиков::98765::185::2011"
+"Иванова::9999::170::1980",
+"Петрова::100000::175::1990",
+"Сидоров::12345::220::1930",
+"Николаев::54321::90::2010",
+"Федоров::123::180::1995",
+"Козлов::67890::220::1929",
+"Новиков::98765::185::2011"
         };
-        inputData = new List<string>() {
-            "Соловьев::12345::180::1990::563",
-            "Ворона::54321::220::1930",
-            "Сорока::67890::90::2010",
-            "Голубь::98765::185::1995::Ведущий::201",
-            "Сокол::10000::170::1980",
-            "0рёл::99999::220::1990",
-            "Ястреб::12345::175::1990",
-            "Коршун::54321::180::1929",
-            "Жаворонок::123::185::1995",
-            "Чайка::67890::89::1990",
-            "Лебедь::98765::221::1990",
-            "Аист::10000::175::2011"
-        };
+        //inputData = new List<string>() {
+        //    "Соловьев::12345::180::1990::563",
+        //    "Ворона::54321::220::1930",
+        //    "Сорока::67890::90::2010",
+        //    "Голубь::98765::185::1995::Ведущий::201",
+        //    "Сокол::10000::170::1980",
+        //    "0рёл::99999::220::1990",
+        //    "Ястреб::12345::175::1990",
+        //    "Коршун::54321::180::1929",
+        //    "Жаворонок::123::185::1995",
+        //    "Чайка::67890::89::1990",
+        //    "Лебедь::98765::221::1990",
+        //    "Аист::10000::175::2011"
+        //};
 
         ProcessingValidateActors proc = new ProcessingValidateActors(inputData);
         List<string> approved = (List<string>)proc.PrintValidActors();
 
-        //выводить на эхкран, вроде, не просят. Но для проверки:
+        //выводить на экран, вроде, не просят. Но для проверки:
         if (approved.Count > 0) foreach (string a in approved) Console.WriteLine(a);
-        else Console.WriteLine("none");
+        else Console.WriteLine("none"); //эта строка не сработала
     } //Подбор актёров
     public class ProcessingValidateActors
     {
@@ -412,6 +413,7 @@ class Program
             {
                 data.Add($"{actor.ActorID}->({actor.LastName}:{actor.Height}:{actor.Year})");
             }
+            if (data.Count < 1) data.Add("none");
             return data;
         }
     }
@@ -437,7 +439,6 @@ class Program
             return result;
         }
     }
-
     static void ServerAnalyzer()
     {
         /*
@@ -531,7 +532,7 @@ class Program
                 foreach (KeyValuePair<string, List<int>> kv in readWriteCounter)
                 {
                     if (kv.Value[1] * 100 / (kv.Value[1] + kv.Value[0]) >= 75) strings.Add($"Alert! {kv.Key} has suspicious activity");
-                    else strings.Add($"{{\"service\":\"{kv.Key}\":\"read\":{kv.Value[0]}:\"write\":{kv.Value[1]}}}");
+                    else strings.Add($"{{\"service\":\"{kv.Key}\",\"read\":{kv.Value[0]},\"write\":{kv.Value[1]}}}");
                 }
             }
             else strings.Add("none");
@@ -674,6 +675,154 @@ class Program
             return $"{Name}::{Price}::{Change}::{Time:HH:mm:ss}";
         }
     }
+
+    static void PopularGames() 
+    {
+        List<string> inputData = new List<string>() {
+            "1000->Stafgfgfg->90->1010000",
+            "1001->StardewValley->95->50000",
+            "1002->Terraria->85->75000",
+            "1003->HollowKnight->72->300000",
+            "1004->Celeste->20->15000",
+            "1007->SuperNova->75->25000"
+        };
+        inputData = new List<string>() {
+            "1001->Amani->95->500000",
+            "1002->Baraka->85->75000",
+            "1003-> Chidi->92->300000", //пробел в названии
+            "1004->Dakarai->80->45000",
+            "1005->Ekon->65->50000", //4 символа в названии
+            "1006->Femi->90->200000", //4 символа в названии
+            "1007->lfe->75->60000", //4 символа в названии
+            "1008->Jabari->80->80000",
+            "1009->Kato->70->70000", //4 символа в названии
+            "1010->Lebo->60->40000" //4 символа в названии
+        };
+        inputData = new List<string>() {
+            "1001->Stardew Valley->95->500000",
+            "1002->->85->75000",
+            "1003->HollowKnight->92->300000",
+            "->->80->45000"
+        };
+        inputData = new List<string>() {
+            "4999->Tindo->78->78000",
+            "4888->Raadi->-1->1000", 
+            "4777->TitaUU->-50->50000", 
+            "4666->Minzi->12->-12000", 
+            "4555->Дженго->34->34000", 
+            "4444->Siti->56->56000", 
+            "4333->Kali->78->78000",
+            "4222->Nala->10->10000"
+        };
+        inputData = new List<string>() {
+            "1001->Amani->95->500000",
+            "1002->Baraka->85->75000",
+            "1003-> Chidi->92->300000", 
+            "1004->Dakarai->80->45000",
+            "1005->Ekon->65->50000",
+            "1006->Femi->90->200000",
+            "1007->lfe->75->60000",
+            "1008->Jabari->80->80000",
+            "1009->Kato->70->70000",
+            "1010->Lebo->60->40000",
+            "1011->Mandla->155->30000",
+            "1012->Nia->50->20000"
+        };
+        inputData = new List<string>() {
+            "1001->Amani->95->500000",
+            "1002->Baraka->85->75000",
+            "1003-> Chidi->92->300000",
+            "1004 ->Dakarai->80->45000",
+            "1005->Ekon->65->50000",
+            "1006->Femi->90->200000",
+            "1007->lfe->75->60000",
+            "1008->Jabari->80->80000",
+            "1009->Kato->70->70000",
+            "1010->Lebo->60->40000",
+            "1011->Mandla->55->30000000",
+            "1012->Nia->50->20000"
+        };
+        inputData = new List<string>() {
+            "4012->Tindo->0->1000",
+            "4023->Raadi->15->12000",
+            "4034->Tita->25->23000",
+            "4045->Minzi->35->34000",
+            "4056->Jengo->45->45000",
+            "4067->Siti2->55->56000",
+            "4078->Kali->65->67000",
+            "4089->Nala->78->78000"
+        };
+        var pg = new ProcessingGames();
+        var gameList = pg.GameReport(inputData);
+
+
+    } //популярные компьютерные игры
+    public class ProcessingGames
+    {
+        public IList<string> GameReport(List<string> inputLines)
+        {
+            foreach (string str in inputLines)
+            {
+                Game g = new Game();
+                if (ValidateGame(str, ref g)) //если правильный формат
+                {
+                    Console.WriteLine($"{g.gameId}:{g.Name}:{g.RatingName}");
+                }
+                else //если есть ошибки
+                {
+                    Console.WriteLine($"{(g.gameId == "" ? "unknown" : g.gameId)}:{(g.Name == "" ? "unknown" : g.Name)}:incorrect data");
+                }                
+            }
+
+            return new List<string>();
+        }
+        public bool ValidateGame(string gameRecord, ref Game g)
+        {
+            string[] data = gameRecord.Split("->");
+            var game = new { gameId = data[0], Name = data[1], Rating = data[2], Downloaded = data[3] }; //анонимный тип
+
+            if (data.Length != 4) return false; //первая проверка
+
+            else
+            {
+                g.gameId = data[0];
+                g.Name = data[1].Trim();
+                g.Rating = data[2];
+                g.Downloaded = data[3];
+            }
+
+            if (!int.TryParse(g.gameId, out int id) || id < 1000 || id > 9999) return false;
+
+            //здесь спорный момент: в задании имя должно быть без пробелов, в примерах отсекаются пробелы спереди
+            else if (g.Name.Trim().Length < 5 || g.Name.Trim().Length > 40 || !Regex.IsMatch(g.Name.Trim(), "^[A-Za-z]+$")) return false;
+            else if (int.Parse(g.Rating) < 0 || int.Parse(g.Rating) > 100) return false;
+            else if (int.Parse(g.Downloaded) < 0 || int.Parse(g.Downloaded) > 10000000) return false;
+
+            CalculateGameRate(ref g); //сразу и рейтинг определяем
+
+            return true;
+        }
+        public void CalculateGameRate(ref Game g)
+        {
+            if (int.Parse(g.Rating) >= 90 || int.Parse(g.Downloaded) > 100000) g.RatingName = "top";
+            else if (int.Parse(g.Rating) >= 65 || int.Parse(g.Downloaded) > 50000) g.RatingName = "middle";
+            else g.RatingName = "low";
+        }
+        public class Game
+        {
+            public string gameId { get; set; }
+            public string Name { get; set; }
+            public string Rating { get; set; }
+            public string RatingName { get; set; }
+            public string Downloaded { get; set; }
+            public bool Correct { get; set; }
+            public override string ToString()
+            {
+                return $"{gameId};{Name};{Rating};{Downloaded}";
+            }
+        }
+    }
+
 
     static void ReportMaker()
     {
