@@ -19,7 +19,7 @@ class Program
         //Survey();
         //Raiting();
         //DominantNumbers();
-        //checkingPasswords();
+        checkingPasswords();
 
         //ReportMaker();
         //Backlogs();
@@ -31,8 +31,7 @@ class Program
         //actors();
         //ServerAnalyzer();
         //StocksMonitoring();
-
-        PopularGames();
+        //PopularGames();
 
         Console.WriteLine("Press any key...");
         Console.ReadKey();
@@ -277,7 +276,11 @@ class Program
     static void checkingPasswords()
     {
         //string inputString = Console.ReadLine();
-        string inputString = "Password123 mus be secure. Use 1 digi and 1 uppercase letter.";
+        string inputString = "Hello Worldl23, this is a Test2 string with 3Exams and No2Words";
+        inputString = "Text without uppercase letters and digits 2223114%";
+        inputString = "This is an example without suitable words.";
+        inputString = "Password123 mus be secure. Use 1 digi and 1 uppercase letter.";
+        inputString = "Hello, World! Today is 2023.";
         StringAnalyzer analyzer = new StringAnalyzer(inputString);
         int count = analyzer.CountWordsWithDigits();
 
@@ -446,16 +449,60 @@ class Program
          Нужно понять как именно будут вводиться данные. Сейчас предполагается, что данные вводятся в консоль
          до тех пор, пока вводится пустая строка
          */
-
         List<string> input = new List<string>();
+        //input = new List<string>() {
+        //    "<service=\"10001\" data=\"ABCDEFGHI\" action=\"read\">", 
+        //    "<service=\"10001\" data=\"JKLMNOPQR\" action=\"read\">",
+        //    "<service=\"10001\" data=\"STUVWXYZa\" action=\"write\">", 
+        //    "<service=\"10002\" data=\"bcdefghij\" action=\"read\">"
+        //};
+        //input = new List<string>() {
+        //    "<service=\"20001\" data=\"AAAAAAAAA\" action=\"write\">", 
+        //    "<service=\"20001\" data=\"BBBBBBBBB\" action=\"write\">", 
+        //    "<service=\"20001\" data=\"CCCCCCCCC\" action=\"write\">", 
+        //    "<service=\"20001\" data=\"DDDDDDDDD\" action=\"read\">", 
+        //    "<service=\"20002\" data=\"EEEEEEEEE\" action=\"read\">", 
+        //    "<service=\"20002\" data=\"FFFFFFFFF\" action=\"read\">", 
+        //    "<service=\"20002\" data=\"GGGGGGGGG\" action=\"write\">"
+        //};
+        //input = new List<string>() {
+        //    "<service=\"20002\" data=\"EEEEEEEEE\" acteon=\"read\">", 
+        //    "<service=\"20002\" data=\"FFFFFF\" action=\"re\">", 
+        //    "<service=\"200\" data=\"GGGGGGGGG\" action=\"write\">"
+        //};
+        //input = new List<string>() {
+        //    "<service=\"31007\" data=\"ABCDEFGHI\" action=\"write\">",
+        //    "<service=\"32008\" data=\"JKLMNOPQR\" action=\"read\">",
+        //    "<service=\"31OO7\" data=\"STUVWXYZA\" action=\"write\">",
+        //    "<service=\"32008\" data=\"BCDEFGHIJ\" action=\"read\">",
+        //    "<service=\"31OO7\" data=\"KLMNOPQRS\" action=\"write\">",
+        //    "<service=\"32008\" data=\"TUVWXYZAB\" action=\"read\">",
+        //    "<service=\"31OO7\" data=\"CDEFGHIJK\" action=\"write\">",
+        //    "<service=\"32008\" data=\"LMNOPQRST\" action=\"read\">"
+        //};
+        input = new List<string>() {
+            "<service=\"39015\" data=\"ABCDEFJHI\" action=\"read\">", 
+            "<service=\"40016\" data=\"JKLMNOPQR\" action=\"read\">", 
+            "<service=\"39015\" data=\"STUVWXYZA\" action=\"write\">", 
+            "<service=\"40016\" data=\"BCDEFGHIJ\" action=\"read\">", 
+            "<service=\"39015\" data=\"KLMNOPQRS\" action=\"write\">", 
+            "<service=\"40016\" data=\"TUVWXYZAB\" action=\"read\">", 
+            "<service=\"39015\" data=\"CDEFGHIJK\" action=\"write\">", 
+            "<service=\"40016\" data=\"LMNOPQRST\" action=\"read\">", 
+            "<service=\"39015\" data=\"UVWXYZABC\" action=\"write\">", 
+            "<service=\"40016\" data=\"XYZABCDEF\" action=\"read\">", 
+            "<service=\"39015\" data=\"YZABCDEFG\" action=\"write\">", 
+            "<service=\"40016\" data=\"ZABCDEFGH\" action=\"write\">", 
+            "<service=\"39015\" data=\"NEWDATAID\" action=\"write\">", 
+            "<service=\"40016\" data=\"ANOTHERID\" action=\"read\">"
+        };
+        //string str;
+        //do
+        //{
+        //    str = Console.ReadLine();
+        //    input.Add(str);
 
-        string str;
-        do
-        {
-            str = Console.ReadLine();
-            input.Add(str);
-
-        } while (str != "");
+        //} while (str != "");
 
         ServerLogAnalyzer analyzer = new ServerLogAnalyzer(input);
         List<string> l = analyzer.ProcessingServerLogs();
@@ -494,6 +541,8 @@ class Program
             //проверяем корректность каждой записи
             foreach (string s in input)
             {
+                //Console.WriteLine($"Проверяется: {s}");
+
                 string[] data = s.Trim(new char[] { ' ', '<', '>' }).Split(" ");
 
                 if (data.Length == 3 &&
@@ -507,10 +556,15 @@ class Program
 
                     LogRecord rec = new LogRecord(serviceNumber, dataString, action);
 
-                    if (int.Parse(serviceNumber) >= 10000 && int.Parse(serviceNumber) <= 99999 &&
-                        Regex.IsMatch(dataString, "^[A-Z]{9}$") && (action == "read" || action == "write"))
+                    //Console.WriteLine(int.Parse(serviceNumber) >= 10000);
+                    //Console.WriteLine(int.Parse(serviceNumber) <= 99999);
+                    //Console.WriteLine(Regex.IsMatch(dataString, "^[A-Z]{9}$"));
+                    //Console.WriteLine(action == "read" || action == "write");
+
+                    if (int.Parse(serviceNumber) >= 10000 && int.Parse(serviceNumber) <= 99999 && Regex.IsMatch(dataString, "^[A-Z]{9}$") && action == "read" || action == "write")
                     {
                         lst.Add(rec);
+                        //Console.WriteLine($"{rec} добавлена");
                     }
                 }
             }
@@ -606,7 +660,7 @@ class Program
 
         List<string> output = (List<string>)sps.ProcessingInputLines(input.ToList()); //запустим метод обработки
         if (output.Count > 0) Console.WriteLine(output.First()); //выводим none, если список не пуст
-    }
+    } //
     public class SharePriceSystem
     {
         List<Stock> stocks = new List<Stock>();
@@ -822,7 +876,6 @@ class Program
             }
         }
     }
-
 
     static void ReportMaker()
     {
