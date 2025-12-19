@@ -12,14 +12,25 @@ class Program
 {
     static void Main()
     {
-        //Exam();
-        //Geometry();
-        //SymbolsHiding();
+        //Лёгкий уровень
 
-        //Survey();
-        //Raiting();
-        //DominantNumbers();
-        checkingPasswords();
+        //Exam(); //экзамен и проходной балл
+        //Geometry(); //учебник по геометрии
+        //SymbolsHiding(); //Чувствительная инфонмация
+
+        //Средний уровень
+
+        //Survey(); //Рекурсивная сумма  (распечатано)
+        //Raiting(); //Рекрутер с видеосвязью  (распечатано)
+        //DominantNumbers(); //Анализ финансовых рынков (распечатано)
+        //checkingPasswords(); //Проверка ряда паролей (распечатано)
+
+        //actors(); //Подбор актёров (распечатано)
+        //ServerAnalyzer(); //Подозрительная активность на сервере (распечатано)
+        //StocksMonitoring(); //Мониторинг акций (распечатано)
+        PopularGames(); //Популярные компьютерные игры
+
+        //Сложный уровень
 
         //ReportMaker();
         //Backlogs();
@@ -27,11 +38,6 @@ class Program
         //Coding();
         //Users_access();
         //UnfairClients();
-
-        //actors();
-        //ServerAnalyzer();
-        //StocksMonitoring();
-        //PopularGames();
 
         Console.WriteLine("Press any key...");
         Console.ReadKey();
@@ -68,7 +74,7 @@ class Program
             }
             return passed;
         }
-    }
+    } //Экзамен и проходной балл
     static void Geometry()
     {
         //string sideString = Console.ReadLine().Trim();
@@ -89,7 +95,7 @@ class Program
             if (Math.Pow(sides[0], 2) == Math.Pow(sides[1], 2) + Math.Pow(sides[2], 2)) return true;
             else return false;
         }
-    }
+    } //Учебник по геометрии
     static void SymbolsHiding()
     {
         //string stringToMask = Console.ReadLine();
@@ -111,7 +117,7 @@ class Program
             else newString = stringToMask;
             return newString;
         }
-    }
+    } //Чувствительная инфонмация
 
     static void Survey()
     {
@@ -334,39 +340,51 @@ class Program
             "Макаров::54321::180::1929"
         };
         inputData = new List<string>() {
-"Смирнов::10000::90::1930",
-"::20000::170::1980",
-"Кузнецов::99999::220::2010",
-"Лисицын::1234::180::1995",
-"Медведев::12345::89::1990",
-"Орлов::54321::221::1990",
-"Соколов::67890::175::1929",
-"Воробьев::98765::185::2011"
+            "Смирнов::10000::90::1930",
+            "::20000::170::1980",
+            "Кузнецов::99999::220::2010",
+            "Лисицын::1234::180::1995",
+            "Медведев::12345::89::1990",
+            "Орлов::54321::221::1990",
+            "Соколов::67890::175::1929",
+            "Воробьев::98765::185::2011"
         };
         inputData = new List<string>() {
             "Григорьев::10001::91::1931",
-"Иванова::9999::170::1980",
-"Петрова::100000::175::1990",
-"Сидоров::12345::220::1930",
-"Николаев::54321::90::2010",
-"Федоров::123::180::1995",
-"Козлов::67890::220::1929",
-"Новиков::98765::185::2011"
+            "Иванова::9999::170::1980",
+            "Петрова::100000::175::1990",
+            "Сидоров::12345::220::1930",
+            "Николаев::54321::90::2010",
+            "Федоров::123::180::1995",
+            "Козлов::67890::220::1929",
+            "Новиков::98765::185::2011"
         };
-        //inputData = new List<string>() {
-        //    "Соловьев::12345::180::1990::563",
-        //    "Ворона::54321::220::1930",
-        //    "Сорока::67890::90::2010",
-        //    "Голубь::98765::185::1995::Ведущий::201",
-        //    "Сокол::10000::170::1980",
-        //    "0рёл::99999::220::1990",
-        //    "Ястреб::12345::175::1990",
-        //    "Коршун::54321::180::1929",
-        //    "Жаворонок::123::185::1995",
-        //    "Чайка::67890::89::1990",
-        //    "Лебедь::98765::221::1990",
-        //    "Аист::10000::175::2011"
-        //};
+        inputData = new List<string>() {
+            "Соловьев::12345::180::1990::563",
+            "Ворона::54321::220::1930",
+            "Сорока::67890::90::2010",
+            "Голубь::98765::185::1995::Ведущий::201",
+            "Сокол::10000::170::1980",
+            "0рёл::99999::220::1990",
+            "Ястреб::12345::175::1990",
+            "Коршун::54321::180::1929",
+            "Жаворонок::123::185::1995",
+            "Чайка::67890::89::1990",
+            "Лебедь::98765::221::1990",
+            "Аист::10000::175::2011"
+        };
+        inputData = new List<string>() {
+            "Иванов::12345::180::1985",
+            "Петров::54321::185::1975",
+            "Сидоров::99999::170::1980",            
+            "Кузнецов::11111::188::1980"
+        };
+        inputData = new List<string>() {
+            "Johnson::12345::180::1985",
+            "Петров2::54321::185",
+            "Сидоров-Борисов::999::170::1980",
+            "Кузнецов::11111::180::3000"
+        };
 
         ProcessingValidateActors proc = new ProcessingValidateActors(inputData);
         List<string> approved = (List<string>)proc.PrintValidActors();
@@ -409,12 +427,11 @@ class Program
                     lst.Add(new actorData(actorData[0], Convert.ToInt32(actorData[1]), Convert.ToInt32(actorData[2]), Convert.ToInt32(actorData[3])));
                 }
             }
-
-            lst.Sort();
+            //lst.Sort();
 
             foreach (actorData actor in lst)
             {
-                data.Add($"{actor.ActorID}->({actor.LastName}:{actor.Height}:{actor.Year})");
+                data.Add($"{actor.ActorID}({actor.LastName}:{actor.Height}:{actor.Year})");
             }
             if (data.Count < 1) data.Add("none");
             return data;
@@ -448,6 +465,9 @@ class Program
          Задача выполнена, но классы CorrectService и FishingService не используются и созданы формально
          Нужно понять как именно будут вводиться данные. Сейчас предполагается, что данные вводятся в консоль
          до тех пор, пока вводится пустая строка
+
+        нужно переделать код под последнюю версию с hh
+
          */
         List<string> input = new List<string>();
         //input = new List<string>() {
@@ -508,28 +528,73 @@ class Program
         List<string> l = analyzer.ProcessingServerLogs();
         foreach (string line in l) Console.WriteLine(line);
     } //Подозрительная активность на сервере
-    interface IWriteServiceActivity
+    interface IWriteActivity //ненужный интерфейс
     {
-        void PrintData();
+        string GetActivityReport();
     }
-    class CorrectService : IWriteServiceActivity
+    public abstract class Service : IWriteActivity //абстрактный класс, реализующий этот интерфейс
     {
-        public void PrintData()
+        public string ServiceId { get; }
+        public int ReadCount { get; set; }
+        public int WriteCount { get; set; }
+        protected Service(string serviceId) //конструктор устанавливает свойство ServiceId
         {
-            Console.WriteLine("!");
+            ServiceId = serviceId;
+        }
+        public void AddRead() => ReadCount++;
+        public void AddWrite() => WriteCount++;
+        public bool IsSuspicious() => WriteCount >= 0.75 * (ReadCount + WriteCount);
+        public abstract string GetActivityReport();
+    }
+    public class CorrectService : Service //нормальный класс, наследующий абстрактный
+    {
+        public CorrectService(string serviceId) : base(serviceId) { }
+        public override string GetActivityReport() //переопределяем основной метод. Здесь происходит вся работа
+        {
+            //ваш код
+            return "";
         }
     }
-    class FishingService : IWriteServiceActivity
+    public class FishingService : Service //нормальный класс, наследующий абстрактный
     {
-        public void PrintData()
+        public FishingService(string serviceId) : base(serviceId) { }
+        public override string GetActivityReport() //переопределяем основной метод. Здесь происходит вся работа
         {
-            Console.WriteLine("!");
+            //ваш код
+            return "";
         }
     }
     public class ServerLogAnalyzer
     {
+        private readonly Dictionary<string, Service> _service = new Dictionary<string, Service>();
+        //ваш код для регулярного выражения LogRegex
+        Regex LogRegex = new Regex("", RegexOptions.IgnoreCase);
+        public ServerLogAnalyzer(IList<string> inputLines)
+        {
+            foreach (var live in inputLines)
+            {
+                AddLog(live);
+            }
+        }
+        public void AddLog(string log)
+        {
+            var match = LogRegex.Match(log);
+            if (match.Success)
+            {
+                //ваш код
+            }
+        }
+        public List<string> ProcessingServerLogs()
+        {
+            List<string> lst = new List<string>();
+            //ваш код
+            return lst;
+        }
+    }
+    public class ServerLogAnalyzer2
+    {
         List<string> input;
-        public ServerLogAnalyzer(List<string> inputData)
+        public ServerLogAnalyzer2(List<string> inputData)
         {
             input = inputData;
         }
@@ -660,7 +725,7 @@ class Program
 
         List<string> output = (List<string>)sps.ProcessingInputLines(input.ToList()); //запустим метод обработки
         if (output.Count > 0) Console.WriteLine(output.First()); //выводим none, если список не пуст
-    } //
+    } //Мониторинг акций
     public class SharePriceSystem
     {
         List<Stock> stocks = new List<Stock>();
@@ -730,9 +795,26 @@ class Program
         }
     }
 
-    static void PopularGames() 
+    static void PopularGames()
     {
-        List<string> inputData = new List<string>() {
+        //тут какая-то засада! к изначальном коде нет метода для запуска!
+        //метод Main() тоже не даёт создать, то есть по логике сам запускается метод
+        //ProcessingGames.GameReport(List<string> inputLines);
+        //получается не нужно ничего писать до класса ProcessingGames
+        //подразумевается, что автоматом запускается ProcessingGames.GameReport
+        //и передаётся аргумент - готовый список
+        //проверить не смог...
+
+        List<string> inputData = new List<string>();
+
+        string line;
+        while ((line = Console.ReadLine()) != null)
+        {
+            if (line == "") break;
+            inputData.Add(line);
+        }
+
+        inputData = new List<string>() {
             "1000->Stafgfgfg->90->1010000",
             "1001->StardewValley->95->50000",
             "1002->Terraria->85->75000",
@@ -760,18 +842,18 @@ class Program
         };
         inputData = new List<string>() {
             "4999->Tindo->78->78000",
-            "4888->Raadi->-1->1000", 
-            "4777->TitaUU->-50->50000", 
-            "4666->Minzi->12->-12000", 
-            "4555->Дженго->34->34000", 
-            "4444->Siti->56->56000", 
+            "4888->Raadi->-1->1000",
+            "4777->TitaUU->-50->50000",
+            "4666->Minzi->12->-12000",
+            "4555->Дженго->34->34000",
+            "4444->Siti->56->56000",
             "4333->Kali->78->78000",
             "4222->Nala->10->10000"
         };
         inputData = new List<string>() {
             "1001->Amani->95->500000",
             "1002->Baraka->85->75000",
-            "1003-> Chidi->92->300000", 
+            "1003-> Chidi->92->300000",
             "1004->Dakarai->80->45000",
             "1005->Ekon->65->50000",
             "1006->Femi->90->200000",
@@ -806,11 +888,10 @@ class Program
             "4078->Kali->65->67000",
             "4089->Nala->78->78000"
         };
+
         var pg = new ProcessingGames();
         var gameList = pg.GameReport(inputData);
-
-
-    } //популярные компьютерные игры
+    } //Популярные компьютерные игры
     public class ProcessingGames
     {
         public IList<string> GameReport(List<string> inputLines)
@@ -827,7 +908,6 @@ class Program
                     Console.WriteLine($"{(g.gameId == "" ? "unknown" : g.gameId)}:{(g.Name == "" ? "unknown" : g.Name)}:incorrect data");
                 }                
             }
-
             return new List<string>();
         }
         public bool ValidateGame(string gameRecord, ref Game g)
@@ -876,7 +956,6 @@ class Program
             }
         }
     }
-
     static void ReportMaker()
     {
         //string inputData = Console.ReadLine();
