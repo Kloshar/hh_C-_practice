@@ -26,9 +26,9 @@ class Program
         //checkingPasswords(); //Проверка ряда паролей (распечатано)
 
         //actors(); //Подбор актёров (распечатано)
-        //ServerAnalyzer(); //Подозрительная активность на сервере (распечатано)
+        ServerAnalyzer(); //Подозрительная активность на сервере (распечатано)
         //StocksMonitoring(); //Мониторинг акций (распечатано)
-        PopularGames(); //Популярные компьютерные игры
+        //PopularGames(); //Популярные компьютерные игры
 
         //Сложный уровень
 
@@ -534,23 +534,24 @@ class Program
     }
     public abstract class Service : IWriteActivity //абстрактный класс, реализующий этот интерфейс
     {
-        public string ServiceId { get; }
-        public int ReadCount { get; set; }
-        public int WriteCount { get; set; }
+        public string ServiceId { get; } //свойство id
+        public int ReadCount { get; set; } //счётчик прочитанных
+        public int WriteCount { get; set; } //счётчик добавленных
         protected Service(string serviceId) //конструктор устанавливает свойство ServiceId
         {
             ServiceId = serviceId;
         }
-        public void AddRead() => ReadCount++;
-        public void AddWrite() => WriteCount++;
+        public void AddRead () => ReadCount++;
+        public void AddWrite () => WriteCount++;
         public bool IsSuspicious() => WriteCount >= 0.75 * (ReadCount + WriteCount);
-        public abstract string GetActivityReport();
+        public abstract string GetActivityReport(); //метод получает отчёт
     }
     public class CorrectService : Service //нормальный класс, наследующий абстрактный
     {
         public CorrectService(string serviceId) : base(serviceId) { }
         public override string GetActivityReport() //переопределяем основной метод. Здесь происходит вся работа
         {
+
             //ваш код
             return "";
         }
@@ -571,9 +572,9 @@ class Program
         Regex LogRegex = new Regex("", RegexOptions.IgnoreCase);
         public ServerLogAnalyzer(IList<string> inputLines)
         {
-            foreach (var live in inputLines)
+            foreach (var line in inputLines)
             {
-                AddLog(live);
+                AddLog(line);
             }
         }
         public void AddLog(string log)
@@ -593,15 +594,15 @@ class Program
     }
     public class ServerLogAnalyzer2
     {
-        List<string> input;
-        public ServerLogAnalyzer2(List<string> inputData)
+        List<string> input; //список входных строк
+        public ServerLogAnalyzer2(List<string> inputData) //конструктор
         {
             input = inputData;
         }
         public List<string> ProcessingServerLogs()
         {
-            var strings = new List<string>();
-            var lst = new List<LogRecord>();
+            var strings = new List<string>(); //список выходных строк
+            var lst = new List<LogRecord>(); //список объектов записи
 
             //проверяем корректность каждой записи
             foreach (string s in input)
@@ -628,25 +629,26 @@ class Program
 
                     if (int.Parse(serviceNumber) >= 10000 && int.Parse(serviceNumber) <= 99999 && Regex.IsMatch(dataString, "^[A-Z]{9}$") && action == "read" || action == "write")
                     {
-                        lst.Add(rec);
+                        lst.Add(rec); //добавляем новую запись в список корректных
                         //Console.WriteLine($"{rec} добавлена");
                     }
                 }
             }
 
+            //словарь 
             SortedDictionary<string, List<int>> readWriteCounter = new SortedDictionary<string, List<int>>(new StringComparer()); //ключ, список из целых
 
             foreach (LogRecord r in lst)
             {
-                if (!readWriteCounter.ContainsKey(r.ServiceNumber))
+                if (!readWriteCounter.ContainsKey(r.ServiceNumber)) //если в словаре нет элемента с номером из списка
                 {
-                    readWriteCounter.Add(r.ServiceNumber, new List<int>() { 0, 0 });
+                    readWriteCounter.Add(r.ServiceNumber, new List<int>() { 0, 0 }); //то добавляем элемент списка в словарь
                 }
-                if (r.Action == "read") readWriteCounter[r.ServiceNumber][0] += 1;
-                if (r.Action == "write") readWriteCounter[r.ServiceNumber][1] += 1;
+                if (r.Action == "read") readWriteCounter[r.ServiceNumber][0] += 1; //счётчик чтения
+                if (r.Action == "write") readWriteCounter[r.ServiceNumber][1] += 1; //счётчик записи
             }
 
-            if (readWriteCounter.Count > 0)
+            if (readWriteCounter.Count > 0) //
             {
                 foreach (KeyValuePair<string, List<int>> kv in readWriteCounter)
                 {
