@@ -7,6 +7,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Collections;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 class Program
 {
@@ -26,9 +27,9 @@ class Program
         //checkingPasswords(); //Проверка ряда паролей (распечатано)
 
         //actors(); //Подбор актёров (распечатано)
-        ServerAnalyzer(); //Подозрительная активность на сервере (распечатано)
+        //ServerAnalyzer(); //Подозрительная активность на сервере (распечатано)
         //StocksMonitoring(); //Мониторинг акций (распечатано)
-        //PopularGames(); //Популярные компьютерные игры
+        PopularGames(); //Популярные компьютерные игры
 
         //Сложный уровень
 
@@ -376,7 +377,7 @@ class Program
         inputData = new List<string>() {
             "Иванов::12345::180::1985",
             "Петров::54321::185::1975",
-            "Сидоров::99999::170::1980",            
+            "Сидоров::99999::170::1980",
             "Кузнецов::11111::188::1980"
         };
         inputData = new List<string>() {
@@ -470,63 +471,82 @@ class Program
 
          */
         List<string> input = new List<string>();
-        //input = new List<string>() {
-        //    "<service=\"10001\" data=\"ABCDEFGHI\" action=\"read\">", 
-        //    "<service=\"10001\" data=\"JKLMNOPQR\" action=\"read\">",
-        //    "<service=\"10001\" data=\"STUVWXYZa\" action=\"write\">", 
-        //    "<service=\"10002\" data=\"bcdefghij\" action=\"read\">"
-        //};
-        //input = new List<string>() {
-        //    "<service=\"20001\" data=\"AAAAAAAAA\" action=\"write\">", 
-        //    "<service=\"20001\" data=\"BBBBBBBBB\" action=\"write\">", 
-        //    "<service=\"20001\" data=\"CCCCCCCCC\" action=\"write\">", 
-        //    "<service=\"20001\" data=\"DDDDDDDDD\" action=\"read\">", 
-        //    "<service=\"20002\" data=\"EEEEEEEEE\" action=\"read\">", 
-        //    "<service=\"20002\" data=\"FFFFFFFFF\" action=\"read\">", 
-        //    "<service=\"20002\" data=\"GGGGGGGGG\" action=\"write\">"
-        //};
-        //input = new List<string>() {
-        //    "<service=\"20002\" data=\"EEEEEEEEE\" acteon=\"read\">", 
-        //    "<service=\"20002\" data=\"FFFFFF\" action=\"re\">", 
-        //    "<service=\"200\" data=\"GGGGGGGGG\" action=\"write\">"
-        //};
-        //input = new List<string>() {
-        //    "<service=\"31007\" data=\"ABCDEFGHI\" action=\"write\">",
-        //    "<service=\"32008\" data=\"JKLMNOPQR\" action=\"read\">",
-        //    "<service=\"31OO7\" data=\"STUVWXYZA\" action=\"write\">",
-        //    "<service=\"32008\" data=\"BCDEFGHIJ\" action=\"read\">",
-        //    "<service=\"31OO7\" data=\"KLMNOPQRS\" action=\"write\">",
-        //    "<service=\"32008\" data=\"TUVWXYZAB\" action=\"read\">",
-        //    "<service=\"31OO7\" data=\"CDEFGHIJK\" action=\"write\">",
-        //    "<service=\"32008\" data=\"LMNOPQRST\" action=\"read\">"
-        //};
         input = new List<string>() {
-            "<service=\"39015\" data=\"ABCDEFJHI\" action=\"read\">", 
-            "<service=\"40016\" data=\"JKLMNOPQR\" action=\"read\">", 
-            "<service=\"39015\" data=\"STUVWXYZA\" action=\"write\">", 
-            "<service=\"40016\" data=\"BCDEFGHIJ\" action=\"read\">", 
-            "<service=\"39015\" data=\"KLMNOPQRS\" action=\"write\">", 
-            "<service=\"40016\" data=\"TUVWXYZAB\" action=\"read\">", 
-            "<service=\"39015\" data=\"CDEFGHIJK\" action=\"write\">", 
-            "<service=\"40016\" data=\"LMNOPQRST\" action=\"read\">", 
-            "<service=\"39015\" data=\"UVWXYZABC\" action=\"write\">", 
-            "<service=\"40016\" data=\"XYZABCDEF\" action=\"read\">", 
-            "<service=\"39015\" data=\"YZABCDEFG\" action=\"write\">", 
-            "<service=\"40016\" data=\"ZABCDEFGH\" action=\"write\">", 
-            "<service=\"39015\" data=\"NEWDATAID\" action=\"write\">", 
-            "<service=\"40016\" data=\"ANOTHERID\" action=\"read\">"
+            "<service=\"10001\" data=\"ABCDEFGHI\" action=\"read\">",
+            "<service=\"10001\" data=\"JKLMNOPQR\" action=\"read\">",
+            "<service=\"10001\" data=\"STUVWXYZa\" action=\"write\">",
+            "<service=\"10002\" data=\"bcdefghij\" action=\"read\">"
         };
-        //string str;
-        //do
-        //{
-        //    str = Console.ReadLine();
-        //    input.Add(str);
+        input = new List<string>() {
+            "<service=\"20001\" data=\"AAAAAAAAA\" action=\"write\">",
+            "<service=\"20001\" data=\"BBBBBBBBB\" action=\"write\">",
+            "<service=\"20001\" data=\"CCCCCCCCC\" action=\"write\">",
+            "<service=\"20001\" data=\"DDDDDDDDD\" action=\"read\">",
+            "<service=\"20002\" data=\"EEEEEEEEE\" action=\"read\">",
+            "<service=\"20002\" data=\"FFFFFFFFF\" action=\"read\">",
+            "<service=\"20002\" data=\"GGGGGGGGG\" action=\"write\">"
+        };
+        input = new List<string>() {
+            "<service=\"20002\" data=\"EEEEEEEEE\" acteon=\"read\">",
+            "<service=\"20002\" data=\"FFFFFF\" action=\"re\">",
+            "<service=\"200\" data=\"GGGGGGGGG\" action=\"write\">"
+        };
+        input = new List<string>() {
+            "<service=\"31007\" data=\"ABCDEFGHI\" action=\"write\">",
+            "<service=\"32008\" data=\"JKLMNOPQR\" action=\"read\">",
+            "<service=\"31OO7\" data=\"STUVWXYZA\" action=\"write\">",
+            "<service=\"32008\" data=\"BCDEFGHIJ\" action=\"read\">",
+            "<service=\"31OO7\" data=\"KLMNOPQRS\" action=\"write\">",
+            "<service=\"32008\" data=\"TUVWXYZAB\" action=\"read\">",
+            "<service=\"31OO7\" data=\"CDEFGHIJK\" action=\"write\">",
+            "<service=\"32008\" data=\"LMNOPQRST\" action=\"read\">"
+        };
+        input = new List<string>() {
+            "<service=\"41017\" data=\"ABCDEFGHI\" action=\"write\">",
+            "<service=\"42018\" data=\"JKLMNOPQR\" action=\"read\">",
+            "<service=\"41017\" data=\"STUVWXYZA\" action=\"write\">",
+            "<service=\"42018\" data=\"BCDEFGHIJ\" action=\"read\">",
+            "<service=\"41017\" data=\"KLMNOPQRS\" action=”write\">",
+            "<service=\"42018\" data=\"TUVWXYZAB\" action=\"read\">",
+            "<service=\"41017\" data=\"CDEFGHIJK\" action=\"write\">",
+            "<service=\"42018\" data=\"LMNOPQRST\" action=\"read\">",
+            "<service=\"41017\" data=\"UVWXYZABC\" action=\"write\">",
+            "<service=\"42018\" data=\"XYZABCDEF\" action=\"read\">",
+            "<service=\"41017\" data=\"YZABCDEFG\" action=\"write\">",
+            "<service=\"42018\" data=\"ZABCDEFGH\" action=\"read\">",
+            "<service=\"41017\" data=\"NEWDATAID\" action=\"write\">",
+            "<service=\"42018\" data=\"ANOTHERID\" action=\"write\">"
+        };
+        input = new List<string>() {
+           "<service=\"29005\" data=\"ABCDEFGHI\" action=\"read\">",
+            "<service=\"30006\" data=\"JKLMNOPQR\" action=\"write\">",
+            "<service=\"29005\" data=\"STUVWXYZA\" action=\"read\">",
+            "<service=\"30006\" data=\"BCDEFGHIJ\" action=\''write\">",
+            "<service=\"29005\" data=\"KLMNOPQRS\" action=\"read\">",
+            "<service=\"30006\" data=\"TUVWXYZAB\" action=\"write\">",
+            "<service=\"29005\" data=\"CDEFGHIJK\" action=\"read\">",
+            "<service=\"30006\" data=\"LMNOPQRST\" action=\"write\">"
+        };
+        //input = new List<string>() {
+        //    "<service=\"39015\" data=\"ABCDEFJHI\" action=\"read\">",
+        //    "<service=\"40016\" data=\"JKLMNOPQR\" action=\"read\">",
+        //    "<service=\"39015\" data=\"STUVWXYZA\" action=\"write\">",
+        //    "<service=\"40016\" data=\"BCDEFGHIJ\" action=\"read\">",
+        //    "<service=\"39015\" data=\"KLMNOPQRS\" action=\"write\">",
+        //    "<service=\"40016\" data=\"TUVWXYZAB\" action=\"read\">",
+        //    "<service=\"39015\" data=\"CDEFGHIJK\" action=\"write\">",
+        //    "<service=\"40016\" data=\"LMNOPQRST\" action=\"read\">",
+        //    "<service=\"39015\" data=\"UVWXYZABC\" action=\"write\">",
+        //    "<service=\"40016\" data=\"XYZABCDEF\" action=\"read\">",
+        //    "<service=\"39015\" data=\"YZABCDEFG\" action=\"write\">",
+        //    "<service=\"40016\" data=\"ZABCDEFGH\" action=\"write\">",
+        //    "<service=\"39015\" data=\"NEWDATAID\" action=\"write\">",
+        //    "<service=\"40016\" data=\"ANOTHERID\" action=\"read\">"
+        //};
 
-        //} while (str != "");
-
-        ServerLogAnalyzer analyzer = new ServerLogAnalyzer(input);
-        List<string> l = analyzer.ProcessingServerLogs();
-        foreach (string line in l) Console.WriteLine(line);
+        ServerLogAnalyzer analyzer = new ServerLogAnalyzer(input); //создаём экземпляр класса и передаём строки
+        List<string> l = analyzer.ProcessingServerLogs(); //этот метод по-видимому сам запускается
+        //foreach (string line in l) Console.WriteLine(line);
     } //Подозрительная активность на сервере
     interface IWriteActivity //ненужный интерфейс
     {
@@ -541,19 +561,32 @@ class Program
         {
             ServiceId = serviceId;
         }
-        public void AddRead () => ReadCount++;
-        public void AddWrite () => WriteCount++;
-        public bool IsSuspicious() => WriteCount >= 0.75 * (ReadCount + WriteCount);
+        public void AddRead() => ReadCount++;
+        public void AddWrite() => WriteCount++;
+        public bool IsSuspicious() => WriteCount >= 0.75 * (ReadCount + WriteCount); //подозрительный?
         public abstract string GetActivityReport(); //метод получает отчёт
     }
     public class CorrectService : Service //нормальный класс, наследующий абстрактный
     {
         public CorrectService(string serviceId) : base(serviceId) { }
-        public override string GetActivityReport() //переопределяем основной метод. Здесь происходит вся работа
+        public override string GetActivityReport() //определяем основной метод
         {
-
             //ваш код
-            return "";
+
+            string result = string.Empty;
+
+            if (!this.IsSuspicious())
+            {
+                result = JsonSerializer.Serialize(this);
+                result = result.Replace("ServiceId", "service");
+                result = result.Replace("ReadCount", "read");
+                result = result.Replace("WriteCount", "write");
+            }
+            else
+            {
+                result = $"Alert! {ServiceId} has suspicious activity";
+            }
+            return result;
         }
     }
     public class FishingService : Service //нормальный класс, наследующий абстрактный
@@ -569,7 +602,7 @@ class Program
     {
         private readonly Dictionary<string, Service> _service = new Dictionary<string, Service>();
         //ваш код для регулярного выражения LogRegex
-        Regex LogRegex = new Regex("", RegexOptions.IgnoreCase);
+        Regex LogRegex = new Regex(@"service=""[1-9]{1}\d{4}"" data=""[A-Za-zЁё]{9}"" action=""(?:read|write)""", RegexOptions.IgnoreCase); //создаём класс и передаём паттерн
         public ServerLogAnalyzer(IList<string> inputLines)
         {
             foreach (var line in inputLines)
@@ -583,12 +616,35 @@ class Program
             if (match.Success)
             {
                 //ваш код
+                string[] parts = log.Split();
+                CorrectService s = new CorrectService(Regex.Match(parts[0], @"\d+").Value);
+
+                if (!_service.ContainsKey(s.ServiceId)) //сначала проверяем есть ли в словаре этот id
+                {
+                    //Console.WriteLine($"Сервис {s.ServiceId} отсутствует в словаре! parts[2] == {parts[2]}");
+                    if (Regex.Match(parts[2], @"read|write").Value == "read") s.AddRead(); else s.AddWrite();
+                    _service.Add(s.ServiceId, s); //если нет, то добавляем в словарь
+                }
+                else //если уже есть в словаре, то вызываем AddRead() или AddWrite()
+                {
+                    //Console.WriteLine($"Сервис {s.ServiceId} уже есть в словаре! parts[2] == {parts[2]}");
+                    if (Regex.Match(parts[2], @"read|write").Value == "read") _service[s.ServiceId].AddRead(); else _service[s.ServiceId].AddWrite();
+                }
             }
         }
         public List<string> ProcessingServerLogs()
         {
             List<string> lst = new List<string>();
             //ваш код
+            foreach (var r in _service)
+            {
+                //Console.WriteLine($"id={r.Value.ServiceId}, readcount={r.Value.ReadCount}, writecount={r.Value.WriteCount}, IsSuspection={r.Value.IsSuspicious()}");
+                lst.Add(r.Value.GetActivityReport());
+            }
+            if (lst.Count == 0) lst.Add("none");
+
+            foreach (string el in lst) Console.WriteLine(el);
+
             return lst;
         }
     }
@@ -648,7 +704,7 @@ class Program
                 if (r.Action == "write") readWriteCounter[r.ServiceNumber][1] += 1; //счётчик записи
             }
 
-            if (readWriteCounter.Count > 0) //
+            if (readWriteCounter.Count > 0) //подсчёт чтения и записи
             {
                 foreach (KeyValuePair<string, List<int>> kv in readWriteCounter)
                 {
@@ -660,14 +716,14 @@ class Program
 
             return strings;
         }
-    }
+    } //устаревший метод (оставлен для резерва)
     class StringComparer : IComparer<string>
     {
         public int Compare(string a, string b)
         {
             return a.CompareTo(b);
         }
-    }
+    } //более не требуется
     class LogRecord
     {
         public string ServiceNumber { get; set; }
@@ -679,7 +735,7 @@ class Program
             DataString = dataString;
             Action = action;
         }
-    }
+    } //не используется
 
     static void StocksMonitoring()
     {
@@ -791,7 +847,8 @@ class Program
             Price = price;
             Change = change;
             Time = time;
-        }        public override string ToString() 
+        }
+        public override string ToString()
         {
             return $"{Name}::{Price}::{Change}::{Time:HH:mm:ss}";
         }
@@ -908,7 +965,7 @@ class Program
                 else //если есть ошибки
                 {
                     Console.WriteLine($"{(g.gameId == "" ? "unknown" : g.gameId)}:{(g.Name == "" ? "unknown" : g.Name)}:incorrect data");
-                }                
+                }
             }
             return new List<string>();
         }
