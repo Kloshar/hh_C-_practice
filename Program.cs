@@ -1,14 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Collections;
+﻿using System.Text.Json;
 using System.Text.RegularExpressions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 class Program
 {
     static void Main()
@@ -1430,33 +1421,55 @@ class Program
                 var (type, id, lastName, rating, date) = ParseInputLine(item);
                 //ваш код
 
+                //то есть в _employees два значения J и M...
+                //foreach (KeyValuePair<string, List<Employee>> kv in _employees) Console.WriteLine($"key={kv.Key}, value={kv.Value}");
+
+                //Console.WriteLine($"type={type}, id={id}, lastName={lastName}, rating={rating}, date={date.ToString("d")}, {FindEmployee(id)==null}, _employees[J]Count={_employees["J"].Count}, _employees[M]Count={_employees["M"].Count}");
+
+                if (FindEmployee(id) != null)
+                {
+                    Console.WriteLine($"Сотрудник {id} найден!");
+                    
+                }
+                else
+                {
+                    AddNewEmployee(type, id, lastName, rating, date);
+                }
             }
             if(result.Count == 0)
             {
                 result.Add("нет");
             }
             return result;
-        }
-        private (string type, int id, string lastName, string rating, DateTime date) ParseInputLine(string line)
+        } //класс для управления кандидатами
+        private (string type, int id, string lastName, int rating, DateTime date) ParseInputLine(string line)
         {
             var parts = line.Split(';');
             //ваш код
 
+            string type = parts[0];
+            int id = Convert.ToInt32(parts[1]);
+            var lastName = parts[2];
+            var rating = Convert.ToInt32(parts[3].Split(':')[0]);
+            DateTime date = Convert.ToDateTime(parts[3].Split(':')[1]);
+
             return (type, id, lastName, rating, date);
-        }
+        } //метод из стоки делает массив данных
         private Employee FindEmployee(int id)
         {
             foreach (var type in _employees.Keys)
             {
                 //ваш код
+
+                Console.WriteLine($"type={type}, {_employees[type].GetType()}");
             }
             return null;
         }
         private void AddNewEmployee(string type, int id, string lastName, int rating, DateTime date)
         {
-            var newEmployee = new Employee(type, id, lastName, rating, date);
-            newEmployee.RatingChanged += RatingLogger.LogToJson;
-            _employees[type].Add(newEmployee);
+            var newEmployee = new Employee(type, id, lastName, rating, date); //создаём нового сотрудника
+            newEmployee.RatingChanged += RatingLogger.LogToJson; //присоединяем обработчик к событию RatingChanged
+            _employees[type].Add(newEmployee); //добавляем в сотрудника в словарь
         }
     }
 
