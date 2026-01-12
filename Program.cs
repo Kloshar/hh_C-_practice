@@ -6,8 +6,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Numerics;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Text.Json;
+using System.Collections;
 using System.Text.RegularExpressions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 class Program
@@ -587,7 +586,7 @@ class Program
         inputData = new List<string>() {
             "Иванов::12345::180::1985",
             "Петров::54321::185::1975",
-            "Сидоров::99999::170::1980",            
+            "Сидоров::99999::170::1980",
             "Кузнецов::11111::188::1980"
         };
         inputData = new List<string>() {
@@ -1049,7 +1048,8 @@ class Program
             Price = price;
             Change = change;
             Time = time;
-        }        public override string ToString() 
+        }
+        public override string ToString()
         {
             return $"{Name}::{Price}::{Change}::{Time:HH:mm:ss}";
         }
@@ -1287,7 +1287,7 @@ class Program
                 else //если есть ошибки
                 {
                     Console.WriteLine($"{(g.gameId == "" ? "unknown" : g.gameId)}:{(g.Name == "" ? "unknown" : g.Name)}:incorrect data");
-                }                
+                }
             }
             return new List<string>();
         }
