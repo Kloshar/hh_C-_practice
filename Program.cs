@@ -1,13 +1,15 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Numerics;
-using System.Text;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Collections;
+using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 class Program
 {
     static void Main()
@@ -26,18 +28,19 @@ class Program
         //checkingPasswords(); //Проверка ряда паролей (распечатано)
 
         //actors(); //Подбор актёров (распечатано)
-        ServerAnalyzer(); //Подозрительная активность на сервере (распечатано)
+        //ServerAnalyzer(); //Подозрительная активность на сервере (распечатано)
         //StocksMonitoring(); //Мониторинг акций (распечатано)
         //PopularGames(); //Популярные компьютерные игры
+        DinamycRating(); //Динамический рейтинг
 
         //Сложный уровень
 
-        //ReportMaker();
-        //Backlogs();
-        //Lottery();
-        //Coding();
-        //Users_access();
-        //UnfairClients();
+        //ReportMaker(); //отчёты по продажам
+        //Backlogs(); //предмет без отстающих
+        //Lottery(); //победители лотереи
+        //Coding(); //кодирование по частотности
+        //Users_access(); //система управления доступом
+        //UnfairClients(); //недобросовестные клиенты
 
         Console.WriteLine("Press any key...");
         Console.ReadKey();
@@ -307,7 +310,215 @@ class Program
             return result.Count();
         }
     }
-    static void actors()
+
+    static void actors() 
+    {
+        List<string> 
+            inputData = new List<string>() {
+            "Иванов::12345::180::1985",
+            "Петров::54321::185::1975",
+            "Сидорoв::99999::170::1980", //почему-то отсеивают. Латиница в фамилии?
+            "Кузнецов::11111::188::1980"
+        };
+        inputData = new List<string>() {
+            "Johnson::12345::180::1985",
+            "Петров2::54321::185",
+            "Сидоров-Борисов::999::170::1980",
+            "Кузнецов::11111::180::3000"
+        };
+        inputData = new List<string>() {
+            "Павлов::12345::180::1990",
+            "Белoв::54321::220::1930", //почему-то отсеивают. Рост? Год? Латиница в фамилии?
+            "Чернoв::67890::90::2010", //почему-то отсеивают. Рост? Латиница в фамилии?
+            "Рыжoв::98765::185::1995", //почему-то отсеивают. Латиница в фамилии?
+            "12345::10000::170::1980",
+            "Дроздов::99999::89::1990",
+            "Гусев::12345::221::1990",
+            "Журавлев::54321::175::1929"
+        };
+        inputData = new List<string>() {
+            "Зайцев::12745::180::1990",
+            "Волков::54421::220::1930",
+            "Егоров::67890::90::2010",
+            "Комаров::98765::185::1995",
+            "Тихонов::10000::170::1980",
+            "Савельев::99999::220::1990",
+            "Филиппов::12345::180::1990",
+            "Макаров::54321::180::1929"
+        };
+        inputData = new List<string>() {
+            "Соловьев::12345::180::1990::563",
+            "Ворона::54321::220::1930",
+            "Сорока::67890::90::2010",
+            "Голубь::98765::185::1995::Ведущий::201",
+            "Сокол::10000::170::1980",
+            "0рёл::99999::220::1990",
+            "Ястреб::12345::175::1990",
+            "Коршун::54321::180::1929",
+            "Жаворонок::123::185::1995",
+            "Чайка::67890::89::1990",
+            "Лебедь::98765::221::1990",
+            "Аист::10000::175::2011"
+        };
+        /* inputData = new List<string>() {
+            "Иванов::12345::175::1980  ",
+            "  Петров::12445::175::1980",
+            "::12345::175::1980",
+            "Сидоров::12545::85::1980",
+            "Смирнов::9999::175::1980",
+            "Васильев::12645::175::1929",
+            "Алексеев::12745::221::1980",
+            "Николаев::10000::175::2011",
+            "Николаев::10000::175::1930"
+        };        
+        inputData = new List<string>() {
+            "Смирнов::10000::90::1930",
+            "::20000::170::1980",
+            "Кузнецов::99999::220::2010",
+            "Лисицын::1234::180::1995",
+            "Медведев::12345::89::1990",
+            "Орлов::54321::221::1990",
+            "Соколов::67890::175::1929",
+            "Воробьев::98765::185::2011"
+        };
+        inputData = new List<string>() {
+            "Григорьев::10001::91::1931",
+            "Иванова::9999::170::1980",
+            "Петрова::100000::175::1990",
+            "Сидоров::12345::220::1930",
+            "Николаев::54321::90::2010",
+            "Федоров::123::180::1995",
+            "Козлов::67890::220::1929",
+            "Новиков::98765::185::2011"
+        };*/
+
+        ProcessingValidateActors proc = new ProcessingValidateActors(inputData); //не вводить. Используется для отладки
+        IList<string> validActors = proc.PrintValidActors(); //не вводить. Используется для отладки
+        foreach (var item in validActors) Console.WriteLine(item); //не вводить. Используется для отладки
+    } //Подбор актёров
+    public class ProcessingValidateActors
+    {
+        private readonly List<Actor> validActors = new List<Actor>();
+        public ProcessingValidateActors(IList<string> inputLines)
+        {
+            foreach(var input in inputLines)
+            {
+                ValidateActor(input);
+            }
+        } //проверка актёра
+        public bool ValidateActor(string actorData)
+        {
+            string[] parts = actorData.Split(new[] { "::" }, StringSplitOptions.None);
+            if (parts.Length != 4) return false;
+
+            bool isCorrect = true;
+            //проверка фамилии
+            //ваш код
+
+            //Console.WriteLine($"Проверяем фамилию: {parts[0]}");
+
+            string lastName = string.Empty;
+
+            if (parts[0].Length >= 1 && parts[0].Length <= 40)
+            {
+                foreach (char c in parts[0])
+                {
+                    if (!IsRussianLetter(c))
+                    {
+                        //Console.WriteLine($"Not correct letter: {c}");
+                        isCorrect = false;
+                    }
+                }
+                if(isCorrect) lastName = parts[0];
+            }
+            else isCorrect = false;
+
+            //Console.WriteLine($"lastName={lastName}, isCorrect={isCorrect}");
+
+            //проверка ActorID
+            //ваш код
+
+            int actorId = 0;
+
+            if (int.TryParse(parts[1], out actorId))
+            {
+                if (actorId < 10000 || actorId > 99999)
+                {
+                    isCorrect = false;
+                }
+            }
+            else isCorrect = false;
+
+            //Console.WriteLine($"actorId={actorId}, isCorrect={isCorrect}");
+
+            //проверка роста
+            //ваш код
+
+            int height = 0;
+
+            if (int.TryParse(parts[2], out height))
+            {
+                if (height < 90 || height > 220)
+                {
+                    isCorrect = false;
+                }
+            }
+            else isCorrect = false;
+
+            //Console.WriteLine($"height={height}, isCorrect={isCorrect}");
+
+            //проверка года рождения
+            //ваш код
+
+            int birthYear = 0;
+
+            if (int.TryParse(parts[3], out birthYear))
+            {
+                if (birthYear < 1930 || birthYear > 2010)
+                {
+                    isCorrect = false;
+                }
+            }
+            else isCorrect = false;
+
+            //Console.WriteLine($"birthYear={birthYear}, isCorrect={isCorrect}");
+
+            //дополнительные критерии отбора
+            if (isCorrect) //ваш код
+                {
+                //Console.WriteLine($"Valid actor is: {lastName }");
+                validActors.Add(new Actor(lastName, actorId, height, birthYear));
+                }
+            return false;
+        } //проверка вызывает из конструктора и добавляет в validActors
+        public IList<string> PrintValidActors()
+        {
+            if(validActors.Count== 0) return new List<string> { "none" };
+            return validActors.Select(a => $"{a.ActorId}({a.LastName}:{a.Height}:{a.BirthYear})").ToList();
+        } //выводит список актёров
+        private static bool IsRussianLetter(char c)
+        {
+            string allowableLetters = "ёйцукенгшщзфывапролджэячсмитьбю";
+            c = Char.ToLower(c);
+            return allowableLetters.Contains(c);
+        } //проверяет букву
+    } //класс для обработки
+    public class Actor
+    {
+        public string LastName { get; }
+        public int ActorId { get; }
+        public int Height { get; }
+        public int BirthYear { get; }
+        public Actor(string lastName, int actorId, int height, int birthYear)
+        {
+            LastName = lastName;
+            ActorId = actorId;
+            Height = height;
+            BirthYear = birthYear;
+        }
+    }
+
+    static void actors2()
     {
         List<string> inputData = new List<string>() {
             "Иванов::12345::175::1980  ",
@@ -386,17 +597,17 @@ class Program
             "Кузнецов::11111::180::3000"
         };
 
-        ProcessingValidateActors proc = new ProcessingValidateActors(inputData);
+        ProcessingValidateActors2 proc = new ProcessingValidateActors2(inputData);
         List<string> approved = (List<string>)proc.PrintValidActors();
 
         //выводить на экран, вроде, не просят. Но для проверки:
         if (approved.Count > 0) foreach (string a in approved) Console.WriteLine(a);
         else Console.WriteLine("none"); //эта строка не сработала
-    } //Подбор актёров
-    public class ProcessingValidateActors
+    } //переделано. Не используется
+    public class ProcessingValidateActors2
     {
         List<string> inputData;
-        public ProcessingValidateActors(List<string> input)
+        public ProcessingValidateActors2(List<string> input)
         {
             inputData = input;
         }
@@ -406,7 +617,7 @@ class Program
 
             if (data.Count() == 4 &&
                 data[0].Length > 0 && data[0].Length <= 40 && Regex.IsMatch(data[0], "^[А-Яа-я]+$") &&
-                int.TryParse(data[1], out int x) && x >= 10000 && x <= 99999 &&
+                int.TryParse(data[1], out int x) && x >= 10000 && x <= 99999 && 
                 Convert.ToInt32(data[2]) >= 172 && Convert.ToInt32(data[2]) <= 190 && Convert.ToInt32(data[3]) >= 1960 && Convert.ToInt32(data[3]) <= 1990)
             {
                 //Console.WriteLine($"Кандидат подходит: ФИО: {data[0]}, ID: {data[1]}, рост: {data[2]}, год рождения: {data[3]}");
@@ -461,71 +672,83 @@ class Program
     }
     static void ServerAnalyzer()
     {
-        /*
-         Задача выполнена, но классы CorrectService и FishingService не используются и созданы формально
-         Нужно понять как именно будут вводиться данные. Сейчас предполагается, что данные вводятся в консоль
-         до тех пор, пока вводится пустая строка
-
-        нужно переделать код под последнюю версию с hh
-
-         */
         List<string> input = new List<string>();
-        //input = new List<string>() {
-        //    "<service=\"10001\" data=\"ABCDEFGHI\" action=\"read\">", 
-        //    "<service=\"10001\" data=\"JKLMNOPQR\" action=\"read\">",
-        //    "<service=\"10001\" data=\"STUVWXYZa\" action=\"write\">", 
-        //    "<service=\"10002\" data=\"bcdefghij\" action=\"read\">"
-        //};
-        //input = new List<string>() {
-        //    "<service=\"20001\" data=\"AAAAAAAAA\" action=\"write\">", 
-        //    "<service=\"20001\" data=\"BBBBBBBBB\" action=\"write\">", 
-        //    "<service=\"20001\" data=\"CCCCCCCCC\" action=\"write\">", 
-        //    "<service=\"20001\" data=\"DDDDDDDDD\" action=\"read\">", 
-        //    "<service=\"20002\" data=\"EEEEEEEEE\" action=\"read\">", 
-        //    "<service=\"20002\" data=\"FFFFFFFFF\" action=\"read\">", 
-        //    "<service=\"20002\" data=\"GGGGGGGGG\" action=\"write\">"
-        //};
-        //input = new List<string>() {
-        //    "<service=\"20002\" data=\"EEEEEEEEE\" acteon=\"read\">", 
-        //    "<service=\"20002\" data=\"FFFFFF\" action=\"re\">", 
-        //    "<service=\"200\" data=\"GGGGGGGGG\" action=\"write\">"
-        //};
-        //input = new List<string>() {
-        //    "<service=\"31007\" data=\"ABCDEFGHI\" action=\"write\">",
-        //    "<service=\"32008\" data=\"JKLMNOPQR\" action=\"read\">",
-        //    "<service=\"31OO7\" data=\"STUVWXYZA\" action=\"write\">",
-        //    "<service=\"32008\" data=\"BCDEFGHIJ\" action=\"read\">",
-        //    "<service=\"31OO7\" data=\"KLMNOPQRS\" action=\"write\">",
-        //    "<service=\"32008\" data=\"TUVWXYZAB\" action=\"read\">",
-        //    "<service=\"31OO7\" data=\"CDEFGHIJK\" action=\"write\">",
-        //    "<service=\"32008\" data=\"LMNOPQRST\" action=\"read\">"
-        //};
         input = new List<string>() {
-            "<service=\"39015\" data=\"ABCDEFJHI\" action=\"read\">", 
-            "<service=\"40016\" data=\"JKLMNOPQR\" action=\"read\">", 
-            "<service=\"39015\" data=\"STUVWXYZA\" action=\"write\">", 
-            "<service=\"40016\" data=\"BCDEFGHIJ\" action=\"read\">", 
-            "<service=\"39015\" data=\"KLMNOPQRS\" action=\"write\">", 
-            "<service=\"40016\" data=\"TUVWXYZAB\" action=\"read\">", 
-            "<service=\"39015\" data=\"CDEFGHIJK\" action=\"write\">", 
-            "<service=\"40016\" data=\"LMNOPQRST\" action=\"read\">", 
-            "<service=\"39015\" data=\"UVWXYZABC\" action=\"write\">", 
-            "<service=\"40016\" data=\"XYZABCDEF\" action=\"read\">", 
-            "<service=\"39015\" data=\"YZABCDEFG\" action=\"write\">", 
-            "<service=\"40016\" data=\"ZABCDEFGH\" action=\"write\">", 
-            "<service=\"39015\" data=\"NEWDATAID\" action=\"write\">", 
+            "<service=\"10001\" data=\"ABCDEFGHI\" action=\"read\">",
+            "<service=\"10001\" data=\"JKLMNOPQR\" action=\"read\">",
+            "<service=\"10001\" data=\"STUVWXYZa\" action=\"write\">",
+            "<service=\"10002\" data=\"bcdefghij\" action=\"read\">"
+        };
+        input = new List<string>() {
+            "<service=\"20001\" data=\"AAAAAAAAA\" action=\"write\">",
+            "<service=\"20001\" data=\"BBBBBBBBB\" action=\"write\">",
+            "<service=\"20001\" data=\"CCCCCCCCC\" action=\"write\">",
+            "<service=\"20001\" data=\"DDDDDDDDD\" action=\"read\">",
+            "<service=\"20002\" data=\"EEEEEEEEE\" action=\"read\">",
+            "<service=\"20002\" data=\"FFFFFFFFF\" action=\"read\">",
+            "<service=\"20002\" data=\"GGGGGGGGG\" action=\"write\">"
+        };
+        input = new List<string>() {
+            "<service=\"20002\" data=\"EEEEEEEEE\" acteon=\"read\">",
+            "<service=\"20002\" data=\"FFFFFF\" action=\"re\">",
+            "<service=\"200\" data=\"GGGGGGGGG\" action=\"write\">"
+        };
+        input = new List<string>() {
+            "<service=\"31007\" data=\"ABCDEFGHI\" action=\"write\">",
+            "<service=\"32008\" data=\"JKLMNOPQR\" action=\"read\">",
+            "<service=\"31OO7\" data=\"STUVWXYZA\" action=\"write\">",
+            "<service=\"32008\" data=\"BCDEFGHIJ\" action=\"read\">",
+            "<service=\"31OO7\" data=\"KLMNOPQRS\" action=\"write\">",
+            "<service=\"32008\" data=\"TUVWXYZAB\" action=\"read\">",
+            "<service=\"31OO7\" data=\"CDEFGHIJK\" action=\"write\">",
+            "<service=\"32008\" data=\"LMNOPQRST\" action=\"read\">"
+        };
+        input = new List<string>() {
+            "<service=\"41017\" data=\"ABCDEFGHI\" action=\"write\">",
+            "<service=\"42018\" data=\"JKLMNOPQR\" action=\"read\">",
+            "<service=\"41017\" data=\"STUVWXYZA\" action=\"write\">",
+            "<service=\"42018\" data=\"BCDEFGHIJ\" action=\"read\">",
+            "<service=\"41017\" data=\"KLMNOPQRS\" action=”write\">",
+            "<service=\"42018\" data=\"TUVWXYZAB\" action=\"read\">",
+            "<service=\"41017\" data=\"CDEFGHIJK\" action=\"write\">",
+            "<service=\"42018\" data=\"LMNOPQRST\" action=\"read\">",
+            "<service=\"41017\" data=\"UVWXYZABC\" action=\"write\">",
+            "<service=\"42018\" data=\"XYZABCDEF\" action=\"read\">",
+            "<service=\"41017\" data=\"YZABCDEFG\" action=\"write\">",
+            "<service=\"42018\" data=\"ZABCDEFGH\" action=\"read\">",
+            "<service=\"41017\" data=\"NEWDATAID\" action=\"write\">",
+            "<service=\"42018\" data=\"ANOTHERID\" action=\"write\">"
+        };
+        input = new List<string>() {
+           "<service=\"29005\" data=\"ABCDEFGHI\" action=\"read\">",
+            "<service=\"30006\" data=\"JKLMNOPQR\" action=\"write\">",
+            "<service=\"29005\" data=\"STUVWXYZA\" action=\"read\">",
+            "<service=\"30006\" data=\"BCDEFGHIJ\" action=\''write\">",
+            "<service=\"29005\" data=\"KLMNOPQRS\" action=\"read\">",
+            "<service=\"30006\" data=\"TUVWXYZAB\" action=\"write\">",
+            "<service=\"29005\" data=\"CDEFGHIJK\" action=\"read\">",
+            "<service=\"30006\" data=\"LMNOPQRST\" action=\"write\">"
+        };
+
+        input = new List<string>() {
+            "<service=\"39015\" data=\"ABCDEFJHI\" action=\"read\">",
+            "<service=\"40016\" data=\"JKLMNOPQR\" action=\"read\">",
+            "<service=\"39015\" data=\"STUVWXYZA\" action=\"write\">",
+            "<service=\"40016\" data=\"BCDEFGHIJ\" action=\"read\">",
+            "<service=\"39015\" data=\"KLMNOPQRS\" action=\"write\">",
+            "<service=\"40016\" data=\"TUVWXYZAB\" action=\"read\">",
+            "<service=\"39015\" data=\"CDEFGHIJK\" action=\"write\">",
+            "<service=\"40016\" data=\"LMNOPQRST\" action=\"read\">",
+            "<service=\"39015\" data=\"UVWXYZABC\" action=\"write\">",
+            "<service=\"40016\" data=\"XYZABCDEF\" action=\"read\">",
+            "<service=\"39015\" data=\"YZABCDEFG\" action=\"write\">",
+            "<service=\"40016\" data=\"ZABCDEFGH\" action=\"write\">",
+            "<service=\"39015\" data=\"NEWDATAID\" action=\"write\">",
             "<service=\"40016\" data=\"ANOTHERID\" action=\"read\">"
         };
-        //string str;
-        //do
-        //{
-        //    str = Console.ReadLine();
-        //    input.Add(str);
 
-        //} while (str != "");
-
-        ServerLogAnalyzer analyzer = new ServerLogAnalyzer(input);
-        List<string> l = analyzer.ProcessingServerLogs();
+        ServerLogAnalyzer analyzer = new ServerLogAnalyzer(input); //создаём экземпляр класса и передаём строки
+        List<string> l = analyzer.ProcessingServerLogs(); //этот метод по-видимому сам запускается
         foreach (string line in l) Console.WriteLine(line);
     } //Подозрительная активность на сервере
     interface IWriteActivity //ненужный интерфейс
@@ -543,17 +766,30 @@ class Program
         }
         public void AddRead () => ReadCount++;
         public void AddWrite () => WriteCount++;
-        public bool IsSuspicious() => WriteCount >= 0.75 * (ReadCount + WriteCount);
+        public bool IsSuspicious() => WriteCount >= 0.75 * (ReadCount + WriteCount); //подозрительный?
         public abstract string GetActivityReport(); //метод получает отчёт
     }
     public class CorrectService : Service //нормальный класс, наследующий абстрактный
     {
         public CorrectService(string serviceId) : base(serviceId) { }
-        public override string GetActivityReport() //переопределяем основной метод. Здесь происходит вся работа
+        public override string GetActivityReport() //определяем основной метод
         {
-
             //ваш код
-            return "";
+
+            string result = string.Empty;
+
+            if (!this.IsSuspicious())
+            {
+                result = JsonSerializer.Serialize(this);
+                result = result.Replace("ServiceId", "service");
+                result = result.Replace("ReadCount", "read");
+                result = result.Replace("WriteCount", "write");               
+            }
+            else
+            {
+                result = $"Alert! {ServiceId} has suspicious activity";
+            }
+            return result;
         }
     }
     public class FishingService : Service //нормальный класс, наследующий абстрактный
@@ -569,13 +805,13 @@ class Program
     {
         private readonly Dictionary<string, Service> _service = new Dictionary<string, Service>();
         //ваш код для регулярного выражения LogRegex
-        Regex LogRegex = new Regex("", RegexOptions.IgnoreCase);
+        Regex LogRegex = new Regex(@"service=""[1-9]{1}\d{4}"" data=""[A-Za-zЁё]{9}"" action=""(?:read|write)""", RegexOptions.IgnoreCase); //создаём класс и передаём паттерн
         public ServerLogAnalyzer(IList<string> inputLines)
         {
             foreach (var line in inputLines)
             {
                 AddLog(line);
-            }
+            }           
         }
         public void AddLog(string log)
         {
@@ -583,12 +819,35 @@ class Program
             if (match.Success)
             {
                 //ваш код
-            }
+                string[] parts = log.Split();
+                CorrectService s = new CorrectService(Regex.Match(parts[0], @"\d+").Value);
+
+                if (!_service.ContainsKey(s.ServiceId)) //сначала проверяем есть ли в словаре этот id
+                {
+                    //Console.WriteLine($"Сервис {s.ServiceId} отсутствует в словаре! parts[2] == {parts[2]}");
+                    if (Regex.Match(parts[2], @"read|write").Value == "read") s.AddRead(); else s.AddWrite();
+                    _service.Add(s.ServiceId, s); //если нет, то добавляем в словарь
+                }
+                else //если уже есть в словаре, то вызываем AddRead() или AddWrite()
+                {
+                    //Console.WriteLine($"Сервис {s.ServiceId} уже есть в словаре! parts[2] == {parts[2]}");
+                    if (Regex.Match(parts[2], @"read|write").Value == "read") _service[s.ServiceId].AddRead(); else _service[s.ServiceId].AddWrite();
+                }
+            }            
         }
         public List<string> ProcessingServerLogs()
         {
             List<string> lst = new List<string>();
             //ваш код
+            foreach (var r in _service)
+            {
+                //Console.WriteLine($"id={r.Value.ServiceId}, readcount={r.Value.ReadCount}, writecount={r.Value.WriteCount}, IsSuspection={r.Value.IsSuspicious()}");
+                lst.Add(r.Value.GetActivityReport());
+            }
+            if (lst.Count == 0) lst.Add("none");
+
+            //foreach (string el in lst) Console.WriteLine(el);
+
             return lst;
         }
     }
@@ -648,7 +907,7 @@ class Program
                 if (r.Action == "write") readWriteCounter[r.ServiceNumber][1] += 1; //счётчик записи
             }
 
-            if (readWriteCounter.Count > 0) //
+            if (readWriteCounter.Count > 0) //подсчёт чтения и записи
             {
                 foreach (KeyValuePair<string, List<int>> kv in readWriteCounter)
                 {
@@ -660,14 +919,14 @@ class Program
 
             return strings;
         }
-    }
+    } //переделано. Не используется
     class StringComparer : IComparer<string>
     {
         public int Compare(string a, string b)
         {
             return a.CompareTo(b);
         }
-    }
+    } //переделано. Не используется
     class LogRecord
     {
         public string ServiceNumber { get; set; }
@@ -679,8 +938,7 @@ class Program
             DataString = dataString;
             Action = action;
         }
-    }
-
+    } //переделано. Не используется
     static void StocksMonitoring()
     {
         //тут важно определить, что получаем на вводе: одну строку с переносами, массив строк или список
@@ -796,8 +1054,129 @@ class Program
             return $"{Name}::{Price}::{Change}::{Time:HH:mm:ss}";
         }
     }
+    static void PopularGames() //Популярные компьютерные игры
+    {
+        List<string> inputString = new List<string> {
+                    "1001->StardewValley->50000",
+                    "1002->Terrania->75000",
+                    "1003->HollowKnight->300000",
+                    "1004->Celeste->15000",
+                    "1007->SuperNova->25000" };
+        inputString = new List<string> {
+                    "1001->Stardew Valley->500000",
+                    "1002->85->75000",
+                    "1003->HollowKnight->300000"};
+        inputString = new List<string> {
+                    "499->Tindo->7878000",
+                    "488->Raadi->-100001000",
+                    "477->TitaUU->-5050000",
+                    "666->Minzi->12" };
 
-    static void PopularGames()
+        ProcessingGames pg = new ProcessingGames(); //не вводить. Используется для отладки
+        IList<string> lst = pg.GamesReport(inputString); //не вводить. Используется для отладки
+        foreach (string s in lst) Console.WriteLine(s); //не вводить. Используется для отладки
+    }
+    public enum GameRating
+    {
+        Top, Middle, Low, IncorrectData
+    } //перечисление рейтинга
+    public enum ErrorType
+    {
+        InvalidName, InvalidDownloads
+    } //перечисление типа ошибки
+    public class GameValidationException : Exception
+    {
+        public ErrorType ErrorType { get; } //свойство может содержать InvalidName или InvalidDownloads
+        public string[] GameData { get; } //свойство содержит массив строк
+
+        //метод принимающий ErrorType и массив данных
+        public GameValidationException(ErrorType errorType, string[] gameData) : base($"Game validation error: {errorType}")
+        {
+            ErrorType = errorType; //устанавливаем свойство ErrorType
+            GameData = gameData; //устанавливаем своятсво GameData
+        }
+    } //класс ошибки
+    public class ProcessingGames
+    {
+        public IList<string> GamesReport(List<string> inputLines)
+        {
+            IList<string> res = new List<string>(); //создаём пустой список
+            foreach (var line in inputLines) //перебираем игры посточно
+            {
+                var parts = line.Split(new[] { "->" }, StringSplitOptions.None).Select(p => p.Trim()).ToArray();
+                try
+                {
+                    var game = ValidateGame(parts); //проверяем части
+                    var rating = CalculateGameRate(game.Downloads);
+                    res.Add($"{game.GameId}:{rating.ToString().ToLower()}");
+                }
+                catch (GameValidationException ex)
+                {
+                    string gameId = ex.GameData[0];
+                    res.Add($"{gameId}:incorrect data");
+
+                    //Console.WriteLine($"Обработка исключения: {gameId}:incorrect data, {ex.ErrorType}");
+                }
+            }
+            return res;
+        } //основной метод класса - вызывает другие методы
+        public (int GameId, string Name, int Downloads) ValidateGame(string[] parts)
+        {
+            int.TryParse(parts[0], out int gameId); //возвращает true или false и целое число gameId
+
+            //проверка на набор символов и длину поля parts[1] GameValidationException ErrorType
+            //ваш код
+
+            string str = parts[1];
+            string pattern = @"[^A-Za-z]";
+
+            //Console.WriteLine($"{str}, {!Regex.IsMatch(str, pattern)}");
+
+            if (!Regex.IsMatch(str, pattern) == false || str.Length < 5 || str.Length > 40)
+            {
+                GameValidationException ex = new GameValidationException(ErrorType.InvalidName, parts);
+                throw ex;
+            }
+
+            //проверка на целое и диапазон для поля parts[2] GameValidationException ErrorType
+            //ваш код                
+
+            int downloads = 0;
+            bool isInteger = int.TryParse(parts[2], out downloads);
+
+            //Console.WriteLine($"{isInteger}, {downloads}, {!isInteger || downloads < 0 || downloads >= 10000000}");
+
+            if (!isInteger || downloads < 0 || downloads >= 10000000)
+            {
+                GameValidationException ex = new GameValidationException(ErrorType.InvalidDownloads, parts);
+                throw ex;
+            }
+
+            return (gameId, parts[1], downloads);
+        } //проверка допустимости названия, типов и т.д.
+        public GameRating CalculateGameRate(int downloads)
+        {
+            //ваш код
+
+            GameRating gr;
+
+            if (downloads > 100000)
+            {
+                gr = GameRating.Top;
+            }
+            else if (downloads >= 50000)
+            {
+                gr = GameRating.Middle;
+            }
+            else
+            {
+                gr = GameRating.Low;
+            }
+
+            return gr;
+        } //метод возвращает перечисление GameRating
+    } //класс обработки игр
+    static void PopularGames2()
     {
         //тут какая-то засада! к изначальном коде нет метода для запуска!
         //метод Main() тоже не даёт создать, то есть по логике сам запускается метод
@@ -891,10 +1270,10 @@ class Program
             "4089->Nala->78->78000"
         };
 
-        var pg = new ProcessingGames();
+        var pg = new ProcessingGames2();
         var gameList = pg.GameReport(inputData);
-    } //Популярные компьютерные игры
-    public class ProcessingGames
+    } //переделано. Не используется
+    public class ProcessingGames2
     {
         public IList<string> GameReport(List<string> inputLines)
         {
@@ -957,7 +1336,130 @@ class Program
                 return $"{gameId};{Name};{Rating};{Downloaded}";
             }
         }
+    } //переделано. Не используется
+    static void DinamycRating()
+    {
+        List<string> input = new List<string>() 
+        { 
+            "J;10001;Smith;5:01-01-2025",
+            "M;10002;Johnson;3:01-01-2025",
+            "J; 10003;Williams;4:01-01-2025",
+            "M;10004;Brown;2:01-01-2025",
+            "J;10001;Smith;7:02-01-2025",
+            "M;10002;Johnson;5:02-01-2025",
+            "J;10005;Jones;1:01-01-2025",
+            "M;10004;Brown;4:03-01-2025" 
+        };
+        //input = new List<string>()
+        //{
+        //    "J;10006;Davi s;6:01-01-2025",
+        //    "M;10007;Mitier;7:01-01-2025", 
+        //    "J;10008;Wilson;8:01-01-2025", 
+        //    "M;10009;Moore;9:01-01-2025", 
+        //    "J;10006;Davis;6:01-01-2025"
+        //};
+
+        EmployeeManager manager = new EmployeeManager();
+        List<string> lst = manager.ProcessInputLines(input);
+
+
+    } //Динамический рейтинг
+    public delegate string RatingChangedHandler(Employee employee);
+    public class Employee
+    {
+        public string Type { get; }
+        public int ID { get; }
+        public string LastName { get; }
+        public int Rating { get; }
+        public DateTime Date { get; private set; }
+        private readonly List<RatingChangedHandler> _ratingChangedHandlers = new List<RatingChangedHandler>();
+        public event RatingChangedHandler RatingChanged
+        {
+            add => _ratingChangedHandlers.Add(value);
+            remove => _ratingChangedHandlers.Remove(value);
+        }
+        public Employee(string type, int id, string lastName, int rating, DateTime date)
+        {
+            Type = type;
+            ID = id;
+            LastName = lastName;
+            Rating = rating;
+            Date = date;            
+        }
+        public IList<string> UpdateRating(int newRating, DateTime newDate)
+        {
+            //ваш код
+            List<string> lst = new List<string>();
+
+            return lst;
+        }
+        private IList<string> NotifyRatingChanged()
+        {
+            IList<string> notes = new List<string>();
+            foreach(var handler in _ratingChangedHandlers)
+            {
+                notes.Add(handler?.Invoke(this));
+            }
+            return notes;
+        }
     }
+    public class RatingLogger
+    {
+        public static string LogToJson(Employee employee)
+        {
+            var logEntry = new
+            {
+                ID = employee.ID,
+                Rating = employee.Rating,
+            };
+            return JsonSerializer.Serialize(logEntry);
+        }
+    } //класс логгер. Метод LogToJson возвращает Json
+    public class EmployeeManager
+    {
+        private readonly Dictionary<string, List<Employee>> _employees = new Dictionary<string, List<Employee>>() 
+        {
+            {"J", new List<Employee>() },
+            {"M", new List<Employee>() }
+        };
+        public List<string> ProcessInputLines(List<string> inputLines)
+        {
+            List<string> result = new List<string>();
+            foreach(string item in inputLines)
+            {
+                var (type, id, lastName, rating, date) = ParseInputLine(item);
+                //ваш код
+
+            }
+            if(result.Count == 0)
+            {
+                result.Add("нет");
+            }
+            return result;
+        }
+        private (string type, int id, string lastName, string rating, DateTime date) ParseInputLine(string line)
+        {
+            var parts = line.Split(';');
+            //ваш код
+
+            return (type, id, lastName, rating, date);
+        }
+        private Employee FindEmployee(int id)
+        {
+            foreach (var type in _employees.Keys)
+            {
+                //ваш код
+            }
+            return null;
+        }
+        private void AddNewEmployee(string type, int id, string lastName, int rating, DateTime date)
+        {
+            var newEmployee = new Employee(type, id, lastName, rating, date);
+            newEmployee.RatingChanged += RatingLogger.LogToJson;
+            _employees[type].Add(newEmployee);
+        }
+    }
+
     static void ReportMaker()
     {
         //string inputData = Console.ReadLine();
@@ -992,7 +1494,7 @@ class Program
 
             return result;
         }
-    }
+    } //отчёты по продажам
     class Item
     {
         public string Date { get; set; }
@@ -1092,7 +1594,7 @@ class Program
             }
             return list;
         }
-    }
+    } //предмет без отстающих
     static void Lottery()
     {
         string inputString = Console.ReadLine();
@@ -1143,7 +1645,7 @@ class Program
             for (int i = 1; i < x + 1; i++) amount *= i;
             return amount;
         }
-    }
+    } //победители лотереи
     static void Coding() //ЗАДАЧА НЕ РЕШЕНА (НЕ СОВПАДАЕТ ОТВЕТ)!
     {
         //string inputString = Console.ReadLine();
@@ -1191,7 +1693,7 @@ class Program
             foreach (char ch in text) coded += dic[ch] + ' '; //пробел прибавляется для наглядности
             return coded;
         }
-    }
+    } //кодирование по частотности
     static void Users_access()
     {
         var userManager = new UserManager();
@@ -1244,7 +1746,7 @@ class Program
                     break;
             }
         }
-    }
+    } //система управления доступом
     public class UserManager
     {
         private Dictionary<string, int> users = new Dictionary<string, int>(); //словарь для хранения пользователей и их доступа
