@@ -1331,40 +1331,37 @@ class Program
     static void DinamycRating()
     {
         List<string> input = new List<string>() 
-        { 
-            "J;10001;Smith;5:01-01-2025",
+        {   "J;10001;Smith;5:01-01-2025",
             "M;10002;Johnson;3:01-01-2025",
             "J; 10003;Williams;4:01-01-2025",
             "M;10004;Brown;2:01-01-2025",
             "J;10001;Smith;7:02-01-2025",
             "M;10002;Johnson;5:02-01-2025",
             "J;10005;Jones;1:01-01-2025",
-            "M;10004;Brown;4:03-01-2025" 
-        };
-        //input = new List<string>()
-        //{
-        //    "J;10006;Davi s;6:01-01-2025",
-        //    "M;10007;Mitier;7:01-01-2025", 
-        //    "J;10008;Wilson;8:01-01-2025", 
-        //    "M;10009;Moore;9:01-01-2025", 
-        //    "J;10006;Davis;6:01-01-2025"
-        //};
+            "M;10004;Brown;4:03-01-2025" };
+        /*input = new List<string>()
+        {
+            "J;10006;Davi s;6:01-01-2025",
+            "M;10007;Mitier;7:01-01-2025",
+            "J;10008;Wilson;8:01-01-2025",
+            "M;10009;Moore;9:01-01-2025",
+            "J;10006;Davis;6:01-01-2025"
+        };*/
 
-        EmployeeManager manager = new EmployeeManager();
-        List<string> lst = manager.ProcessInputLines(input);
-
+        EmployeeManager manager = new EmployeeManager(); //создаём экземпляр управляющего класса
+        List<string> lst = manager.ProcessInputLines(input); //запускаем обработку строк
 
     } //Динамический рейтинг
-    public delegate string RatingChangedHandler(Employee employee);
+    public delegate string RatingChangedHandler(Employee employee); //есть делегат, принимающий сотрудника в качестве параметра
     public class Employee
     {
         public string Type { get; }
         public int ID { get; }
         public string LastName { get; }
-        public int Rating { get; }
+        public int Rating { get; private set; }
         public DateTime Date { get; private set; }
-        private readonly List<RatingChangedHandler> _ratingChangedHandlers = new List<RatingChangedHandler>();
-        public event RatingChangedHandler RatingChanged
+        private readonly List<RatingChangedHandler> _ratingChangedHandlers = new List<RatingChangedHandler>(); //список делегатов
+        public event RatingChangedHandler RatingChanged //событие добавляет или удаляет значение из списка
         {
             add => _ratingChangedHandlers.Add(value);
             remove => _ratingChangedHandlers.Remove(value);
@@ -1375,23 +1372,25 @@ class Program
             ID = id;
             LastName = lastName;
             Rating = rating;
-            Date = date;            
+            Date = date;
         }
         public IList<string> UpdateRating(int newRating, DateTime newDate)
         {
             //ваш код
-            List<string> lst = new List<string>();
-
+            Rating = newRating; //обновляем рейтинг сотрудника
+            Date = newDate; //обновляем дату сотрудника
+            IList<string> lst = NotifyRatingChanged();
+            Console.WriteLine(lst[0]); //нужно как-то получить список со всеми изменениями... или не нужно...
             return lst;
         }
         private IList<string> NotifyRatingChanged()
         {
-            IList<string> notes = new List<string>();
-            foreach(var handler in _ratingChangedHandlers)
+            IList<string> notes = new List<string>(); //созаём список
+            foreach(var handler in _ratingChangedHandlers) //перебираем список делегатов
             {
-                notes.Add(handler?.Invoke(this));
+                notes.Add(handler?.Invoke(this)); //вызываем делегат с передачей сотрудника (Employee)
             }
-            return notes;
+            return notes; //возвращаем id и rating
         }
     }
     public class RatingLogger
@@ -1419,21 +1418,26 @@ class Program
             foreach(string item in inputLines)
             {
                 var (type, id, lastName, rating, date) = ParseInputLine(item);
-                //ваш код
-
-                //то есть в _employees два значения J и M...
-                //foreach (KeyValuePair<string, List<Employee>> kv in _employees) Console.WriteLine($"key={kv.Key}, value={kv.Value}");
+                //ваш код                
 
                 //Console.WriteLine($"type={type}, id={id}, lastName={lastName}, rating={rating}, date={date.ToString("d")}, {FindEmployee(id)==null}, _employees[J]Count={_employees["J"].Count}, _employees[M]Count={_employees["M"].Count}");
 
-                if (FindEmployee(id) != null)
-                {
-                    Console.WriteLine($"Сотрудник {id} найден!");
-                    
-                }
-                else
+                Employee emp = FindEmployee(id); //сотрудник из базы
+
+                if (emp == null) //если нет в базе, что добавляем сотрудника
                 {
                     AddNewEmployee(type, id, lastName, rating, date);
+                    //Console.WriteLine($"Сотрудник {id} добавлен!");
+                }
+                else //если уже есть, то изменяем дату и рейтинг
+                {                      
+                    if (date > emp.Date) //проверяем дату и рейтинг
+                    {
+                        if (rating != emp.Rating)
+                        {
+                            emp.UpdateRating(rating, date); //обновляем рейтинг
+                        }
+                    }
                 }
             }
             if(result.Count == 0)
@@ -1457,11 +1461,17 @@ class Program
         } //метод из стоки делает массив данных
         private Employee FindEmployee(int id)
         {
-            foreach (var type in _employees.Keys)
+            foreach (var type in _employees.Keys) //перебираем J и M списки
             {
                 //ваш код
-
-                Console.WriteLine($"type={type}, {_employees[type].GetType()}");
+                foreach(var employee in _employees[type]) //перебираем каждый список
+                {
+                    if(employee.ID == id)
+                    {
+                        //Console.WriteLine($"id={id} = {employee.ID}...");
+                        return employee;
+                    }                    
+                }
             }
             return null;
         }
