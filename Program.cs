@@ -1,5 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
+using System.Linq;
 class Program
 {
     static void Main()
@@ -21,7 +23,8 @@ class Program
         //ServerAnalyzer(); //Подозрительная активность на сервере (распечатано)
         //StocksMonitoring(); //Мониторинг акций (распечатано)
         //PopularGames(); //Популярные компьютерные игры
-        DinamycRating(); //Динамический рейтинг
+        //DinamycRating(); //Динамический рейтинг
+        Freelancers(); //Фрилансеры со всего света
 
         //Сложный уровень
 
@@ -300,7 +303,6 @@ class Program
             return result.Count();
         }
     }
-
     static void actors() 
     {
         List<string> 
@@ -507,7 +509,6 @@ class Program
             BirthYear = birthYear;
         }
     }
-
     static void actors2()
     {
         List<string> inputData = new List<string>() {
@@ -1339,17 +1340,22 @@ class Program
             "M;10002;Johnson;5:02-01-2025",
             "J;10005;Jones;1:01-01-2025",
             "M;10004;Brown;4:03-01-2025" };
-        /*input = new List<string>()
+        input = new List<string>()
+        {
+            "M;10002;Brown;8:01-01-2025",
+            "M;10002;Brown;8:05-01-2025"
+        };
+        input = new List<string>()
         {
             "J;10006;Davi s;6:01-01-2025",
             "M;10007;Mitier;7:01-01-2025",
             "J;10008;Wilson;8:01-01-2025",
             "M;10009;Moore;9:01-01-2025",
             "J;10006;Davis;6:01-01-2025"
-        };*/
-
+        };
         EmployeeManager manager = new EmployeeManager(); //создаём экземпляр управляющего класса
         List<string> lst = manager.ProcessInputLines(input); //запускаем обработку строк
+        foreach(string s in lst) Console.WriteLine(s); //выводим строки из списка
 
     } //Динамический рейтинг
     public delegate string RatingChangedHandler(Employee employee); //есть делегат, принимающий сотрудника в качестве параметра
@@ -1380,15 +1386,15 @@ class Program
             Rating = newRating; //обновляем рейтинг сотрудника
             Date = newDate; //обновляем дату сотрудника
             IList<string> lst = NotifyRatingChanged();
-            Console.WriteLine(lst[0]); //нужно как-то получить список со всеми изменениями... или не нужно...
-            return lst;
+            //Console.WriteLine($"lst[0]={ lst[0] }, lst.Count={lst.Count}"); //нужно как-то получить список со всеми изменениями... или не нужно...
+            return lst; //возвращает список с единственным элементом
         }
         private IList<string> NotifyRatingChanged()
         {
-            IList<string> notes = new List<string>(); //созаём список
+            IList<string> notes = new List<string>(); //создаём список
             foreach(var handler in _ratingChangedHandlers) //перебираем список делегатов
             {
-                notes.Add(handler?.Invoke(this)); //вызываем делегат с передачей сотрудника (Employee)
+                notes.Add(handler?.Invoke(this)); //вызываем делегат (по сути LogToJson) с передачей сотрудника (Employee)
             }
             return notes; //возвращаем id и rating
         }
@@ -1415,12 +1421,11 @@ class Program
         public List<string> ProcessInputLines(List<string> inputLines)
         {
             List<string> result = new List<string>();
+
             foreach(string item in inputLines)
             {
                 var (type, id, lastName, rating, date) = ParseInputLine(item);
-                //ваш код                
-
-                //Console.WriteLine($"type={type}, id={id}, lastName={lastName}, rating={rating}, date={date.ToString("d")}, {FindEmployee(id)==null}, _employees[J]Count={_employees["J"].Count}, _employees[M]Count={_employees["M"].Count}");
+                //ваш код
 
                 Employee emp = FindEmployee(id); //сотрудник из базы
 
@@ -1435,7 +1440,7 @@ class Program
                     {
                         if (rating != emp.Rating)
                         {
-                            emp.UpdateRating(rating, date); //обновляем рейтинг
+                            result.Add(emp.UpdateRating(rating, date)[0]); //обновляем рейтинг
                         }
                     }
                 }
@@ -1482,7 +1487,6 @@ class Program
             _employees[type].Add(newEmployee); //добавляем в сотрудника в словарь
         }
     }
-
     static void ReportMaker()
     {
         //string inputData = Console.ReadLine();
@@ -1882,5 +1886,69 @@ class Program
             return list;
         }
         //ваш код
+    }
+    
+    static void Freelancers() //фрилансеры со всего света
+    {
+        Console.WriteLine("!");
+
+
+
+
+
+        Console.ReadKey();
+    }
+    public class CountryFreeLancer 
+    {
+        public string Country { get;set;}
+        public int FreelancerCount { get; set; }
+        public CountryFreeLancer(string country, int count)
+        {
+            Country = country;
+            FreelancerCount = count;
+        }
+        public override string ToString()
+        {
+
+
+            return "";
+        }
+    }
+    public class ProcessingFreelancers
+    {
+        public bool ValidateFreelancer(string freelancerData, out string[] parts)
+        {
+            parts = freelancerData.Split(';')
+                .Select(p => p.Trim())
+                .ToArray();
+            //проверка количество полей
+            //проверка фамилии
+            //проверка года рождения
+            //проверка страны
+            //проверка ProjectID
+
+            return true;
+        }
+        public IEnumerable<CountryFreeLancer> GenerateFreelancerReport(List<string> inputLines)
+        {
+            var countryCounts = new Dictionary<string, int>();
+            foreach (var line in inputLines)
+            {
+                if(ValidateFreelancer(line, out string[] parts))
+                {
+                    //ваш код
+                }
+            }
+            if (countryCounts.Count == 0)
+            {
+                //ваш код
+            }
+            //сортировка
+            var sortedCountries = ""; //ваш код
+            foreach (var pair in sortedCountries)
+            {
+                yield return new CountryFreeLancer(pair.Key, pair.Value);
+            }
+        }
     }
 }
