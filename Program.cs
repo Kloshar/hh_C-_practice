@@ -24,6 +24,7 @@ class Program
         //StocksMonitoring(); //Мониторинг акций (распечатано)
         //PopularGames(); //Популярные компьютерные игры
         //DinamycRating(); //Динамический рейтинг
+
         Freelancers(); //Фрилансеры со всего света
 
         //Сложный уровень
@@ -1890,15 +1891,21 @@ class Program
     
     static void Freelancers() //фрилансеры со всего света
     {
-        Console.WriteLine("!");
-
-
-
-
-
-        Console.ReadKey();
+        List<string> lst = new List<string> { "Smith;1985;USA;АВ123", "Johnson;1990;Canada;CD456", "Williams;1978;USA;EF789", "Brown;1995;UK;GH012", "Davis;1982;Canada;IJ345" };
+        //string[] input = new string[] { "Smith;1985;USA;АВ123", "Johnson;1990;Canada;CD456", "Williams;1978;USA;EF789", "Brown;1995;UK;GH012", "Davis;1982;Canada;IJ345" };
+        //input =          new string[] { "Smith;1950;USA;АВ123", "Johnson;1990;Canada;CD456", "Williams;1978;USA;EF789", "Brown;1995;UK;GH0123", "Davis;1982;Canada;IJ345" };
+        ProcessingFreelancers proc = new ProcessingFreelancers();
+        //string[] parts;
+        //foreach(string line in input)
+        //{
+        //    proc.ValidateFreelancer(line, out parts); //перебираем входящие строки возвращает true или false
+        //}
+        foreach(CountryFreeLancer c in proc.GenerateFreelancerReport(lst))
+        {
+            Console.WriteLine(c);
+        }            
     }
-    public class CountryFreeLancer 
+    public class CountryFreeLancer //класс для хранения страны и количества работников
     {
         public string Country { get;set;}
         public int FreelancerCount { get; set; }
@@ -1909,42 +1916,56 @@ class Program
         }
         public override string ToString()
         {
-
-
-            return "";
+            return $"{Country}:{FreelancerCount}";
         }
     }
-    public class ProcessingFreelancers
+    public class ProcessingFreelancers //класс для обработки данных через метод ValidateFreelancer()
     {
         public bool ValidateFreelancer(string freelancerData, out string[] parts)
         {
             parts = freelancerData.Split(';')
                 .Select(p => p.Trim())
                 .ToArray();
+
             //проверка количество полей
+            if (parts.Length != 4) return false;
+
             //проверка фамилии
+
+
             //проверка года рождения
             //проверка страны
             //проверка ProjectID
+
+            //Console.WriteLine($"{true} will be returned!");
 
             return true;
         }
         public IEnumerable<CountryFreeLancer> GenerateFreelancerReport(List<string> inputLines)
         {
             var countryCounts = new Dictionary<string, int>();
-            foreach (var line in inputLines)
+
+            foreach (var line in inputLines) //перебираем входящие строки
             {
                 if(ValidateFreelancer(line, out string[] parts))
                 {
-                    //ваш код
+                    if (countryCounts.ContainsKey(parts[2])) //проверка, что страна ещё не добавлена
+                    {
+                        countryCounts[parts[2]]++; //увеличиваем счётчик
+                    }
+                    else
+                    {
+                        countryCounts.Add(parts[2], 1); //добавляем страну, если ещё не добавлена
+                    }
                 }
             }
             if (countryCounts.Count == 0)
             {
-                //ваш код
+                countryCounts.Add("none", 0);
             }
             //сортировка
-            var sortedCountries = ""; //ваш код
+            var sortedCountries = countryCounts.OrderByDescending(e => e.Value).OrderBy(e=>e.Key);
+
             foreach (var pair in sortedCountries)
             {
                 yield return new CountryFreeLancer(pair.Key, pair.Value);
