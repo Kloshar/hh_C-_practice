@@ -1892,18 +1892,10 @@ class Program
     static void Freelancers() //фрилансеры со всего света
     {
         List<string> lst = new List<string> { "Smith;1985;USA;АВ123", "Johnson;1990;Canada;CD456", "Williams;1978;USA;EF789", "Brown;1995;UK;GH012", "Davis;1982;Canada;IJ345" };
-        //string[] input = new string[] { "Smith;1985;USA;АВ123", "Johnson;1990;Canada;CD456", "Williams;1978;USA;EF789", "Brown;1995;UK;GH012", "Davis;1982;Canada;IJ345" };
-        //input =          new string[] { "Smith;1950;USA;АВ123", "Johnson;1990;Canada;CD456", "Williams;1978;USA;EF789", "Brown;1995;UK;GH0123", "Davis;1982;Canada;IJ345" };
+        lst = new List<string> { "Smith;1950;USA;АВ123", "Johnson;1990;Canada;CD456", "Williams;1978;USA;EF789", "Brown;1995;UK;GH0123", "Davis;1982;Canada;IJ345" };
+        lst = new List<string> { "Smith;1960;USA;АВ123", "Johnson;1990;Canada;CD456", "Williams;1978;USA;EF789", "Brown;1995;UK;GH0123", "Davis;1982;Canada;IJ345" };
         ProcessingFreelancers proc = new ProcessingFreelancers();
-        //string[] parts;
-        //foreach(string line in input)
-        //{
-        //    proc.ValidateFreelancer(line, out parts); //перебираем входящие строки возвращает true или false
-        //}
-        foreach(CountryFreeLancer c in proc.GenerateFreelancerReport(lst))
-        {
-            Console.WriteLine(c);
-        }            
+        foreach(CountryFreeLancer c in proc.GenerateFreelancerReport(lst)) Console.WriteLine(c);
     }
     public class CountryFreeLancer //класс для хранения страны и количества работников
     {
@@ -1931,10 +1923,18 @@ class Program
             if (parts.Length != 4) return false;
 
             //проверка фамилии
-
+            if(parts[0].Length < 1 || parts[0].Length > 40) return false;
+            if (!Regex.IsMatch(parts[0], "^[A-Za-z]+")) return false;
 
             //проверка года рождения
+            int year;
+            if (!int.TryParse(parts[1], out year)) return false;
+            if(year < 1960 || year > 2007) return false;
+
             //проверка страны
+
+
+
             //проверка ProjectID
 
             //Console.WriteLine($"{true} will be returned!");
